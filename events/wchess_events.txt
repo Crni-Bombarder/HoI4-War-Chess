@@ -1,0 +1,73 @@
+add_namespace = wchess_events
+
+# Challenge accepted
+country_event = {
+    id = wchess_events.1
+    title = wchess_events.1.t
+    desc = wchess_events.1.desc
+
+    is_triggered_only = yes
+    timeout_days = 5
+
+    option = {
+        name = wchess_events.1.a
+    }
+    option = {
+        name = wchess_events.1.b
+    }
+    option = {
+        name = wchess_events.1.c
+    }
+}
+
+# Challenge refused
+country_event = {
+    id = wchess_events.2
+    title = wchess_events.2.t
+    desc = wchess_events.2.desc
+
+    is_triggered_only = yes
+    timeout_days = 5
+
+    option = {
+        name = wchess_events.2.a
+    }
+    option = {
+        name = wchess_events.2.b
+        country_event = wchess_events.3
+    }
+}
+
+# Announce the world its shame
+news_event = {
+    id = wchess_events.3
+    title = wchess_events.3.t
+    desc = wchess_events.3.desc
+    major = yes
+    hours = 8
+
+    is_triggered_only = yes
+
+    option = {
+        original_recipient_only = no
+        name = wchess_events.3.a
+    }
+    option = {
+        original_recipient_only = yes
+        name = wchess_events.3.b
+        country_event = wchess_events.4
+    }
+}
+
+# Hidden event to clear the variables
+country_event = {
+    id = wchess_events.4
+    hidden = yes
+
+    is_triggered_only = yes
+
+    FROM.wchess_challenger = {
+        clear_variable = THIS.wchess_challenged
+    }
+    clear_variable = FROM.wchess_challenger
+}

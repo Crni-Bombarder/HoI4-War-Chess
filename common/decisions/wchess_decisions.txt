@@ -1,0 +1,80 @@
+wchess_decision_categories = {
+    wchess_challenge = {
+        state_target = yes
+        on_map_mode = map_only
+        visible = {
+            is_ai = no
+            AND = {
+                NOT = {
+                    has_variable = ROOT.wchess_challenged
+                }
+                NOT = {
+                    has_variable = ROOT.wchess_challenger
+                }
+            }
+        }
+        target_root_trigger = {
+            AND = {
+                NOT = {
+                    has_variable = ROOT.wchess_challenged
+                }
+                NOT = {
+                    has_variable = ROOT.wchess_challenger
+                }
+            }
+        }
+        target_trigger = {
+            FROM = {
+                is_capital = yes
+                owner = {
+                    is_neighbor_of = ROOT
+                    AND = {
+                        NOT = {
+                            has_variable = ROOT.wchess_challenged
+                        }
+                        NOT = {
+                            has_variable = ROOT.wchess_challenger
+                        }
+                    }
+                }
+            }
+        }
+        complete_effect = {
+            FROM = {
+                owner = {
+                    set_variable = {
+                        var = ROOT.wchess_challenger
+                        value = THIS
+                    }
+                    set_variable = {
+                        var = THIS.wchess_challenged
+                        value = ROOT
+                    }
+                }
+            }
+        }
+    }
+
+    wchess_mission_challenged = {
+        days_mission_timeout = 7
+        selectable_mission = yes
+        visible = {
+            has_variable = ROOT.wchess_challenged
+        }
+        activation = {
+            has_variable = ROOT.wchess_challenged
+        }
+        complete_effect = {
+            country_event = wchess_events.1
+        }
+    }
+
+     wchess_debug_clr_variable = {
+        complete_effect = {
+            every_country = {
+                clear_variable = THIS.wchess_challenged
+                clear_variable = THIS.wchess_challenger
+            }
+        }
+    }
+}
