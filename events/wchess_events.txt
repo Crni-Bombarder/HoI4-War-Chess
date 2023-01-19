@@ -33,41 +33,68 @@ country_event = {
         name = wchess_events.2.a
     }
     option = {
+        log = "[ROOT.GetName]"
         name = wchess_events.2.b
-        country_event = wchess_events.3
+        every_other_country = {
+            if = {
+                limit = {
+                    check_variable = {
+                        var = THIS.wchess_challenged
+                        value = PREV
+                        compare = equals
+                    }
+                }
+                country_event = wchess_events.4
+            } else = {
+                set_variable = {
+                    var = THIS.wchess_shamed
+                    value = ROOT.wchess_challenger
+                }
+                country_event = wchess_events.3
+            }
+        }
+
+        country_event = wchess_events.5
     }
 }
 
-# Announce the world its shame
+# Someone has been shamed
 news_event = {
     id = wchess_events.3
     title = wchess_events.3.t
     desc = wchess_events.3.desc
-    major = yes
-    hours = 8
 
     is_triggered_only = yes
 
     option = {
-        original_recipient_only = no
         name = wchess_events.3.a
-    }
-    option = {
-        original_recipient_only = yes
-        name = wchess_events.3.b
-        country_event = wchess_events.4
     }
 }
 
-# Hidden event to clear the variables
-country_event = {
+# You have been shamed
+news_event = {
     id = wchess_events.4
-    hidden = yes
+    title = wchess_events.4.t
+    desc = wchess_events.4.desc
 
     is_triggered_only = yes
 
-    FROM.wchess_challenger = {
-        clear_variable = THIS.wchess_challenged
+    option = {
+        log = "Shamed : [ROOT.GetName]"
+        name = wchess_events.4.a
     }
-    clear_variable = FROM.wchess_challenger
+}
+
+# You have shamed someone
+news_event = {
+    id = wchess_events.5
+    title = wchess_events.5.t
+    desc = wchess_events.5.desc
+
+    is_triggered_only = yes
+
+    option = {
+        log = "[ROOT.GetName] Has shamed"
+        name = wchess_events.5.a
+    }
 }

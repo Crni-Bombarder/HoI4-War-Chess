@@ -42,6 +42,8 @@ wchess_decision_categories = {
         complete_effect = {
             FROM = {
                 owner = {
+                    log = "THIS = [THIS.GetTag]"
+                    log = "ROOT = [ROOT.GetTag]"
                     set_variable = {
                         var = ROOT.wchess_challenger
                         value = THIS
