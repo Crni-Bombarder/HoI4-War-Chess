@@ -1,0 +1,14 @@
+
+@WINDOWS_SIZE_X = 597
+@WINDOWS_SIZE_Y = 602
+
+@TILE_GRID_CORNER_LEFT_POS_X = 27
+@TILE_GRID_CORNER_LEFT_POS_Y = 13
+
+@TILE_GRID_SIZE_X = 70
+@TILE_GRID_SIZE_Y = 70
+
+gui_types = {
+    name = "wchess_gui_board"
+    position = {}
+}

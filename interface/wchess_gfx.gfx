@@ -6,17 +6,17 @@ spriteTypes = {
 
     spriteType = {
         name = "GFX_wchess_tile_halocheck"
-        texturefile = "gfx/wchess/wchess_board_background.dds"
+        texturefile = "gfx/wchess/wchess_tile_halocheck.dds"
     }
 
     spriteType = {
         name = "GFX_wchess_tile_highlight"
-        texturefile = "gfx/wchess/wchess_board_background.dds"
+        texturefile = "gfx/wchess/wchess_tile_highlight.dds"
     }
 
     spriteType = {
         name = "GFX_wchess_pieces"
-        texturefile = "gfx/wchess/wchess_board_background.dds"
+        texturefile = "gfx/wchess/wchess_pieces.dds"
         noOfFrames = 12
     }
 }
