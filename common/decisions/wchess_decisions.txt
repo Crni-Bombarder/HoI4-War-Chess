@@ -69,6 +69,11 @@ wchess_decision_categories = {
         complete_effect = {
             country_event = wchess_events.1
         }
+        timeout_effect = {
+            var:ROOT.wchess_challenged = {
+                country_event = wchess_events.2
+            }
+        }
     }
 
      wchess_debug_clr_variable = {
@@ -76,6 +81,8 @@ wchess_decision_categories = {
             every_country = {
                 clear_variable = THIS.wchess_challenged
                 clear_variable = THIS.wchess_challenger
+                clear_variable = THIS.wchess_shamed
+                clear_variable = THIS.wchess_has_shamed
             }
         }
     }

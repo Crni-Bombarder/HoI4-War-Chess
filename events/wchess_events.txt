@@ -31,6 +31,10 @@ country_event = {
 
     option = {
         name = wchess_events.2.a
+        var:wchess_challenged = {
+            clear_variable = THIS.wchess_challenger
+        }
+        clear_variable = THIS.wchess_challenged
     }
     option = {
         log = "[ROOT.GetName]"
@@ -50,6 +54,10 @@ country_event = {
                     var = THIS.wchess_shamed
                     value = ROOT.wchess_challenger
                 }
+                set_variable = {
+                    var = THIS.wchess_has_shamed
+                    value = ROOT
+                }
                 country_event = wchess_events.3
             }
         }
@@ -68,6 +76,8 @@ news_event = {
 
     option = {
         name = wchess_events.3.a
+        clear_variable = THIS.wchess_shamed
+        clear_variable = THIS.wchess_has_shamed
     }
 }
 
@@ -80,8 +90,8 @@ news_event = {
     is_triggered_only = yes
 
     option = {
-        log = "Shamed : [ROOT.GetName]"
         name = wchess_events.4.a
+        clear_variable = THIS.wchess_challenged
     }
 }
 
@@ -94,7 +104,7 @@ news_event = {
     is_triggered_only = yes
 
     option = {
-        log = "[ROOT.GetName] Has shamed"
         name = wchess_events.5.a
+        clear_variable = THIS.wchess_challenger
     }
 }

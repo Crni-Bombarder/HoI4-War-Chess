@@ -18,7 +18,7 @@ wchess_events.2.b:0 "Call the journalists, let all the world know of their cowar
 
 # Someone has been shamed
 wchess_events.3.t:0 "[?ROOT.wchess_shamed.GetNameDefCap] refused a chess game"
-wchess_events.3.desc:0 "Contrary to all the traditions and value of the human race, [?ROOT.wchess_shamed.GetLeader] has refused a chess game from [ROOT.wchess_shamed.GetTag.wchess_challenged.GetLeader]"
+wchess_events.3.desc:0 "Contrary to all the traditions and values of the human race, [?ROOT.wchess_shamed.GetLeader] has refused a chess game from [?ROOT.wchess_has_shamed.GetLeader]"
 wchess_events.3.a:0 "Oh, the humanity!"
 
 # You have been shamed
