@@ -76,7 +76,7 @@ wchess_decision_categories = {
         }
     }
 
-     wchess_debug_clr_variable = {
+    wchess_debug_clr_variable = {
         complete_effect = {
             every_country = {
                 clear_variable = THIS.wchess_challenged
@@ -84,6 +84,21 @@ wchess_decision_categories = {
                 clear_variable = THIS.wchess_shamed
                 clear_variable = THIS.wchess_has_shamed
             }
+        }
+    }
+
+    wchess_debug_dispaly_gui = {
+        complete_effect = {
+            set_variable = {
+                var = ROOT.wchess_debug_show_gui
+                value = ROOT
+            }
+        }
+    }
+
+    wchess_debug_hide_gui = {
+        complete_effect = {
+            clear_variable = ROOT.wchess_debug_show_gui
         }
     }
 }

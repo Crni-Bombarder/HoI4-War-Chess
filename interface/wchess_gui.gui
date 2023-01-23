@@ -1,0 +1,44 @@
+
+@WINDOWS_SIZE_X = 597
+@WINDOWS_SIZE_Y = 602
+
+@TILE_GRID_CORNER_LEFT_POS_X = 27
+@TILE_GRID_CORNER_LEFT_POS_Y = 13
+
+@TILE_GRID_SIZE_X = 70
+@TILE_GRID_SIZE_Y = 70
+
+guiTypes = {
+    containerWindowType  = {
+        name = "wchess_gui_board"
+        position = {
+            x = 0
+            y = 0
+        }
+        orientation = center
+        origo = center
+        size = {
+            width = @WINDOWS_SIZE_X
+            height = @WINDOWS_SIZE_Y
+        }
+        moveable = yes
+        
+		click_to_front = yes
+
+        	background = {
+			name = "Background"
+			quadTextureSprite = "GFX_tiled_plain_bg"
+		}
+
+        iconType = {
+            name = "wchess_gui_board_background"
+            position = {
+                x = 0
+                y = 0
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_board_background"
+            alwaystransparent = yes
+        }
+    }
+}

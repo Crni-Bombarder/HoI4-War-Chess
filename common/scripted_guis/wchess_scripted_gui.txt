@@ -1,0 +1,11 @@
+scripted_gui = {
+    wchess_scripted_gui_board = {
+        window_name = "wchess_gui_board"
+
+        context_type = player_context
+
+        visible = {
+            has_variable = wchess_debug_show_gui
+        }
+    }
+}
