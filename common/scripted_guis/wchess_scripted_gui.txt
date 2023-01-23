@@ -7,5 +7,62 @@ scripted_gui = {
         visible = {
             has_variable = wchess_debug_show_gui
         }
+
+        dynamic_lists = {
+            wchess_tiles_grid = {
+                array = wchess_tiles_array
+                change_scope = no
+                entry_container = wchess_pieces_cell
+            }
+        }
+
+        properties = {
+            wchess_tile_piece = {
+                frame = v
+            }
+        }
+    }
+
+    wchess_scripted_gui_debug = {
+        window_name = "wchess_debug_interface"
+
+        context_type = player_context
+
+        visible = {
+            has_variable = wchess_debug_show_gui
+        }
+
+        effects = {
+            wchess_button_add_tile_array_click = {
+                log = "Add value to array wchess_tiles_array"
+                resize_array = {
+                    array = wchess_tiles_array
+                    size = 64
+                    value = 2
+                }
+                for_each_loop = {
+                    array = wchess_tiles_array
+                    index = i
+                    set_temp_variable = {temp_random = random}
+                    multiply_temp_variable = {
+                        var = temp_random
+                        value = 13.5
+                    }
+                    round_temp_variable = temp_random
+                    clamp_temp_variable = {
+                        var = temp_random
+                        min = 0
+                        max = 13
+                    }
+
+                    set_variable = {wchess_tiles_array^i = temp_random}
+                }
+            }
+
+            wchess_button_clean_tile_array_click = {
+                log = "Clearing wchess_tiles_array"
+                clear_array = wchess_tiles_array
+            }
+        }
     }
 }

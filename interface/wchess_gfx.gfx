@@ -17,6 +17,6 @@ spriteTypes = {
     spriteType = {
         name = "GFX_wchess_pieces"
         textureFile = "gfx/wchess/wchess_pieces.dds"
-        noOfFrames = 12
+        noOfFrames = 13
     }
 }

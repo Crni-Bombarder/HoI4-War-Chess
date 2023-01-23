@@ -2,11 +2,17 @@
 @WINDOWS_SIZE_X = 597
 @WINDOWS_SIZE_Y = 602
 
-@TILE_GRID_CORNER_LEFT_POS_X = 27
-@TILE_GRID_CORNER_LEFT_POS_Y = 13
+@TILE_GRID_CORNER_LEFT_POS_X = 25
+@TILE_GRID_CORNER_LEFT_POS_Y = 12
 
-@TILE_GRID_SIZE_X = 70
-@TILE_GRID_SIZE_Y = 70
+@TILE_GRID_SIZE_X = 560
+@TILE_GRID_SIZE_Y = 560
+
+@TILE_GRID_TILE_SIZE_X = 70
+@TILE_GRID_TILE_SIZE_Y = 70
+
+@TILE_GRID_GRIDBOX_POS_X = -245 # -(TILE_GRID_SIZE_X/2 - TILE_GRID_TILE_SIZE_X / 2)
+@TILE_GRID_GRIDBOX_POS_Y = 0
 
 guiTypes = {
     containerWindowType  = {
@@ -18,14 +24,14 @@ guiTypes = {
         orientation = center
         origo = center
         size = {
-            width = @WINDOWS_SIZE_X
+            width  = @WINDOWS_SIZE_X
             height = @WINDOWS_SIZE_Y
         }
         moveable = yes
         
 		click_to_front = yes
 
-        	background = {
+        background = {
 			name = "Background"
 			quadTextureSprite = "GFX_tiled_plain_bg"
 		}
@@ -40,5 +46,145 @@ guiTypes = {
             spriteType = "GFX_wchess_board_background"
             alwaystransparent = yes
         }
+
+        containerWindowType = {
+            name = "wchess_pieces_container"
+            position = {
+                x = @TILE_GRID_CORNER_LEFT_POS_X
+                y = @TILE_GRID_CORNER_LEFT_POS_Y
+            }
+            size = {
+                width  = @TILE_GRID_SIZE_X
+                height = @TILE_GRID_SIZE_Y
+            }
+
+            gridboxtype = {
+                name = "wchess_tiles_grid"
+                position = {
+                    x = @TILE_GRID_GRIDBOX_POS_X
+                    y = @TILE_GRID_GRIDBOX_POS_Y
+                }
+                size = {
+                    width  = 560
+                    height = 100%%
+                }
+                slotsize = {
+                    width  = 70
+                    height = 70
+                }
+                max_slots_horizontal = 8
+                max_slots_vertical   = 8
+			}
+        }
+    }
+
+    containerWindowType = {
+        name = "wchess_pieces_cell"
+        position = {
+            x = 0
+            y = 0
+        }
+        size = {
+            width  = 70
+            height = 70
+        }
+
+        buttonType = {
+            name = "wchess_tile_piece"
+            position = {
+                x = 3
+                y = 3
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_pieces"
+            frame = 1
+            clicksound = click_default
+        }
+
+        iconType = {
+            name = "wchess_tile_highlight"
+            position = {
+                x = 0
+                y = 0
+            }
+            spriteType = "GFX_wchess_tile_highlight"
+            alwaystransparent = yes
+        }
+    }
+
+    containerWindowType = {
+        name = "wchess_debug_interface"
+        position = {
+            x = 0
+            y = 0
+        }
+        orientation = lower_right
+        origo = lower_right
+        size = {
+            width  = 300
+            height = 300
+        }
+        moveable = yes
+
+        background = {
+			name = "Background"
+			quadTextureSprite = "GFX_tiled_plain_bg"
+		}
+
+        buttonType = {
+            name = "wchess_button_add_tile_array"
+            position = {
+                x = 3
+                y = 3
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_pieces"
+            frame = 2
+            clicksound = click_default
+        }
+
+        buttonType = {
+            name = "wchess_button_clean_tile_array"
+            position = {
+                x = 80
+                y = 3
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_pieces"
+            frame = 1
+            clicksound = click_default
+        }
     }
 }
+
+#iconType = {
+#    name = "wchess_test_tile_highlight"
+#    position = {
+#        x = 0
+#        y = 0
+#    }
+#    orientation = "upper_left"
+#    spriteType = "GFX_wchess_tile_highlight"
+#    alwaystransparent = yes
+#}
+#iconType = {
+#    name = "wchess_test_tile_halocheck"
+#    position = {
+#        x = 3
+#        y = 3
+#    }
+#    orientation = "upper_left"
+#    spriteType = "GFX_wchess_tile_halocheck"
+#    alwaystransparent = yes
+#}
+#iconType = {
+#    name = "wchess_test_pieces"
+#    position = {
+#        x = 3
+#        y = 3
+#    }
+#    orientation = "upper_left"
+#    spriteType = "GFX_wchess_pieces"
+#    frame = 2
+#    alwaystransparent = yes
+#}

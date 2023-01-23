@@ -87,7 +87,7 @@ wchess_decision_categories = {
         }
     }
 
-    wchess_debug_dispaly_gui = {
+    wchess_debug_display_gui = {
         complete_effect = {
             set_variable = {
                 var = ROOT.wchess_debug_show_gui
