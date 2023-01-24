@@ -9,15 +9,25 @@ scripted_gui = {
         }
 
         dynamic_lists = {
-            wchess_tiles_grid = {
+            wchess_grid_pieces = {
+                array = wchess_pieces_array
+                change_scope = no
+                entry_container = wchess_piece_cell
+            }
+
+            wchess_grid_highlights = {
                 array = wchess_tiles_array
                 change_scope = no
-                entry_container = wchess_pieces_cell
+                entry_container = wchess_highlight_cell
             }
         }
 
         properties = {
-            wchess_tile_piece = {
+            wchess_piece_tile = {
+                frame = v
+            }
+
+            wchess_highlight_tile = {
                 frame = v
             }
         }
@@ -33,15 +43,19 @@ scripted_gui = {
         }
 
         effects = {
-            wchess_button_add_tile_array_click = {
-                log = "Add value to array wchess_tiles_array"
+
+            # ########################################## #
+            # ################# DEBUG ################## #
+            # ########################################## #
+            wchess_debug_random_tile_array_click = {
+                log = "Random value to array wchess_pieces_array"
                 resize_array = {
-                    array = wchess_tiles_array
+                    array = wchess_pieces_array
                     size = 64
                     value = 2
                 }
                 for_each_loop = {
-                    array = wchess_tiles_array
+                    array = wchess_pieces_array
                     index = i
                     set_temp_variable = {temp_random = random}
                     multiply_temp_variable = {
@@ -55,12 +69,40 @@ scripted_gui = {
                         max = 13
                     }
 
-                    set_variable = {wchess_tiles_array^i = temp_random}
+                    set_variable = {wchess_pieces_array^i = temp_random}
                 }
             }
 
-            wchess_button_clean_tile_array_click = {
-                log = "Clearing wchess_tiles_array"
+            wchess_debug_clean_tile_array_click = {
+                log = "Clearing wchess_pieces_array"
+                clear_array = wchess_pieces_array
+            }
+
+            wchess_debug_add_highlight_array_click = {
+                log = "Random value to array wchess_tiles_array"
+                clear_array = wchess_tiles_array
+                resize_array = {
+                    array = wchess_tiles_array
+                    size = 64
+                    value = 1
+                }
+                for_each_loop = {
+                    array = wchess_tiles_array
+                    index = i
+                    if = {
+                        limit = {
+                            check_variable = {
+                                random < 0.5
+                            }
+                        }
+                        set_variable = {wchess_tiles_array^i = 2}
+                    }
+                    log = "[?wchess_tiles_array^i]"
+                }
+            }
+
+            wchess_debug_clean_highlight_array_click = {
+                log = "Clearing wchess_highlight_cell"
                 clear_array = wchess_tiles_array
             }
         }

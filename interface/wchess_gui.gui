@@ -5,13 +5,13 @@
 @TILE_GRID_CORNER_LEFT_POS_X = 25
 @TILE_GRID_CORNER_LEFT_POS_Y = 12
 
-@TILE_GRID_SIZE_X = 560
-@TILE_GRID_SIZE_Y = 560
-
 @TILE_GRID_TILE_SIZE_X = 70
 @TILE_GRID_TILE_SIZE_Y = 70
 
-@TILE_GRID_GRIDBOX_POS_X = -245 # -(TILE_GRID_SIZE_X/2 - TILE_GRID_TILE_SIZE_X / 2)
+@TILE_GRID_SIZE_X = 560
+@TILE_GRID_SIZE_Y = 560
+
+@TILE_GRID_GRIDBOX_POS_X = -245 # -(TILE_GRID_SIZE_X/2 - TILE_GRID_TILE_SIZE_X/2)
 @TILE_GRID_GRIDBOX_POS_Y = 0
 
 guiTypes = {
@@ -29,12 +29,12 @@ guiTypes = {
         }
         moveable = yes
         
-		click_to_front = yes
+        click_to_front = yes
 
         background = {
-			name = "Background"
-			quadTextureSprite = "GFX_tiled_plain_bg"
-		}
+            name = "Background"
+            quadTextureSprite = "GFX_tiled_plain_bg"
+        }
 
         iconType = {
             name = "wchess_gui_board_background"
@@ -59,18 +59,36 @@ guiTypes = {
             }
 
             gridboxtype = {
-                name = "wchess_tiles_grid"
+                name = "wchess_grid_pieces"
                 position = {
                     x = @TILE_GRID_GRIDBOX_POS_X
                     y = @TILE_GRID_GRIDBOX_POS_Y
                 }
                 size = {
-                    width  = 560
-                    height = 100%%
+                    width  = @TILE_GRID_SIZE_X
+                    height = @TILE_GRID_SIZE_Y
                 }
                 slotsize = {
-                    width  = 70
-                    height = 70
+                    width  = @TILE_GRID_TILE_SIZE_X
+                    height = @TILE_GRID_TILE_SIZE_Y
+                }
+                max_slots_horizontal = 8
+                max_slots_vertical   = 8
+            }
+
+            gridboxtype = {
+                name = "wchess_grid_highlights"
+                position = {
+                    x = @TILE_GRID_GRIDBOX_POS_X
+                    y = @TILE_GRID_GRIDBOX_POS_Y
+                }
+                size = {
+                    width  = @TILE_GRID_SIZE_X
+                    height = @TILE_GRID_SIZE_Y
+                }
+                slotsize = {
+                    width  = @TILE_GRID_TILE_SIZE_X
+                    height = @TILE_GRID_TILE_SIZE_Y
                 }
                 max_slots_horizontal = 8
                 max_slots_vertical   = 8
@@ -79,7 +97,7 @@ guiTypes = {
     }
 
     containerWindowType = {
-        name = "wchess_pieces_cell"
+        name = "wchess_piece_cell"
         position = {
             x = 0
             y = 0
@@ -90,7 +108,7 @@ guiTypes = {
         }
 
         buttonType = {
-            name = "wchess_tile_piece"
+            name = "wchess_piece_tile"
             position = {
                 x = 3
                 y = 3
@@ -100,9 +118,21 @@ guiTypes = {
             frame = 1
             clicksound = click_default
         }
+    }
+
+    containerWindowType = {
+        name = "wchess_highlight_cell"
+        position = {
+            x = 0
+            y = 0
+        }
+        size = {
+            width  = 70
+            height = 70
+        }
 
         iconType = {
-            name = "wchess_tile_highlight"
+            name = "wchess_highlight_tile"
             position = {
                 x = 0
                 y = 0
@@ -112,6 +142,9 @@ guiTypes = {
         }
     }
 
+    # ########################################## #
+    # ################# DEBUG ################## #
+    # ########################################## #
     containerWindowType = {
         name = "wchess_debug_interface"
         position = {
@@ -127,12 +160,12 @@ guiTypes = {
         moveable = yes
 
         background = {
-			name = "Background"
-			quadTextureSprite = "GFX_tiled_plain_bg"
-		}
+            name = "Background"
+            quadTextureSprite = "GFX_tiled_plain_bg"
+        }
 
         buttonType = {
-            name = "wchess_button_add_tile_array"
+            name = "wchess_debug_random_tile_array"
             position = {
                 x = 3
                 y = 3
@@ -140,11 +173,12 @@ guiTypes = {
             orientation = "upper_left"
             spriteType = "GFX_wchess_pieces"
             frame = 2
+            pdx_tooltip = "Random filing tiles"
             clicksound = click_default
         }
 
         buttonType = {
-            name = "wchess_button_clean_tile_array"
+            name = "wchess_debug_clean_tile_array"
             position = {
                 x = 80
                 y = 3
@@ -152,6 +186,31 @@ guiTypes = {
             orientation = "upper_left"
             spriteType = "GFX_wchess_pieces"
             frame = 1
+            pdx_tooltip = "Clearing tiles"
+            clicksound = click_default
+        }
+
+        buttonType = {
+            name = "wchess_debug_add_highlight_array"
+            position = {
+                x = 3
+                y = 83
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_pieces"
+            frame = 4
+            clicksound = click_default
+        }
+
+        buttonType = {
+            name = "wchess_debug_clean_highlight_array"
+            position = {
+                x = 80
+                y = 83
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_pieces"
+            frame = 3
             clicksound = click_default
         }
     }

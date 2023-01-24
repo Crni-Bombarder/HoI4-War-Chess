@@ -7,11 +7,13 @@ spriteTypes = {
     spriteType = {
         name = "GFX_wchess_tile_halocheck"
         textureFile = "gfx/wchess/wchess_tile_halocheck.dds"
+        noOfFrames = 2
     }
 
     spriteType = {
         name = "GFX_wchess_tile_highlight"
         textureFile = "gfx/wchess/wchess_tile_highlight.dds"
+        noOfFrames = 2
     }
 
     spriteType = {
