@@ -16,9 +16,15 @@ scripted_gui = {
             }
 
             wchess_grid_highlights = {
-                array = wchess_tiles_array
+                array = wchess_highlights_array
                 change_scope = no
                 entry_container = wchess_highlight_cell
+            }
+
+            wchess_grid_halochecks = {
+                array = wchess_halochecks_array
+                change_scope = no
+                entry_container = wchess_halocheck_cell
             }
         }
 
@@ -28,6 +34,10 @@ scripted_gui = {
             }
 
             wchess_highlight_tile = {
+                frame = v
+            }
+
+            wchess_halocheck_tile = {
                 frame = v
             }
         }
@@ -79,15 +89,15 @@ scripted_gui = {
             }
 
             wchess_debug_add_highlight_array_click = {
-                log = "Random value to array wchess_tiles_array"
-                clear_array = wchess_tiles_array
+                log = "Random value to array wchess_highlights_array"
+                clear_array = wchess_highlights_array
                 resize_array = {
-                    array = wchess_tiles_array
+                    array = wchess_highlights_array
                     size = 64
                     value = 1
                 }
                 for_each_loop = {
-                    array = wchess_tiles_array
+                    array = wchess_highlights_array
                     index = i
                     if = {
                         limit = {
@@ -95,15 +105,47 @@ scripted_gui = {
                                 random < 0.5
                             }
                         }
-                        set_variable = {wchess_tiles_array^i = 2}
+                        set_variable = {wchess_highlights_array^i = 2}
                     }
-                    log = "[?wchess_tiles_array^i]"
+                    log = "[?wchess_highlights_array^i]"
                 }
             }
 
             wchess_debug_clean_highlight_array_click = {
-                log = "Clearing wchess_highlight_cell"
-                clear_array = wchess_tiles_array
+                log = "Clearing wchess_highlights_array"
+                clear_array = wchess_highlights_array
+            }
+
+            wchess_debug_add_halocheck_array_click = {
+                log = "Random value to array wchess_halochecks_array"
+                clear_array = wchess_halochecks_array
+                resize_array = {
+                    array = wchess_halochecks_array
+                    size = 64
+                    value = 2
+                }
+                for_each_loop = {
+                    array = wchess_pieces_array
+                    index = i
+                    value = piece
+                    if = {
+                        limit = {
+                            check_variable = {
+                                random < 0.5
+                            }
+                            check_variable = {
+                                piece < 3
+                            }
+                        }
+                        set_variable = {wchess_halochecks_array^i = 1}
+                    }
+                    log = "[?wchess_halochecks_array^i] [?piece]"
+                }
+            }
+
+            wchess_debug_clean_halocheck_array_click = {
+                log = "Clearing wchess_halochecks_array"
+                clear_array = wchess_halochecks_array
             }
         }
     }
