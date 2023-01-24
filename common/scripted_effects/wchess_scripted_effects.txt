@@ -1,0 +1,98 @@
+@B_KING   = 1
+@W_KING   = 2
+@B_QUEEN  = 3
+@W_QUEEN  = 4
+@B_BISHOP = 5
+@W_BISHOP = 6
+@B_ROOK   = 7
+@W_ROOK   = 8
+@B_KNIGHT = 9
+@W_KNIGHT = 10
+@B_PAWN   = 11
+@W_PAWN   = 12
+@EMPTY    = 13
+
+@ID_KING   = 0
+@ID_QUEEN  = 1
+@ID_BISHOP = 2
+@ID_ROOK   = 3
+@ID_KNIGHT = 4
+@ID_PAWN   = 5
+
+@BLACK = 1
+@WHITE = 0
+
+@ACTIVATE = 1
+@DEACTIVATE = 2
+
+@S_SELECTION = 0
+
+wchess_create_board = {
+
+    resize_temp_array = {
+        array = temp_array
+        size = 2
+        value = 0
+    }
+    set_temp_variable = {temp_array^0 = ROOT}
+    set_temp_variable = {temp_array^1 = THIS}
+
+    for_each_scope_loop = {
+        array = temp_array
+        resize_array = {
+            array = wchess_pieces_array
+            size = 64
+            value = @EMPTY
+        }
+
+        resize_array = {
+            array = wchess_highlights_array
+            size = 64
+            value = @EMPTY
+        }
+
+        resize_array = {
+            array = wchess_halochecks_array
+            size = 64
+            value = @EMPTY
+        }
+
+        # Black pieces
+        set_variable = {wchess_pieces_array^0 = @B_ROOK}
+        set_variable = {wchess_pieces_array^1 = @B_KNIGHT}
+        set_variable = {wchess_pieces_array^2 = @B_BISHOP}
+        set_variable = {wchess_pieces_array^3 = @B_QUEEN}
+        set_variable = {wchess_pieces_array^4 = @B_KING}
+        set_variable = {wchess_pieces_array^5 = @B_BISHOP}
+        set_variable = {wchess_pieces_array^6 = @B_KNIGHT}
+        set_variable = {wchess_pieces_array^7 = @B_ROOK}
+        # Black pawns
+        set_variable = {wchess_pieces_array^8  = @B_PAWN}
+        set_variable = {wchess_pieces_array^9  = @B_PAWN}
+        set_variable = {wchess_pieces_array^10 = @B_PAWN}
+        set_variable = {wchess_pieces_array^11 = @B_PAWN}
+        set_variable = {wchess_pieces_array^12 = @B_PAWN}
+        set_variable = {wchess_pieces_array^13 = @B_PAWN}
+        set_variable = {wchess_pieces_array^14 = @B_PAWN}
+        set_variable = {wchess_pieces_array^15 = @B_PAWN}
+
+        # White pawns
+        set_variable = {wchess_pieces_array^48 = @W_PAWN}
+        set_variable = {wchess_pieces_array^49 = @W_PAWN}
+        set_variable = {wchess_pieces_array^50 = @W_PAWN}
+        set_variable = {wchess_pieces_array^51 = @W_PAWN}
+        set_variable = {wchess_pieces_array^52 = @W_PAWN}
+        set_variable = {wchess_pieces_array^53 = @W_PAWN}
+        set_variable = {wchess_pieces_array^54 = @W_PAWN}
+        set_variable = {wchess_pieces_array^55 = @W_PAWN}
+        # White pieces
+        set_variable = {wchess_pieces_array^56 = @W_ROOK}
+        set_variable = {wchess_pieces_array^57 = @W_KNIGHT}
+        set_variable = {wchess_pieces_array^58 = @W_BISHOP}
+        set_variable = {wchess_pieces_array^59 = @W_KING}
+        set_variable = {wchess_pieces_array^60 = @W_QUEEN}
+        set_variable = {wchess_pieces_array^61 = @W_BISHOP}
+        set_variable = {wchess_pieces_array^62 = @W_KNIGHT}
+        set_variable = {wchess_pieces_array^63 = @W_ROOK}
+    }
+}
