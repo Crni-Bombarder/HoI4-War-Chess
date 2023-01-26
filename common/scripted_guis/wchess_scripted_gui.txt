@@ -90,7 +90,7 @@ scripted_gui = {
                 }
                 set_temp_variable = {temp_wchess_id = i}
                 set_temp_variable = {temp_wchess_color = wchess_color}
-                wchess_rook_get_move = yes
+                wchess_get_knight_moves = yes
                 for_each_loop = {
                     array = wchess_highlights_array
                     value = val

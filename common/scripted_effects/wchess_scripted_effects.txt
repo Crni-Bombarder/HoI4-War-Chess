@@ -28,6 +28,8 @@
 @S_SELECTION = 0
 @S_MOVE      = 1
 
+# Function : wchess_create_board
+# Initialize in the player context the pieces, highlights and halochecks array.
 wchess_create_board = {
 
     resize_temp_array = {
@@ -102,24 +104,14 @@ wchess_create_board = {
     }
 }
 
-# This functions output in a temporary array the possible moves of a piece / pawn
-
-wchess_rook_get_move = {
-    log = "[?temp_wchess_array^1]"
-    resize_temp_array = {temp_wchess_move_scan_x = 4}
-    resize_temp_array = {temp_wchess_move_scan_y = 4}
-    set_temp_variable = {temp_wchess_move_scan_x^0 =  1}
-    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
-    set_temp_variable = {temp_wchess_move_scan_x^1 =  0}
-    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
-    set_temp_variable = {temp_wchess_move_scan_x^2 = -1}
-    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
-    set_temp_variable = {temp_wchess_move_scan_x^3 =  0}
-    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
-
-    wchess_generic_get_move = yes
-}
-
+# Function : wchess_generic_get_move
+# A generic function that compute the possibles moves of a piece
+# Inputs : temp_wchess_move_scan_x -| The moves direction ad coordinates offset
+#          temp_wchess_move_scan_y -|
+#          temp_wchess_move_iter   - Boolean if the moves can be iterated (Straight line)
+#          temp_wchess_id          - The initial position id
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The output highlighted positions
 wchess_generic_get_move = {
     for_each_loop = {
         array = temp_wchess_move_scan_x
@@ -169,10 +161,13 @@ wchess_generic_get_move = {
 
             if = {
                 limit = {
-                    check_variable = {
-                        var = temp_wchess_piece_array^temp_index_xy
-                        value = @EMPTY
-                        compare = not_equals
+                    OR = {
+                        check_variable = {
+                            var = temp_wchess_piece_array^temp_index_xy
+                            value = @EMPTY
+                            compare = not_equals
+                        }
+                        check_variable = {temp_wchess_move_iter = 0}
                     }
                 }
 
@@ -195,6 +190,140 @@ wchess_generic_get_move = {
             add_to_temp_variable = {temp_x = incr_x}
             add_to_temp_variable = {temp_y = incr_y}
         }
-        clear_temp_variable = incr_y
     }
+}
+
+# Function : wchess_get_rook_moves
+# This function compute the possible moves of a rook
+# Inputs : temp_wchess_id          - The rook position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_rook_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 1}
+    resize_temp_array = {temp_wchess_move_scan_x = 4}
+    resize_temp_array = {temp_wchess_move_scan_y = 4}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  0} # Bottom
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Left
+    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  0} # Top
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_bishop_moves
+# This function compute the possible moves of a bishop
+# Inputs : temp_wchess_id          - The bishop position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_bishop_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 1}
+    resize_temp_array = {temp_wchess_move_scan_x = 4}
+    resize_temp_array = {temp_wchess_move_scan_y = 4}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Bottom-right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^1 = -1} # Bottom-left
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Top-left
+    set_temp_variable = {temp_wchess_move_scan_y^2 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  1} # Top-right
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_queen_moves
+# This function compute the possible moves of a queen
+# Inputs : temp_wchess_id          - The queen position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_queen_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 1}
+    resize_temp_array = {temp_wchess_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_move_scan_y = 8}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  0} # Bottom
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Left
+    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  0} # Top
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^4 =  1} # Bottom-right
+    set_temp_variable = {temp_wchess_move_scan_y^4 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^5 = -1} # Bottom-left
+    set_temp_variable = {temp_wchess_move_scan_y^5 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^6 = -1} # Top-left
+    set_temp_variable = {temp_wchess_move_scan_y^6 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^7 =  1} # Top-right
+    set_temp_variable = {temp_wchess_move_scan_y^7 = -1}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_knight_moves
+# This function compute the possible moves of a queen
+# Inputs : temp_wchess_id          - The knight position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_knight_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 0}
+    resize_temp_array = {temp_wchess_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_move_scan_y = 8}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  2}
+    set_temp_variable = {temp_wchess_move_scan_y^0 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  2}
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -2}
+    set_temp_variable = {temp_wchess_move_scan_y^2 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^3 = -2}
+    set_temp_variable = {temp_wchess_move_scan_y^3 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^4 =  1}
+    set_temp_variable = {temp_wchess_move_scan_y^4 =  2}
+    set_temp_variable = {temp_wchess_move_scan_x^5 = -1}
+    set_temp_variable = {temp_wchess_move_scan_y^5 =  2}
+    set_temp_variable = {temp_wchess_move_scan_x^6 = -1}
+    set_temp_variable = {temp_wchess_move_scan_y^6 = -2}
+    set_temp_variable = {temp_wchess_move_scan_x^7 =  1}
+    set_temp_variable = {temp_wchess_move_scan_y^7 = -2}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_pawn_moves
+# This function compute the possible moves of a pawn
+# Inputs : temp_wchess_id          - The pawn position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_en_passant  - If defined, an en passant can be done at that column
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_pawn_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 0}
+    resize_temp_array = {temp_wchess_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_move_scan_y = 8}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  2}
+    set_temp_variable = {temp_wchess_move_scan_y^0 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  2}
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -2}
+    set_temp_variable = {temp_wchess_move_scan_y^2 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^3 = -2}
+    set_temp_variable = {temp_wchess_move_scan_y^3 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^4 =  1}
+    set_temp_variable = {temp_wchess_move_scan_y^4 =  2}
+    set_temp_variable = {temp_wchess_move_scan_x^5 = -1}
+    set_temp_variable = {temp_wchess_move_scan_y^5 =  2}
+    set_temp_variable = {temp_wchess_move_scan_x^6 = -1}
+    set_temp_variable = {temp_wchess_move_scan_y^6 = -2}
+    set_temp_variable = {temp_wchess_move_scan_x^7 =  1}
+    set_temp_variable = {temp_wchess_move_scan_y^7 = -2}
+
+    wchess_generic_get_move = yes
 }
