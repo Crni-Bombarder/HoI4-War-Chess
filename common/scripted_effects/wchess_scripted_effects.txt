@@ -26,6 +26,7 @@
 @DEACTIVATE = 2
 
 @S_SELECTION = 0
+@S_MOVE      = 1
 
 wchess_create_board = {
 
@@ -39,22 +40,26 @@ wchess_create_board = {
 
     for_each_scope_loop = {
         array = temp_array
+
+        clear_array = wchess_pieces_array
         resize_array = {
             array = wchess_pieces_array
             size = 64
             value = @EMPTY
         }
 
+        clear_array = wchess_highlights_array
         resize_array = {
             array = wchess_highlights_array
             size = 64
-            value = @EMPTY
+            value = @DEACTIVATE
         }
 
+        clear_array = wchess_halochecks_array
         resize_array = {
             array = wchess_halochecks_array
             size = 64
-            value = @EMPTY
+            value = @DEACTIVATE
         }
 
         # Black pieces
@@ -94,5 +99,102 @@ wchess_create_board = {
         set_variable = {wchess_pieces_array^61 = @W_BISHOP}
         set_variable = {wchess_pieces_array^62 = @W_KNIGHT}
         set_variable = {wchess_pieces_array^63 = @W_ROOK}
+    }
+}
+
+# This functions output in a temporary array the possible moves of a piece / pawn
+
+wchess_rook_get_move = {
+    log = "[?temp_wchess_array^1]"
+    resize_temp_array = {temp_wchess_move_scan_x = 4}
+    resize_temp_array = {temp_wchess_move_scan_y = 4}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1}
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  0}
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1}
+    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  0}
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+
+    wchess_generic_get_move = yes
+}
+
+wchess_generic_get_move = {
+    for_each_loop = {
+        array = temp_wchess_move_scan_x
+        value = incr_x
+        index = iter
+        set_temp_variable = {incr_y = temp_wchess_move_scan_y^iter}
+
+        set_temp_variable = {temp_x = temp_wchess_id}
+        modulo_temp_variable = {temp_x = 8}
+        set_temp_variable = {temp_y = temp_wchess_id}
+        divide_temp_variable = {temp_y = 8}
+        add_to_temp_variable = {temp_y = -0.5}
+        round_temp_variable = temp_y
+        
+        log = "First pos [?temp_x], [?temp_y] [?temp_wchess_break_flag]"
+        add_to_temp_variable = {temp_x = incr_x}
+        add_to_temp_variable = {temp_y = incr_y}
+        log = "Inr [?incr_x], [?incr_y]"
+        set_temp_variable    = {temp_wchess_break_flag = 0}
+        while_loop_effect = {
+            limit = {
+                NOT = {
+                    OR = {
+                        check_variable = {
+                            temp_x < 0
+                        }
+                        check_variable = {
+                            temp_x > 7
+                        }
+                        check_variable = {
+                            temp_y < 0
+                        }
+                        check_variable = {
+                            temp_y > 7
+                        }
+                        check_variable = {
+                            temp_wchess_break_flag = 1
+                        }
+                    }
+                }
+            }
+
+            set_temp_variable = {temp_index_xy = temp_y}
+            multiply_temp_variable = {temp_index_xy = 8}
+            add_to_temp_variable = {temp_index_xy = temp_x}
+            set_temp_variable = {temp_wchess_highlights_array^temp_index_xy = @ACTIVATE}
+
+            if = {
+                limit = {
+                    check_variable = {
+                        var = temp_wchess_piece_array^temp_index_xy
+                        value = @EMPTY
+                        compare = not_equals
+                    }
+                }
+
+                set_temp_variable = {temp_wchess_break_flag = 1}
+                if = {
+                    limit = {
+                        set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
+                        modulo_temp_variable = {temp_wchess_piece_value = 2}
+                        check_variable = {
+                            var = temp_wchess_piece_value
+                            value = temp_wchess_color
+                            compare = equals
+                        }
+                    }
+                    set_temp_variable = {temp_wchess_highlights_array^temp_index_xy = @DEACTIVATE}
+                }
+            }
+
+            #log = "[?temp_x], [?temp_y], [?temp_index_xy]"
+            add_to_temp_variable = {temp_x = incr_x}
+            add_to_temp_variable = {temp_y = incr_y}
+        }
+        clear_temp_variable = incr_y
     }
 }

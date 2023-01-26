@@ -26,6 +26,7 @@
 @DEACTIVATE = 2
 
 @S_SELECTION = 0
+@S_MOVE      = 1
 
 wchess_decision_categories = {
     wchess_challenge = {
