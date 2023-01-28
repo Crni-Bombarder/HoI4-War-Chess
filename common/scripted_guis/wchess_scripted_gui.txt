@@ -90,8 +90,7 @@ scripted_gui = {
                 }
                 set_temp_variable = {temp_wchess_id = i}
                 set_temp_variable = {temp_wchess_color = wchess_color}
-                set_temp_variable = {temp_wchess_en_passant = 0}
-                wchess_get_pawn_moves = yes
+                wchess_get_king_moves = yes
                 for_each_loop = {
                     array = wchess_highlights_array
                     value = val
@@ -121,13 +120,63 @@ scripted_gui = {
                                     compare = not_equals
                                 }
                                 set_temp_variable = {
-                                    wchess_temp_check_color_piece = wchess_pieces_array^i
+                                    temp_wchess_check_color_piece = wchess_pieces_array^i
                                 }
                                 modulo_temp_variable = {
-                                    wchess_temp_check_color_piece = 2
+                                    temp_wchess_check_color_piece = 2
                                 }
                                 check_variable = {
-                                    wchess_temp_check_color_piece = wchess_color
+                                    temp_wchess_check_color_piece = wchess_color
+                                }
+                            }
+
+                            set_temp_variable    = {temp_wchess_piece_type = wchess_pieces_array^i}
+                            subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+                            divide_temp_variable = {temp_wchess_piece_type = 2}
+                            add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+                            round_temp_variable  = temp_wchess_piece_type
+                            log = "[?temp_wchess_piece_type]"
+                            if = {
+                                limit = {
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_KING
+                                    }
+                                    log = "King"
+                                }
+                            } else_if = {
+                                limit = {
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_QUEEN
+                                    }
+                                    log = "Queen"
+                                }
+                            } else_if = {
+                                limit = {
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_BISHOP
+                                    }
+                                    log = "Bishop"
+                                }
+                            } else_if = {
+                                limit = {
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_ROOK
+                                    }
+                                    log = "Rook"
+                                }
+                            } else_if = {
+                                limit = {
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_KNIGHT
+                                    }
+                                    log = "Knight"
+                                }
+                            } else_if = {
+                                limit = {
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_PAWN
+                                    }
+                                    log = "Pawn"
                                 }
                             }
 
@@ -152,7 +201,12 @@ scripted_gui = {
                             }
 
                             set_variable = {wchess_play_state  = @S_SELECTION}
-                            set_variable = {wchess_highlights_array^i = @DEACTIVATE}
+                            clear_array = wchess_highlights_array
+                            resize_array = {
+                                array = wchess_highlights_array
+                                size = 64
+                                value = @DEACTIVATE
+                            }
                         }
                     }
                 }

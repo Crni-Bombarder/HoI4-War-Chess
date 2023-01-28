@@ -83,8 +83,6 @@ wchess_create_board = {
         set_variable = {wchess_pieces_array^14 = @B_PAWN}
         set_variable = {wchess_pieces_array^15 = @B_PAWN}
 
-        set_variable = {wchess_pieces_array^24 = @B_PAWN}
-        set_variable = {wchess_pieces_array^25 = @W_PAWN}
         # White pawns
         set_variable = {wchess_pieces_array^48 = @W_PAWN}
         set_variable = {wchess_pieces_array^49 = @W_PAWN}
@@ -128,10 +126,8 @@ wchess_generic_get_move = {
         add_to_temp_variable = {temp_y = -0.5}
         round_temp_variable = temp_y
         
-        log = "First pos [?temp_x], [?temp_y] [?temp_wchess_break_flag]"
         add_to_temp_variable = {temp_x = incr_x}
         add_to_temp_variable = {temp_y = incr_y}
-        log = "Inr [?incr_x], [?incr_y]"
         set_temp_variable    = {temp_wchess_break_flag = 0}
         while_loop_effect = {
             limit = {
@@ -352,9 +348,7 @@ wchess_get_pawn_moves = {
                 # En passant
                 AND = {
                     has_variable = temp_wchess_en_passant
-                    log = "[?temp_wchess_en_passant] [?temp_x] [?temp_y]"
                     subtract_from_temp_variable = {temp_wchess_en_passant = temp_x}
-                    log = "[?temp_wchess_en_passant] [?temp_x]"
                     OR = {
                         check_variable = {
                             temp_wchess_en_passant = 1
@@ -456,4 +450,34 @@ wchess_get_pawn_moves = {
             }
         }
     }
+}
+
+# Function : wchess_get_king_moves
+# This function compute the possible moves of a king
+# Inputs : temp_wchess_id          - The king position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_king_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 0}
+    resize_temp_array = {temp_wchess_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_move_scan_y = 8}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  0} # Bottom
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Left
+    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  0} # Top
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^4 =  1} # Bottom-right
+    set_temp_variable = {temp_wchess_move_scan_y^4 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^5 = -1} # Bottom-left
+    set_temp_variable = {temp_wchess_move_scan_y^5 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^6 = -1} # Top-left
+    set_temp_variable = {temp_wchess_move_scan_y^6 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^7 =  1} # Top-right
+    set_temp_variable = {temp_wchess_move_scan_y^7 = -1}
+
+    wchess_generic_get_move = yes
 }
