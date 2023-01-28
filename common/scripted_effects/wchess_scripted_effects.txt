@@ -124,6 +124,11 @@ wchess_generic_get_move = {
         set_temp_variable = {temp_y = temp_wchess_id}
         divide_temp_variable = {temp_y = 8}
         add_to_temp_variable = {temp_y = -0.5}
+        clamp_temp_variable = {
+            var = temp_y
+            min = 0
+            max = 7
+        }
         round_temp_variable = temp_y
         
         add_to_temp_variable = {temp_x = incr_x}
@@ -180,7 +185,6 @@ wchess_generic_get_move = {
                         set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
                         subtract_from_temp_variable = {temp_wchess_piece_value = 1}
                         modulo_temp_variable = {temp_wchess_piece_value = 2}
-                        log = "Modified : [?temp_wchess_color], [?temp_wchess_piece_value]"
                         check_variable = {
                             var = temp_wchess_piece_value
                             value = temp_wchess_color
@@ -306,7 +310,7 @@ wchess_get_knight_moves = {
 # This function compute the possible moves of a pawn
 # Inputs : temp_wchess_id          - The pawn position id
 #          temp_wchess_color       - Allied color (0 black, 1 white)
-#          temp_wchess_en_passant  - If defined, an en passant can be done at that column
+#          temp_wchess_en_passant  - If not -1, an en passant can be done at that column
 #          temp_wchess_piece_array - The input pieces array
 # Outputs: temp_wchess_highlights_array - The allowed move array
 wchess_get_pawn_moves = {
@@ -348,14 +352,18 @@ wchess_get_pawn_moves = {
                     subtract_from_temp_variable = {temp_wchess_piece_value = 1}
                     modulo_temp_variable = {temp_wchess_piece_value = 2}
                     check_variable = {
-                        var = temp_wchess_piece_array^temp_index_xy
+                        var = temp_wchess_piece_value
                         value = temp_wchess_color
                         compare = not_equals
                     }
                 }
                 # En passant
                 AND = {
-                    has_variable = temp_wchess_en_passant
+                    check_variable = {
+                        var = temp_wchess_en_passant
+                        value = -1
+                        compare = not_equals
+                    }
                     subtract_from_temp_variable = {temp_wchess_en_passant = temp_x}
                     OR = {
                         check_variable = {
@@ -394,16 +402,49 @@ wchess_get_pawn_moves = {
             }
             add_to_temp_variable = {temp_index_xy = 1}
             set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
-            check_variable = {
-                var = temp_wchess_piece_array^temp_index_xy
-                value = @EMPTY
-                compare = not_equals
-            }
-            modulo_temp_variable = {temp_wchess_piece_value = 2}
-            check_variable = {
-                var = temp_wchess_piece_array^temp_index_xy
-                value = temp_wchess_color
-                compare = not_equals
+            OR = {
+                # Normal
+                AND = {
+                    check_variable = {
+                        var = temp_wchess_piece_array^temp_index_xy
+                        value = @EMPTY
+                        compare = not_equals
+                    }
+                    subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                    modulo_temp_variable = {temp_wchess_piece_value = 2}
+                    check_variable = {
+                        var = temp_wchess_piece_value
+                        value = temp_wchess_color
+                        compare = not_equals
+                    }
+                }
+                # En passant
+                AND = {
+                    check_variable = {
+                        var = temp_wchess_en_passant
+                        value = -1
+                        compare = not_equals
+                    }
+                    subtract_from_temp_variable = {temp_wchess_en_passant = temp_x}
+                    OR = {
+                        check_variable = {
+                            temp_wchess_en_passant = 1
+                        }
+                        check_variable = {
+                            temp_wchess_en_passant = -1
+                        }
+                    }
+                    OR = {
+                        AND = {
+                            check_variable = {temp_wchess_color = @BLACK}
+                            check_variable = {temp_y = 4}
+                        }
+                        AND = {
+                            check_variable = {temp_wchess_color = @WHITE}
+                            check_variable = {temp_y = 3}
+                        }
+                    }
+                }
             }
         }
 
@@ -488,4 +529,73 @@ wchess_get_king_moves = {
     set_temp_variable = {temp_wchess_move_scan_y^7 = -1}
 
     wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_piece_moves
+# This function compute the possible moves of a piece
+# Inputs : temp_wchess_id          - The piece position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_en_passant  - If not -1, an en passant can be done at that column
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_piece_moves = {
+    set_temp_variable    = {temp_wchess_piece_type = temp_wchess_piece_array^temp_wchess_id}
+    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+    divide_temp_variable = {temp_wchess_piece_type = 2}
+    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+    clamp_temp_variable = {
+        var = temp_wchess_piece_type
+        min = 0
+        max = 6
+    }
+    round_temp_variable  = temp_wchess_piece_type
+    log = "[?temp_wchess_piece_type]"
+    if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_KING
+            }
+        }
+        wchess_get_king_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_QUEEN
+            }
+        }
+        wchess_get_queen_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_BISHOP
+            }
+        }
+        wchess_get_bishop_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_ROOK
+            }
+        }
+        wchess_get_rook_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_KNIGHT
+            }
+        }
+        wchess_get_knight_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_PAWN
+            }
+        }
+        wchess_get_pawn_moves = yes
+    }
 }

@@ -82,20 +82,20 @@ wchess_decision_categories = {
                     }
 
                     # DEBUG : Force the game to start
-                    # The challenged start with the black
-                    set_variable = {
-                        var = THIS.wchess_start_game
-                        value = 1
-                    }
-                    set_variable = {
-                        var = THIS.wchess_color
-                        value = @WHITE
-                    }
-                    set_variable = {
-                        var = THIS.wchess_opponent
-                        value = ROOT
-                    }
-                    clear_variable = THIS.wchess_game_turn
+                    ## The challenged start with the black
+                    #set_variable = {
+                    #    var = THIS.wchess_start_game
+                    #    value = 1
+                    #}
+                    #set_variable = {
+                    #    var = THIS.wchess_color
+                    #    value = @WHITE
+                    #}
+                    #set_variable = {
+                    #    var = THIS.wchess_opponent
+                    #    value = ROOT
+                    #}
+                    #clear_variable = THIS.wchess_game_turn
                     # The challenger start with the white
                     set_variable = {
                         var = ROOT.wchess_start_game
@@ -107,7 +107,7 @@ wchess_decision_categories = {
                     }
                     set_variable = {
                         var = ROOT.wchess_opponent
-                        value = THIS
+                        value = ROOT
                     }
                     set_variable = {
                         var = ROOT.wchess_game_turn
