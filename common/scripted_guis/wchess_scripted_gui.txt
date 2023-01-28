@@ -19,8 +19,8 @@
 @ID_KNIGHT = 4
 @ID_PAWN   = 5
 
-@BLACK = 1
-@WHITE = 0
+@BLACK = 0
+@WHITE = 1
 
 @ACTIVATE = 1
 @DEACTIVATE = 2
@@ -63,40 +63,6 @@ scripted_gui = {
 
                 # Debug
                 log = "Event click on [?i], piece [?v] [?wchess_play_state]"
-                #add_to_temp_array = {temp_wchess_piece_array = 0}
-                clear_temp_array = temp_wchess_piece_array
-                resize_temp_array = {
-                    array = temp_wchess_piece_array
-                    value = 4
-                    size = 64
-                }
-                for_each_loop = {
-                    array = wchess_pieces_array
-                    value = val
-                    index = iter
-                    set_temp_variable = {temp_wchess_piece_array^iter = val}
-                }
-                clear_temp_array = temp_wchess_highlights_array
-                resize_temp_array = {
-                    array = temp_wchess_highlights_array
-                    value = 4
-                    size = 64
-                }
-                for_each_loop = {
-                    array = wchess_highlights_array
-                    value = val
-                    index = iter
-                    set_temp_variable = {temp_wchess_highlights_array^iter = val}
-                }
-                set_temp_variable = {temp_wchess_id = i}
-                set_temp_variable = {temp_wchess_color = wchess_color}
-                wchess_get_king_moves = yes
-                for_each_loop = {
-                    array = wchess_highlights_array
-                    value = val
-                    index = iter
-                    set_variable = {wchess_highlights_array^iter = temp_wchess_highlights_array^iter}
-                }
 
                 if = {
                     limit = {
@@ -122,9 +88,8 @@ scripted_gui = {
                                 set_temp_variable = {
                                     temp_wchess_check_color_piece = wchess_pieces_array^i
                                 }
-                                modulo_temp_variable = {
-                                    temp_wchess_check_color_piece = 2
-                                }
+                                subtract_from_temp_variable = {temp_wchess_check_color_piece = 1}
+                                modulo_temp_variable = {temp_wchess_check_color_piece = 2}
                                 check_variable = {
                                     temp_wchess_check_color_piece = wchess_color
                                 }
@@ -135,49 +100,81 @@ scripted_gui = {
                             divide_temp_variable = {temp_wchess_piece_type = 2}
                             add_to_temp_variable = {temp_wchess_piece_type = -0.5}
                             round_temp_variable  = temp_wchess_piece_type
-                            log = "[?temp_wchess_piece_type]"
+
+                            clear_temp_array = temp_wchess_piece_array
+                            resize_temp_array = {
+                                array = temp_wchess_piece_array
+                                value = 4
+                                size = 64
+                            }
+                            for_each_loop = {
+                                array = wchess_pieces_array
+                                value = val
+                                index = iter
+                                set_temp_variable = {temp_wchess_piece_array^iter = val}
+                            }
+                            clear_temp_array = temp_wchess_highlights_array
+                            resize_temp_array = {
+                                array = temp_wchess_highlights_array
+                                value = 4
+                                size = 64
+                            }
+                            set_temp_variable = {temp_wchess_id = i}
+                            set_temp_variable = {temp_wchess_color = wchess_color}
+
                             if = {
                                 limit = {
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_KING
                                     }
-                                    log = "King"
                                 }
+                                wchess_get_king_moves = yes
+
                             } else_if = {
                                 limit = {
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_QUEEN
                                     }
-                                    log = "Queen"
                                 }
+                                wchess_get_queen_moves = yes
+
                             } else_if = {
                                 limit = {
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_BISHOP
                                     }
-                                    log = "Bishop"
                                 }
+                                wchess_get_bishop_moves = yes
+
                             } else_if = {
                                 limit = {
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_ROOK
                                     }
-                                    log = "Rook"
                                 }
+                                wchess_get_rook_moves = yes
+
                             } else_if = {
                                 limit = {
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_KNIGHT
                                     }
-                                    log = "Knight"
                                 }
+                                wchess_get_knight_moves = yes
+
                             } else_if = {
                                 limit = {
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_PAWN
                                     }
-                                    log = "Pawn"
                                 }
+                                wchess_get_pawn_moves = yes
+                            }
+                            for_each_loop = {
+                                array = wchess_highlights_array
+                                value = val
+                                index = iter
+                                set_variable = {wchess_highlights_array^iter = temp_wchess_highlights_array^iter}
                             }
 
                             set_variable = {wchess_selected_id = i}

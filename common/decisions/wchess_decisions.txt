@@ -19,8 +19,8 @@
 @ID_KNIGHT = 4
 @ID_PAWN   = 5
 
-@BLACK = 1
-@WHITE = 0
+@BLACK = 0
+@WHITE = 1
 
 @ACTIVATE = 1
 @DEACTIVATE = 2
@@ -89,7 +89,7 @@ wchess_decision_categories = {
                     }
                     set_variable = {
                         var = THIS.wchess_color
-                        value = @BLACK
+                        value = @WHITE
                     }
                     set_variable = {
                         var = THIS.wchess_opponent
@@ -103,7 +103,7 @@ wchess_decision_categories = {
                     }
                     set_variable = {
                         var = ROOT.wchess_color
-                        value = @WHITE
+                        value = @BLACK
                     }
                     set_variable = {
                         var = ROOT.wchess_opponent

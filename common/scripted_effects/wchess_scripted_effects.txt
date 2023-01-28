@@ -19,8 +19,8 @@
 @ID_KNIGHT = 4
 @ID_PAWN   = 5
 
-@BLACK = 1
-@WHITE = 0
+@BLACK = 0
+@WHITE = 1
 
 @ACTIVATE = 1
 @DEACTIVATE = 2
@@ -172,8 +172,15 @@ wchess_generic_get_move = {
                 set_temp_variable = {temp_wchess_break_flag = 1}
                 if = {
                     limit = {
+                        check_variable = {
+                            var = temp_wchess_piece_array^temp_index_xy
+                            value = @EMPTY
+                            compare = not_equals
+                        }
                         set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
+                        subtract_from_temp_variable = {temp_wchess_piece_value = 1}
                         modulo_temp_variable = {temp_wchess_piece_value = 2}
+                        log = "Modified : [?temp_wchess_color], [?temp_wchess_piece_value]"
                         check_variable = {
                             var = temp_wchess_piece_value
                             value = temp_wchess_color
@@ -338,6 +345,7 @@ wchess_get_pawn_moves = {
                         value = @EMPTY
                         compare = not_equals
                     }
+                    subtract_from_temp_variable = {temp_wchess_piece_value = 1}
                     modulo_temp_variable = {temp_wchess_piece_value = 2}
                     check_variable = {
                         var = temp_wchess_piece_array^temp_index_xy
