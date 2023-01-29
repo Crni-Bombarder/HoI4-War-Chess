@@ -103,7 +103,7 @@ wchess_decision_categories = {
                     }
                     set_variable = {
                         var = ROOT.wchess_color
-                        value = @BLACK
+                        value = @WHITE
                     }
                     set_variable = {
                         var = ROOT.wchess_opponent

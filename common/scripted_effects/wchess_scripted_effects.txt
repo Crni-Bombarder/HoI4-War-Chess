@@ -364,14 +364,10 @@ wchess_get_pawn_moves = {
                         value = -1
                         compare = not_equals
                     }
-                    subtract_from_temp_variable = {temp_wchess_en_passant = temp_x}
-                    OR = {
-                        check_variable = {
-                            temp_wchess_en_passant = 1
-                        }
-                        check_variable = {
-                            temp_wchess_en_passant = -1
-                        }
+                    set_temp_variable = {temp_wchess_en_passant_left = temp_wchess_en_passant}
+                    subtract_from_temp_variable = {temp_wchess_en_passant_left = temp_x}
+                    check_variable = {
+                        temp_wchess_en_passant_left = -1
                     }
                     OR = {
                         AND = {
@@ -425,14 +421,10 @@ wchess_get_pawn_moves = {
                         value = -1
                         compare = not_equals
                     }
-                    subtract_from_temp_variable = {temp_wchess_en_passant = temp_x}
-                    OR = {
-                        check_variable = {
-                            temp_wchess_en_passant = 1
-                        }
-                        check_variable = {
-                            temp_wchess_en_passant = -1
-                        }
+                    set_temp_variable = {temp_wchess_en_passant_right = temp_wchess_en_passant}
+                    subtract_from_temp_variable = {temp_wchess_en_passant_right = temp_x}
+                    check_variable = {
+                        temp_wchess_en_passant_right = 1
                     }
                     OR = {
                         AND = {

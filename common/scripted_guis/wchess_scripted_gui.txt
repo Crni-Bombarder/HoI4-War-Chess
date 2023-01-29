@@ -118,7 +118,11 @@ scripted_gui = {
                             set_temp_variable = {temp_wchess_color = wchess_color}
                             if = {
                                 limit = {
-                                    has_variable = wchess_en_passant
+                                    check_variable = {
+                                        var = wchess_en_passant
+                                        value = -1
+                                        compare = not_equals
+                                    }
                                 }
                                 log = "En passant detected on column [?wchess_en_passant]"
                                 set_temp_variable = {temp_wchess_en_passant = wchess_en_passant}
@@ -168,6 +172,39 @@ scripted_gui = {
                                 }
                             }
 
+                             # Delete the passed pawn
+                            if = {
+                                limit = {
+                                    set_temp_variable    = {temp_wchess_piece_type = wchess_pieces_array^wchess_selected_id}
+                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+                                    divide_temp_variable = {temp_wchess_piece_type = 2}
+                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+                                    clamp_temp_variable = {
+                                        var = temp_wchess_piece_type
+                                        min = 0
+                                        max = 6
+                                    }
+                                    round_temp_variable  = temp_wchess_piece_type
+                                    set_temp_variable = {temp_wchess_pawn_x = i}
+                                    modulo_temp_variable = {temp_wchess_pawn_x = 8}
+                                    check_variable = {temp_wchess_piece_type = @ID_PAWN}
+                                    check_variable = {temp_wchess_pawn_x = wchess_en_passant}
+                                }
+
+                                set_temp_variable = {temp_wchess_en_passant_id = i}
+                                if = {
+                                    limit = {
+                                        check_variable = {wchess_color = @BLACK}
+                                    }
+
+                                    add_to_temp_variable = {temp_wchess_en_passant_id = -8}
+                                } else = {
+                                    add_to_temp_variable = {temp_wchess_en_passant_id =  8}
+                                }
+                                set_variable = {wchess_pieces_array^temp_wchess_en_passant_id = @EMPTY}
+                            }
+
+                            # Move the piece
                             set_variable = {
                                 wchess_pieces_array^i = wchess_pieces_array^wchess_selected_id
                             }
@@ -183,10 +220,33 @@ scripted_gui = {
                                 value = @DEACTIVATE
                             }
 
-                            # En passant flag
+                            # Clear own en passant available
+                            set_variable = {wchess_en_passant = -1}
+                            # En passant flag for the opponent
                             if = {
                                 limit = {
-                                    
+                                    set_temp_variable = {
+                                        temp_wchess_en_passant_y_offset = i
+                                    }
+                                    subtract_from_temp_variable = {
+                                        temp_wchess_en_passant_y_offset = wchess_selected_id
+                                    }
+                                    OR = {
+                                        check_variable = {
+                                            temp_wchess_en_passant_y_offset = 16
+                                        }
+                                        check_variable = {
+                                            temp_wchess_en_passant_y_offset = -16
+                                        }
+                                    }
+                                }
+
+                                set_temp_variable = {temp_wchess_en_passant_id = wchess_selected_id}
+                                modulo_temp_variable = {temp_wchess_en_passant_id = 8}
+                                var:wchess_opponent = {
+                                    set_variable = {
+                                        wchess_en_passant = temp_wchess_en_passant_id
+                                    }
                                 }
                             }
 
@@ -276,6 +336,7 @@ scripted_gui = {
 
             wchess_debug_add_highlight_array_click = {
                 wchess_create_board = yes
+                set_variable = {wchess_en_passant = -1}
             }
 
             wchess_debug_clean_highlight_array_click = {
