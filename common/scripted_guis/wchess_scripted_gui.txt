@@ -63,6 +63,7 @@ scripted_gui = {
 
                 # Debug
                 log = "Event click on [?i], piece [?v] [?wchess_play_state]"
+                log = "[?wchess_king_moved]"
                 set_temp_variable = {temp_wchess_en_passant = -1}
 
                 clear_array = wchess_halochecks_array
@@ -92,7 +93,7 @@ scripted_gui = {
 
                 log = "Ok"
                 set_temp_variable = {temp_wchess_color = @WHITE}
-                wchess_get_attacked_tiles = yes
+                #wchess_get_attacked_tiles = yes
 
                 for_each_loop = {
                     array = wchess_halochecks_array
@@ -168,7 +169,6 @@ scripted_gui = {
                                         compare = not_equals
                                     }
                                 }
-                                log = "En passant detected on column [?wchess_en_passant]"
                                 set_temp_variable = {temp_wchess_en_passant = wchess_en_passant}
                             }
 
@@ -179,6 +179,106 @@ scripted_gui = {
                                 value = val
                                 index = iter
                                 set_variable = {wchess_highlights_array^iter = temp_wchess_highlights_array^iter}
+                            }
+
+                            # Castling logic goes here
+                            if = {
+                                limit = {
+                                    set_temp_variable    = {temp_wchess_piece_type = v}
+                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+                                    divide_temp_variable = {temp_wchess_piece_type = 2}
+                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+                                    clamp_temp_variable = {
+                                        var = temp_wchess_piece_type
+                                        min = 0
+                                        max = 6
+                                    }
+                                    round_temp_variable = temp_wchess_piece_type
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_KING
+                                    }
+                                    check_variable = {
+                                        wchess_king_moved = 0
+                                    }
+                                }
+                                set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+                                wchess_get_attacked_tiles = yes
+
+                                # Castling queen side
+                                set_temp_variable = {temp_wchess_castling_index = 1}
+                                if = {
+                                    limit = {
+                                        check_variable = {wchess_color = @WHITE}
+                                    }
+                                    set_temp_variable = {temp_wchess_castling_index = 56}
+                                }
+
+                                if = {
+                                    limit = {
+                                        check_variable = {
+                                            wchess_left_rook_moved = 0
+                                        }
+                                        check_variable = {
+                                            wchess_pieces_array^temp_wchess_castling_index = @EMPTY
+                                        }
+                                        add_to_temp_variable = {temp_wchess_castling_index = 1}
+                                        check_variable = {
+                                            wchess_pieces_array^temp_wchess_castling_index = @EMPTY
+                                        }
+                                        check_variable = {
+                                            temp_wchess_attacked_array^temp_wchess_castling_index = 0
+                                        }
+                                        add_to_temp_variable = {temp_wchess_castling_index = 1}
+                                        check_variable = {
+                                            wchess_pieces_array^temp_wchess_castling_index = @EMPTY
+                                        }
+                                        check_variable = {
+                                            temp_wchess_attacked_array^temp_wchess_castling_index = 0
+                                        }
+                                        add_to_temp_variable = {temp_wchess_castling_index = 1}
+                                        check_variable = {
+                                            temp_wchess_attacked_array^temp_wchess_castling_index = 0
+                                        }
+                                    }
+                                    subtract_from_temp_variable = {temp_wchess_castling_index = 4}
+                                    set_variable = {wchess_highlights_array^temp_wchess_castling_index = @ACTIVATE}
+                                }
+
+                                # Castling king side
+                                set_temp_variable = {temp_wchess_castling_index = 6}
+                                if = {
+                                    limit = {
+                                        check_variable = {wchess_color = @WHITE}
+                                    }
+                                    set_temp_variable = {temp_wchess_castling_index = 62}
+                                }
+
+                                if = {
+                                    limit = {
+                                        check_variable = {
+                                            wchess_right_rook_moved = 0
+                                        }
+                                        check_variable = {
+                                            wchess_pieces_array^temp_wchess_castling_index = @EMPTY
+                                        }
+                                        check_variable = {
+                                            temp_wchess_attacked_array^temp_wchess_castling_index = 0
+                                        }
+                                        subtract_from_temp_variable = {temp_wchess_castling_index = 1}
+                                        check_variable = {
+                                            wchess_pieces_array^temp_wchess_castling_index = @EMPTY
+                                        }
+                                        check_variable = {
+                                            temp_wchess_attacked_array^temp_wchess_castling_index = 0
+                                        }
+                                        subtract_from_temp_variable = {temp_wchess_castling_index = 1}
+                                        check_variable = {
+                                            temp_wchess_attacked_array^temp_wchess_castling_index = 0
+                                        }
+                                    }
+                                    add_to_temp_variable = {temp_wchess_castling_index = 3}
+                                    set_variable = {wchess_highlights_array^temp_wchess_castling_index = @ACTIVATE}
+                                }
                             }
 
                             set_variable = {wchess_selected_id = i}
@@ -248,12 +348,163 @@ scripted_gui = {
                                 set_variable = {wchess_pieces_array^temp_wchess_en_passant_id = @EMPTY}
                             }
 
-                            # Move the piece
-                            set_variable = {
-                                wchess_pieces_array^i = wchess_pieces_array^wchess_selected_id
+                            # Flag for castling update
+                            # King
+                            if {
+                                limit = {
+                                    set_temp_variable = {
+                                        temp_wchess_piece_type = wchess_pieces_array^wchess_selected_id
+                                    }
+                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+                                    divide_temp_variable = {temp_wchess_piece_type = 2}
+                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+                                    clamp_temp_variable = {
+                                        var = temp_wchess_piece_type
+                                        min = 0
+                                        max = 6
+                                    }
+                                    round_temp_variable = temp_wchess_piece_type
+                                    log = "Castle type [?temp_wchess_piece_type]"
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_KING
+                                    }
+                                }
+
+                                set_variable = {wchess_king_moved = 1}
                             }
-                            set_variable = {
-                                wchess_pieces_array^wchess_selected_id = @EMPTY
+
+                            # Rooks
+                            if = {
+                                limit = {
+                                    set_temp_variable = {
+                                        temp_wchess_piece_type = wchess_pieces_array^wchess_selected_id
+                                    }
+                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+                                    divide_temp_variable = {temp_wchess_piece_type = 2}
+                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+                                    clamp_temp_variable = {
+                                        var = temp_wchess_piece_type
+                                        min = 0
+                                        max = 6
+                                    }
+                                    round_temp_variable = temp_wchess_piece_type
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_ROOK
+                                    }
+                                }
+
+                                set_temp_variable = {temp_x = wchess_selected_id}
+                                modulo_temp_variable = {temp_x = 8}
+                                if = {
+                                    limit = {
+                                        check_variable = {temp_x = 0}
+                                    }
+                                    set_variable = {wchess_left_rook_moved = 1}
+                                } else_if = {
+                                    limit = {
+                                        check_variable = {temp_x = 7}
+                                    }
+                                    set_variable = {wchess_right_rook_moved = 1}
+                                }
+                            }
+
+                            # Castling
+                            if = {
+                                limit = {
+                                    set_temp_variable = {
+                                        temp_wchess_piece_type = wchess_pieces_array^wchess_selected_id
+                                    }
+                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+                                    divide_temp_variable = {temp_wchess_piece_type = 2}
+                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+                                    clamp_temp_variable = {
+                                        var = temp_wchess_piece_type
+                                        min = 0
+                                        max = 6
+                                    }
+                                    round_temp_variable = temp_wchess_piece_type
+                                    log = "Castle type [?temp_wchess_piece_type]"
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_KING
+                                    }
+                                    set_temp_variable    = {temp_wchess_piece_type = v}
+                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+                                    divide_temp_variable = {temp_wchess_piece_type = 2}
+                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+                                    clamp_temp_variable = {
+                                        var = temp_wchess_piece_type
+                                        min = 0
+                                        max = 6
+                                    }
+                                    round_temp_variable = temp_wchess_piece_type
+                                    check_variable = {
+                                        temp_wchess_piece_type = @ID_ROOK
+                                    }
+                                    log = "Castle type [?temp_wchess_piece_type]"
+                                }
+                                
+                                # Queen side
+                                if = {
+                                    limit = {
+                                        check_variable = { wchess_selected_id > i}
+                                    }
+
+                                    set_temp_variable = {temp_wchess_index_castle_king = i}
+                                    add_to_temp_variable = {temp_wchess_index_castle_king = 2}
+                                    set_temp_variable = {
+                                        temp_wchess_index_castle_rook = temp_wchess_index_castle_king
+                                    }
+                                    add_to_temp_variable = {temp_wchess_index_castle_rook = 1}
+
+                                # King side
+                                } else = {
+                                    set_temp_variable = {temp_wchess_index_castle_king = i}
+                                    add_to_temp_variable = {temp_wchess_index_castle_king = -1}
+                                    set_temp_variable = {
+                                        temp_wchess_index_castle_rook = temp_wchess_index_castle_king
+                                    }
+                                    add_to_temp_variable = {temp_wchess_index_castle_rook = -1}
+                                }
+
+                                # Castle
+                                set_variable = {
+                                    wchess_pieces_array^wchess_selected_id = @EMPTY
+                                }
+                                set_variable = {
+                                    wchess_pieces_array^i = @EMPTY
+                                }
+
+                                if = {
+                                    limit = {
+                                        check_variable = {wchess_color = @BLACK}
+                                    }
+
+                                    set_variable = {
+                                        wchess_pieces_array^temp_wchess_index_castle_rook = @B_ROOK
+                                    }
+                                    set_variable = {
+                                        wchess_pieces_array^temp_wchess_index_castle_king = @B_KING
+                                    }
+                                } else = {
+                                    set_variable = {
+                                        wchess_pieces_array^temp_wchess_index_castle_rook = @W_ROOK
+                                    }
+                                    set_variable = {
+                                        wchess_pieces_array^temp_wchess_index_castle_king = @W_KING
+                                    }
+                                }
+
+                                set_variable = {
+                                    wchess_king_moved = 1
+                                }
+                            } else = {
+                                # Normal move
+                                set_variable = {
+                                    wchess_pieces_array^i = wchess_pieces_array^wchess_selected_id
+                                }
+                                set_variable = {
+                                    wchess_pieces_array^wchess_selected_id = @EMPTY
+                                }
                             }
 
                             set_variable = {wchess_play_state  = @S_SELECTION}
@@ -307,8 +558,10 @@ scripted_gui = {
                                         }
                                     }
                                     set_variable = {wchess_color = @WHITE}
+                                    set_variable = {wchess_opponent_color = @BLACK}
                                 } else = {
                                     set_variable = {wchess_color = @BLACK}
+                                    set_variable = {wchess_opponent_color = @WHITE}
                                 }
                             }
                         }
@@ -381,6 +634,9 @@ scripted_gui = {
             wchess_debug_add_highlight_array_click = {
                 wchess_create_board = yes
                 set_variable = {wchess_en_passant = -1}
+                set_variable = {wchess_king_moved = 0}
+                set_variable = {wchess_left_rook_moved = 0}
+                set_variable = {wchess_right_rook_moved = 0}
             }
 
             wchess_debug_clean_highlight_array_click = {

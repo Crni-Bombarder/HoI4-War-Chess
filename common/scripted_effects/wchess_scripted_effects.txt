@@ -74,14 +74,14 @@ wchess_create_board = {
         set_variable = {wchess_pieces_array^6 = @B_KNIGHT}
         set_variable = {wchess_pieces_array^7 = @B_ROOK}
         # Black pawns
-        #set_variable = {wchess_pieces_array^8  = @B_PAWN}
-        #set_variable = {wchess_pieces_array^9  = @B_PAWN}
-        #set_variable = {wchess_pieces_array^10 = @B_PAWN}
-        #set_variable = {wchess_pieces_array^11 = @B_PAWN}
-        #set_variable = {wchess_pieces_array^12 = @B_PAWN}
-        #set_variable = {wchess_pieces_array^13 = @B_PAWN}
-        #set_variable = {wchess_pieces_array^14 = @B_PAWN}
-        #set_variable = {wchess_pieces_array^15 = @B_PAWN}
+        set_variable = {wchess_pieces_array^8  = @B_PAWN}
+        set_variable = {wchess_pieces_array^9  = @B_PAWN}
+        set_variable = {wchess_pieces_array^10 = @B_PAWN}
+        set_variable = {wchess_pieces_array^11 = @B_PAWN}
+        set_variable = {wchess_pieces_array^12 = @B_PAWN}
+        set_variable = {wchess_pieces_array^13 = @B_PAWN}
+        set_variable = {wchess_pieces_array^14 = @B_PAWN}
+        set_variable = {wchess_pieces_array^15 = @B_PAWN}
 
         # White pawns
         set_variable = {wchess_pieces_array^48 = @W_PAWN}
@@ -96,8 +96,8 @@ wchess_create_board = {
         set_variable = {wchess_pieces_array^56 = @W_ROOK}
         set_variable = {wchess_pieces_array^57 = @W_KNIGHT}
         set_variable = {wchess_pieces_array^58 = @W_BISHOP}
-        set_variable = {wchess_pieces_array^59 = @W_KING}
-        set_variable = {wchess_pieces_array^60 = @W_QUEEN}
+        set_variable = {wchess_pieces_array^59 = @W_QUEEN}
+        set_variable = {wchess_pieces_array^60 = @W_KING}
         set_variable = {wchess_pieces_array^61 = @W_BISHOP}
         set_variable = {wchess_pieces_array^62 = @W_KNIGHT}
         set_variable = {wchess_pieces_array^63 = @W_ROOK}

@@ -106,6 +106,10 @@ wchess_decision_categories = {
                         value = @WHITE
                     }
                     set_variable = {
+                        var = ROOT.wchess_opponent_color
+                        value = @BLACK
+                    }
+                    set_variable = {
                         var = ROOT.wchess_opponent
                         value = ROOT
                     }
@@ -116,6 +120,18 @@ wchess_decision_categories = {
                     set_variable = {
                         var = ROOT.wchess_play_state
                         value = @S_SELECTION
+                    }
+                    set_variable = {
+                        var = ROOT.wchess_king_moved
+                        value = 0
+                    }
+                    set_variable = {
+                        var = ROOT.wchess_left_rook_moved
+                        value = 0
+                    }
+                    set_variable = {
+                        var = ROOT.wchess_right_rook_moved
+                        value = 0
                     }
 
                     wchess_create_board = yes
