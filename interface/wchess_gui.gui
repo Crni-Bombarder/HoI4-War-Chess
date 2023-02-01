@@ -2,6 +2,9 @@
 @WINDOWS_SIZE_X = 597
 @WINDOWS_SIZE_Y = 602
 
+@WINDOWS_PROMOTE_SIZE_X = 280
+@WINDOWS_PROMOTE_SIZE_Y = 70
+
 @TILE_GRID_CORNER_LEFT_POS_X = 25
 @TILE_GRID_CORNER_LEFT_POS_Y = 12
 
@@ -110,6 +113,79 @@ guiTypes = {
                 }
                 max_slots_horizontal = 8
                 max_slots_vertical   = 8
+            }
+
+            containerWindowType = {
+                name = "wchess_test_machin"
+                position = {
+                    x = 140
+                    y = 60
+                }
+                orientation = upper_left
+                origo = upper_left
+                size = {
+                    width  = @WINDOWS_PROMOTE_SIZE_X
+                    height = @WINDOWS_PROMOTE_SIZE_Y
+                }
+
+                iconType = {
+                    name = "wchess_pawn_promote_background"
+                    position = {
+                        x = 0
+                        y = 0
+                    }
+                    orientation = "upper_left"
+                    spriteType = "GFX_wchess_promote_pawn_background"
+                    alwaystransparent = yes
+                }
+
+                buttonType = {
+                    name = "wchess_promote_queen"
+                    position = {
+                        x = 3
+                        y = 3
+                    }
+                    orientation = "upper_left"
+                    spriteType = "GFX_wchess_pieces"
+                    frame = 1
+                    clicksound = click_default
+                }
+
+                buttonType = {
+                    name = "wchess_promote_knight"
+                    position = {
+                        x = 3
+                        y = 73
+                    }
+                    orientation = "upper_left"
+                    spriteType = "GFX_wchess_pieces"
+                    frame = 1
+                    clicksound = click_default
+                }
+
+                buttonType = {
+                    name = "wchess_promote_rook"
+                    position = {
+                        x = 3
+                        y = 143
+                    }
+                    orientation = "upper_left"
+                    spriteType = "GFX_wchess_pieces"
+                    frame = 1
+                    clicksound = click_default
+                }
+
+                buttonType = {
+                    name = "wchess_promote_bishop"
+                    position = {
+                        x = 3
+                        y = 213
+                    }
+                    orientation = "upper_left"
+                    spriteType = "GFX_wchess_pieces"
+                    frame = 1
+                    clicksound = click_default
+                }
             }
         }
     }

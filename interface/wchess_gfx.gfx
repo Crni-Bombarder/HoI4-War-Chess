@@ -5,6 +5,11 @@ spriteTypes = {
     }
 
     spriteType = {
+        name = "GFX_wchess_promote_pawn_background"
+        textureFile = "gfx/wchess/wchess_promote_pawn_background.dds"
+    }
+
+    spriteType = {
         name = "GFX_wchess_tile_halocheck"
         textureFile = "gfx/wchess/wchess_tile_halocheck.dds"
         noOfFrames = 2

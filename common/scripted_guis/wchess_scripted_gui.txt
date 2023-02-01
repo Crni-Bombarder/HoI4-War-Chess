@@ -350,7 +350,7 @@ scripted_gui = {
 
                             # Flag for castling update
                             # King
-                            if {
+                            if = {
                                 limit = {
                                     set_temp_variable = {
                                         temp_wchess_piece_type = wchess_pieces_array^wchess_selected_id
@@ -568,6 +568,22 @@ scripted_gui = {
                     }
                 }
             }
+
+            wchess_promote_queen_click = {
+                log = "Click"
+            }
+
+            wchess_promote_knight_click = {
+
+            }
+
+            wchess_promote_rook_click = {
+
+            }
+
+            wchess_promote_bishop_click = {
+
+            }
         }
 
         properties = {
@@ -582,6 +598,27 @@ scripted_gui = {
             wchess_halocheck_tile = {
                 frame = v
             }
+
+            wchess_promote_queen = {
+                frame = wchess_promote_queen_frame
+            }
+            wchess_promote_knight = {
+                frame = wchess_promote_knight_frame
+            }
+            wchess_promote_rook = {
+                frame = wchess_promote_rook_frame
+            }
+            wchess_promote_bishop = {
+                frame = wchess_promote_bishop_frame
+            }
+        }
+    }
+
+    wchess_test_machin_scri = {
+        window_name = "wchess_test_machin"
+
+        visible = {
+            always = no
         }
     }
 
