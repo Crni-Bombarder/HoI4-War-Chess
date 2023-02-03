@@ -25,8 +25,9 @@
 @ACTIVATE = 1
 @DEACTIVATE = 2
 
-@S_SELECTION = 0
-@S_MOVE      = 1
+@S_SELECTION      = 0
+@S_MOVE           = 1
+@S_PAWN_PROMOTION = 2
 
 scripted_gui = {
     wchess_scripted_gui_board = {
@@ -62,8 +63,6 @@ scripted_gui = {
             wchess_piece_tile_click = {
 
                 # Debug
-                log = "Event click on [?i], piece [?v] [?wchess_play_state]"
-                log = "[?wchess_king_moved]"
                 set_temp_variable = {temp_wchess_en_passant = -1}
 
                 clear_array = wchess_halochecks_array
@@ -91,7 +90,6 @@ scripted_gui = {
                     size = 64
                 }
 
-                log = "Ok"
                 set_temp_variable = {temp_wchess_color = @WHITE}
                 #wchess_get_attacked_tiles = yes
 
@@ -364,7 +362,6 @@ scripted_gui = {
                                         max = 6
                                     }
                                     round_temp_variable = temp_wchess_piece_type
-                                    log = "Castle type [?temp_wchess_piece_type]"
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_KING
                                     }
@@ -423,7 +420,6 @@ scripted_gui = {
                                         max = 6
                                     }
                                     round_temp_variable = temp_wchess_piece_type
-                                    log = "Castle type [?temp_wchess_piece_type]"
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_KING
                                     }
@@ -440,7 +436,6 @@ scripted_gui = {
                                     check_variable = {
                                         temp_wchess_piece_type = @ID_ROOK
                                     }
-                                    log = "Castle type [?temp_wchess_piece_type]"
                                 }
                                 
                                 # Queen side
@@ -507,12 +502,49 @@ scripted_gui = {
                                 }
                             }
 
-                            set_variable = {wchess_play_state  = @S_SELECTION}
+                            
                             clear_array = wchess_highlights_array
                             resize_array = {
                                 array = wchess_highlights_array
                                 size = 64
                                 value = @DEACTIVATE
+                            }
+
+                            if = {
+                                limit = {
+                                    OR = {
+                                        AND = {
+                                            check_variable = {wchess_color = @WHITE}
+                                            check_variable = {i < 8}
+                                        }
+                                        AND = {
+                                            check_variable = {wchess_color = @BLACK}
+                                            check_variable = {i > 55}
+                                        }
+                                    }
+                                    OR = {
+                                        check_variable = {wchess_pieces_array^i = @B_PAWN}
+                                        check_variable = {wchess_pieces_array^i = @W_PAWN}
+                                    }
+                                }
+
+                                set_variable = {wchess_display_promote_pawn = @ACTIVATE}
+                                set_variable = {wchess_pawn_promotion_id = i}
+                                set_temp_variable = {temp_wchess_position_id = i}
+                                modulo_temp_variable = {temp_wchess_position_id = 8}
+                                if = {
+                                    limit = {
+                                        check_variable = {wchess_color = @BLACK}
+                                    }
+
+                                    add_to_temp_variable = {temp_wchess_position_id = 8}
+                                }
+
+                                wchess_set_promote_pawn_interface_position = yes
+                                set_variable = {wchess_play_state  = @S_PAWN_PROMOTION}
+                            } else = {
+                                set_variable = {wchess_play_state  = @S_SELECTION}
+                                wchess_switch_turn = yes
                             }
 
                             # Clear own en passant available
@@ -534,6 +566,10 @@ scripted_gui = {
                                             temp_wchess_en_passant_y_offset = -16
                                         }
                                     }
+                                    OR = {
+                                        check_variable = {wchess_pieces_array^i = @B_PAWN}
+                                        check_variable = {wchess_pieces_array^i = @W_PAWN}
+                                    }
                                 }
 
                                 set_temp_variable = {temp_wchess_en_passant_id = wchess_selected_id}
@@ -544,45 +580,125 @@ scripted_gui = {
                                     }
                                 }
                             }
-
-                            if = {
-                                limit = {
-                                    check_variable = {
-                                            wchess_opponent = ROOT
-                                        }
-                                }
-                                if = {
-                                    limit = {
-                                        check_variable = {
-                                            wchess_color = @BLACK
-                                        }
-                                    }
-                                    set_variable = {wchess_color = @WHITE}
-                                    set_variable = {wchess_opponent_color = @BLACK}
-                                } else = {
-                                    set_variable = {wchess_color = @BLACK}
-                                    set_variable = {wchess_opponent_color = @WHITE}
-                                }
-                            }
                         }
                     }
                 }
             }
 
             wchess_promote_queen_click = {
-                log = "Click"
+                if = {
+                    limit = {
+                        check_variable = {
+                            wchess_play_state = @S_PAWN_PROMOTION
+                        }
+                    }
+
+                    if = {
+                        limit = {
+                            check_variable = {wchess_color = @WHITE}
+                        }
+
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @W_QUEEN
+                        }
+                    } else = {
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @B_QUEEN
+                        }
+                    }
+
+                    set_variable = {wchess_play_state = @S_SELECTION}
+                    set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
+
+                    wchess_switch_turn = yes
+                }
             }
 
             wchess_promote_knight_click = {
+                if = {
+                    limit = {
+                        check_variable = {
+                            wchess_play_state = @S_PAWN_PROMOTION
+                        }
+                    }
 
+                    if = {
+                        limit = {
+                            check_variable = {wchess_color = @WHITE}
+                        }
+
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @W_KNIGHT
+                        }
+                    } else = {
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @B_KNIGHT
+                        }
+                    }
+
+                    set_variable = {wchess_play_state = @S_SELECTION}
+                    set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
+
+                    wchess_switch_turn = yes
+                }
             }
 
             wchess_promote_rook_click = {
+                if = {
+                    limit = {
+                        check_variable = {
+                            wchess_play_state = @S_PAWN_PROMOTION
+                        }
+                    }
 
+                    if = {
+                        limit = {
+                            check_variable = {wchess_color = @WHITE}
+                        }
+
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @W_ROOK
+                        }
+                    } else = {
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @B_ROOK
+                        }
+                    }
+
+                    set_variable = {wchess_play_state = @S_SELECTION}
+                    set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
+
+                    wchess_switch_turn = yes
+                }
             }
 
             wchess_promote_bishop_click = {
+                if = {
+                    limit = {
+                        check_variable = {
+                            wchess_play_state = @S_PAWN_PROMOTION
+                        }
+                    }
 
+                    if = {
+                        limit = {
+                            check_variable = {wchess_color = @WHITE}
+                        }
+
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @W_BISHOP
+                        }
+                    } else = {
+                        set_variable = {
+                            wchess_pieces_array^wchess_pawn_promotion_id = @B_BISHOP
+                        }
+                    }
+
+                    set_variable = {wchess_play_state = @S_SELECTION}
+                    set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
+
+                    wchess_switch_turn = yes
+                }
             }
         }
 
@@ -628,23 +744,23 @@ scripted_gui = {
 
         triggers = {
             wchess_pawn_promote_background_visible = {
-                check_variable = {wchess_display_promote_pawn = 1}
+                check_variable = {wchess_display_promote_pawn = @ACTIVATE}
             }
 
             wchess_promote_queen_visible = {
-                check_variable = {wchess_display_promote_pawn = 1}
+                check_variable = {wchess_display_promote_pawn = @ACTIVATE}
             }
 
             wchess_promote_knight_visible = {
-                check_variable = {wchess_display_promote_pawn = 1}
+                check_variable = {wchess_display_promote_pawn = @ACTIVATE}
             }
 
             wchess_promote_rook_visible = {
-                check_variable = {wchess_display_promote_pawn = 1}
+                check_variable = {wchess_display_promote_pawn = @ACTIVATE}
             }
 
             wchess_promote_bishop_visible = {
-                check_variable = {wchess_display_promote_pawn = 1}
+                check_variable = {wchess_display_promote_pawn = @ACTIVATE}
             }
         }
     }

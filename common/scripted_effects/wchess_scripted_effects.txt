@@ -766,8 +766,8 @@ wchess_get_attacked_tiles = {
 }
 
 # Function : wchess_set_promote_pawn_interface_position
-# This function compute all the attacked tiles and the number of pieces attacking
-# Inputs : temp_wchess_position_id  - Row ID (0-7 white, 8-15 black)
+# This function move the pawn promotion interface to the correct tiles
+# Inputs : temp_wchess_position_id  - Column ID (0-7 white, 8-15 black)
 wchess_set_promote_pawn_interface_position = {
     set_temp_variable = {temp_pos_x = temp_wchess_position_id}
     modulo_temp_variable = {temp_pos_x = 8}
@@ -817,4 +817,29 @@ wchess_set_promote_pawn_interface_position = {
 
     set_variable = {wchess_promote_pawn_bishop_pos_x = temp_pos_x}
     set_variable = {wchess_promote_pawn_bishop_pos_y = temp_pos_y}
+}
+
+# Function : wchess_switch_turn
+# This function switch the turn to the opponent
+# Inputs : None
+wchess_switch_turn = {
+    if = {
+        limit = {
+            check_variable = {
+                    wchess_opponent = ROOT
+                }
+        }
+        if = {
+            limit = {
+                check_variable = {
+                    wchess_color = @BLACK
+                }
+            }
+            set_variable = {wchess_color = @WHITE}
+            set_variable = {wchess_opponent_color = @BLACK}
+        } else = {
+            set_variable = {wchess_color = @BLACK}
+            set_variable = {wchess_opponent_color = @WHITE}
+        }
+    }
 }
