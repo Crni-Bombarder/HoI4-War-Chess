@@ -116,10 +116,10 @@ guiTypes = {
             }
 
             containerWindowType = {
-                name = "wchess_test_machin"
+                name = "wchess_promote_pawn_container"
                 position = {
-                    x = 140
-                    y = 60
+                    x = 0
+                    y = 0
                 }
                 orientation = upper_left
                 origo = upper_left
@@ -130,10 +130,6 @@ guiTypes = {
 
                 iconType = {
                     name = "wchess_pawn_promote_background"
-                    position = {
-                        x = 0
-                        y = 0
-                    }
                     orientation = "upper_left"
                     spriteType = "GFX_wchess_promote_pawn_background"
                     alwaystransparent = yes
@@ -141,10 +137,6 @@ guiTypes = {
 
                 buttonType = {
                     name = "wchess_promote_queen"
-                    position = {
-                        x = 3
-                        y = 3
-                    }
                     orientation = "upper_left"
                     spriteType = "GFX_wchess_pieces"
                     frame = 1
@@ -153,10 +145,6 @@ guiTypes = {
 
                 buttonType = {
                     name = "wchess_promote_knight"
-                    position = {
-                        x = 3
-                        y = 73
-                    }
                     orientation = "upper_left"
                     spriteType = "GFX_wchess_pieces"
                     frame = 1
@@ -165,10 +153,6 @@ guiTypes = {
 
                 buttonType = {
                     name = "wchess_promote_rook"
-                    position = {
-                        x = 3
-                        y = 143
-                    }
                     orientation = "upper_left"
                     spriteType = "GFX_wchess_pieces"
                     frame = 1
@@ -177,10 +161,6 @@ guiTypes = {
 
                 buttonType = {
                     name = "wchess_promote_bishop"
-                    position = {
-                        x = 3
-                        y = 213
-                    }
                     orientation = "upper_left"
                     spriteType = "GFX_wchess_pieces"
                     frame = 1

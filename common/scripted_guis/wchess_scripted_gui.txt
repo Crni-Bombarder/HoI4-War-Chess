@@ -599,26 +599,53 @@ scripted_gui = {
                 frame = v
             }
 
+            wchess_pawn_promote_background = {
+                x = wchess_promote_pawn_background_pos_x
+                y = wchess_promote_pawn_background_pos_y
+            }
+
             wchess_promote_queen = {
+                x = wchess_promote_pawn_queen_pos_x
+                y = wchess_promote_pawn_queen_pos_y
                 frame = wchess_promote_queen_frame
             }
             wchess_promote_knight = {
+                x = wchess_promote_pawn_knight_pos_x
+                y = wchess_promote_pawn_knight_pos_y
                 frame = wchess_promote_knight_frame
             }
             wchess_promote_rook = {
+                x = wchess_promote_pawn_rook_pos_x
+                y = wchess_promote_pawn_rook_pos_y
                 frame = wchess_promote_rook_frame
             }
             wchess_promote_bishop = {
+                x = wchess_promote_pawn_bishop_pos_x
+                y = wchess_promote_pawn_bishop_pos_y
                 frame = wchess_promote_bishop_frame
             }
         }
-    }
 
-    wchess_test_machin_scri = {
-        window_name = "wchess_test_machin"
+        triggers = {
+            wchess_pawn_promote_background_visible = {
+                check_variable = {wchess_display_promote_pawn = 1}
+            }
 
-        visible = {
-            always = no
+            wchess_promote_queen_visible = {
+                check_variable = {wchess_display_promote_pawn = 1}
+            }
+
+            wchess_promote_knight_visible = {
+                check_variable = {wchess_display_promote_pawn = 1}
+            }
+
+            wchess_promote_rook_visible = {
+                check_variable = {wchess_display_promote_pawn = 1}
+            }
+
+            wchess_promote_bishop_visible = {
+                check_variable = {wchess_display_promote_pawn = 1}
+            }
         }
     }
 
@@ -688,12 +715,14 @@ scripted_gui = {
 
             wchess_debug_add_halocheck_array_click = {
                 set_variable = {wchess_play_state = @S_SELECTION}
-                set_variable = {wchess_game_turn = 0}
+                set_variable = {wchess_display_promote_pawn = 0}
             }
 
             wchess_debug_clean_halocheck_array_click = {
                 log = "Clearing wchess_halochecks_array"
-                set_variable = {wchess_game_turn = 1}
+                set_variable = {wchess_display_promote_pawn = 1}
+                set_temp_variable = {temp_wchess_position_id = 5}
+                wchess_set_promote_pawn_interface_position = yes
             }
         }
     }

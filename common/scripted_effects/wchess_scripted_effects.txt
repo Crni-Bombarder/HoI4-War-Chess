@@ -28,6 +28,8 @@
 @S_SELECTION = 0
 @S_MOVE      = 1
 
+@PROMOTE_PAWN_POS_Y_OFFSET = 60
+
 # Function : wchess_create_board
 # Initialize in the player context the pieces, highlights and halochecks array.
 wchess_create_board = {
@@ -761,4 +763,58 @@ wchess_get_attacked_tiles = {
             }
         }
     }
+}
+
+# Function : wchess_set_promote_pawn_interface_position
+# This function compute all the attacked tiles and the number of pieces attacking
+# Inputs : temp_wchess_position_id  - Row ID (0-7 white, 8-15 black)
+wchess_set_promote_pawn_interface_position = {
+    set_temp_variable = {temp_pos_x = temp_wchess_position_id}
+    modulo_temp_variable = {temp_pos_x = 8}
+    multiply_temp_variable = {temp_pos_x = 70}
+
+    set_temp_variable = {temp_pos_y = @PROMOTE_PAWN_POS_Y_OFFSET}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_position_id > 7}
+        }
+
+        set_temp_variable = {temp_pos_y = 70}
+        multiply_temp_variable = {temp_pos_y = 4}
+        subtract_from_temp_variable = {temp_pos_y = @PROMOTE_PAWN_POS_Y_OFFSET}
+
+        set_variable = {wchess_promote_queen_frame  = @B_QUEEN}
+        set_variable = {wchess_promote_knight_frame = @B_KNIGHT}
+        set_variable = {wchess_promote_rook_frame   = @B_ROOK}
+        set_variable = {wchess_promote_bishop_frame = @B_BISHOP}
+    } else = {
+        set_variable = {wchess_promote_queen_frame  = @W_QUEEN}
+        set_variable = {wchess_promote_knight_frame = @W_KNIGHT}
+        set_variable = {wchess_promote_rook_frame   = @W_ROOK}
+        set_variable = {wchess_promote_bishop_frame = @W_BISHOP}
+    }
+
+    set_variable = {wchess_promote_pawn_background_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_background_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_x = 3}
+    add_to_temp_variable = {temp_pos_y = 3}
+
+    set_variable = {wchess_promote_pawn_queen_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_queen_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_y = 70}
+
+    set_variable = {wchess_promote_pawn_knight_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_knight_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_y = 70}
+
+    set_variable = {wchess_promote_pawn_rook_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_rook_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_y = 70}
+
+    set_variable = {wchess_promote_pawn_bishop_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_bishop_pos_y = temp_pos_y}
 }
