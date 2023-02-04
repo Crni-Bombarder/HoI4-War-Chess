@@ -31,6 +31,7 @@
 @PROMOTE_PAWN_POS_Y_OFFSET = 60
 
 # Function : wchess_create_board
+# Context : Player
 # Initialize in the player context the pieces, highlights and halochecks array.
 wchess_create_board = {
 
@@ -107,6 +108,7 @@ wchess_create_board = {
 }
 
 # Function : wchess_generic_get_move
+# Context : Independant
 # A generic function that compute the possibles moves of a piece
 # Inputs : temp_wchess_move_scan_x -| The moves direction as coordinates offset
 #          temp_wchess_move_scan_y -|
@@ -209,6 +211,7 @@ wchess_generic_get_move = {
 }
 
 # Function : wchess_get_rook_moves
+# Context : Independant
 # This function compute the possible moves of a rook
 # Inputs : temp_wchess_id          - The rook position id
 #          temp_wchess_color       - Allied color (0 black, 1 white)
@@ -232,6 +235,7 @@ wchess_get_rook_moves = {
 }
 
 # Function : wchess_get_bishop_moves
+# Context : Independant
 # This function compute the possible moves of a bishop
 # Inputs : temp_wchess_id          - The bishop position id
 #          temp_wchess_color       - Allied color (0 black, 1 white)
@@ -255,6 +259,7 @@ wchess_get_bishop_moves = {
 }
 
 # Function : wchess_get_queen_moves
+# Context : Independant
 # This function compute the possible moves of a queen
 # Inputs : temp_wchess_id          - The queen position id
 #          temp_wchess_color       - Allied color (0 black, 1 white)
@@ -286,6 +291,7 @@ wchess_get_queen_moves = {
 }
 
 # Function : wchess_get_knight_moves
+# Context : Independant
 # This function compute the possible moves of a queen
 # Inputs : temp_wchess_id          - The knight position id
 #          temp_wchess_color       - Allied color (0 black, 1 white)
@@ -317,6 +323,7 @@ wchess_get_knight_moves = {
 }
 
 # Function : wchess_get_pawn_moves
+# Context : Independant
 # This function compute the possible moves of a pawn
 # Inputs : temp_wchess_id          - The pawn position id
 #          temp_wchess_color       - Allied color (0 black, 1 white)
@@ -504,13 +511,16 @@ wchess_get_pawn_moves = {
 }
 
 # Function : wchess_get_king_moves
+# Context : Independant
 # This function compute the possible moves of a king
 # Inputs : temp_wchess_id          - The king position id
 #          temp_wchess_color       - Allied color (0 black, 1 white)
 #          temp_wchess_inc_allies  - Boolean if the allies protected are included
 #          temp_wchess_piece_array - The input pieces array
+#          temp_wchess_check_en    - Activate the check verification
 # Outputs: temp_wchess_highlights_array - The allowed move array
 wchess_get_king_moves = {
+
     set_temp_variable = {temp_wchess_move_iter = 0}
     resize_temp_array = {temp_wchess_move_scan_x = 8}
     resize_temp_array = {temp_wchess_move_scan_y = 8}
@@ -532,9 +542,64 @@ wchess_get_king_moves = {
     set_temp_variable = {temp_wchess_move_scan_y^7 = -1}
 
     wchess_generic_get_move = yes
+
+    if = {
+        limit = {
+            check_variable = {temp_wchess_check_en = @ACTIVATE}
+        }
+
+        resize_temp_array = {
+            array = temp_wchess_highlights_array_filtered
+            value = 0
+            size = 64
+        }
+        for_each_loop = {
+            array = temp_wchess_highlights_array
+            value = val
+            index = iter
+            set_temp_variable = {temp_wchess_highlights_array_filtered^iter = val}
+        }
+
+        # Get the attacked tiles, disable move for attacked tiles
+        if = {
+            limit = {
+                check_variable = {temp_wchess_color = @WHITE}
+            }
+
+            set_temp_variable = {temp_wchess_color = @BLACK}
+        } else = {
+            set_temp_variable = {temp_wchess_color = @WHITE}
+        }
+        
+        wchess_get_attacked_tiles = yes
+
+        for_each_loop = {
+            array = temp_wchess_attacked_array
+            value = attacks
+            index = iter
+
+            if = {
+                limit = {
+                    check_variable = {attacks > 0}
+                    check_variable = {temp_wchess_highlights_array_filtered^iter = @ACTIVATE}
+                }
+
+                log = "Disable [?iter] for check ()"
+                set_temp_variable = {temp_wchess_highlights_array^iter = @DEACTIVATE}
+            } else_if = {
+                limit = {
+                    check_variable = {temp_wchess_highlights_array_filtered^iter = @ACTIVATE}
+                }
+                set_temp_variable = {temp_wchess_highlights_array^iter = @ACTIVATE}
+            } else = {
+                set_temp_variable = {temp_wchess_highlights_array^iter = @DEACTIVATE}
+            }
+        }
+    }
 }
 
 # Function : wchess_get_piece_moves
+# Context : Independant
 # This function compute the possible moves of a piece
 # Inputs : temp_wchess_id          - The piece position id
 #          temp_wchess_color       - Attacking color (0 black, 1 white)
@@ -605,6 +670,7 @@ wchess_get_piece_moves = {
 }
 
 # Function : wchess_get_attacked_tiles
+# Context : Independant
 # This function compute all the attacked tiles and the number of pieces attacking
 # Inputs : temp_wchess_color       - Allied color (0 black, 1 white)
 #          temp_wchess_piece_array - The input pieces array
@@ -664,6 +730,7 @@ wchess_get_attacked_tiles = {
                         temp_wchess_piece_type = @ID_KING
                     }
                 }
+                set_temp_variable = {temp_wchess_check_en = @DEACTIVATE}
                 wchess_get_king_moves = yes
 
             } else_if = {
@@ -766,6 +833,7 @@ wchess_get_attacked_tiles = {
 }
 
 # Function : wchess_set_promote_pawn_interface_position
+# Context : Player
 # This function move the pawn promotion interface to the correct tiles
 # Inputs : temp_wchess_position_id  - Column ID (0-7 white, 8-15 black)
 wchess_set_promote_pawn_interface_position = {
@@ -820,6 +888,7 @@ wchess_set_promote_pawn_interface_position = {
 }
 
 # Function : wchess_switch_turn
+# Context : Player
 # This function switch the turn to the opponent
 # Inputs : None
 wchess_switch_turn = {
@@ -840,6 +909,39 @@ wchess_switch_turn = {
         } else = {
             set_variable = {wchess_color = @BLACK}
             set_variable = {wchess_opponent_color = @WHITE}
+        }
+    }
+}
+
+# Function : wchess_get_king_id
+# Context : Independant
+# This function return the position of the allied king
+# Inputs : temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_king_id - The attacked tiles array
+wchess_get_king_id = {
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = piece
+        index = iter
+        break = break
+
+        if = {
+            limit = {
+                OR = {
+                    AND = {
+                        check_variable = {temp_wchess_color = @WHITE}
+                        check_variable = {piece = @W_KING}
+                    }
+                    AND = {
+                        check_variable = {temp_wchess_color = @BLACK}
+                        check_variable = {piece = @B_KING}
+                    }
+                }
+            }
+
+            set_temp_variable = {temp_wchess_king_id = iter}
+            set_temp_variable = {break = 1}
         }
     }
 }
