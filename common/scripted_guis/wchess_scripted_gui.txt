@@ -72,57 +72,6 @@ scripted_gui = {
         effects = {
             wchess_piece_tile_click = {
 
-                # Debug
-
-                clear_array = wchess_halochecks_array
-                resize_array = {
-                    array = wchess_halochecks_array
-                    size = 64
-                    value = @DEACTIVATE
-                }
-                clear_temp_array = temp_wchess_piece_array
-                resize_temp_array = {
-                    array = temp_wchess_piece_array
-                    value = 0
-                    size = 64
-                }
-                for_each_loop = {
-                    array = wchess_pieces_array
-                    value = val
-                    index = iter
-                    set_temp_variable = {temp_wchess_piece_array^iter = val}
-                }
-                set_temp_variable = {temp_wchess_color = wchess_color}
-                clear_temp_array = temp_wchess_pinned_tiles_array
-                resize_temp_array = {
-                    array = temp_wchess_pinned_tiles_array
-                    value = @ID_MOVE_NONE
-                    size = 64
-                }
-                clear_temp_array = temp_wchess_pinned_direction
-                resize_temp_array = {
-                    array = temp_wchess_pinned_direction
-                    value = @DEACTIVATE
-                    size = 9
-                }
-
-                wchess_get_pinned_pieces = yes
-
-                #for_each_loop = {
-                #    array = wchess_halochecks_array
-                #    value = val    
-                #    index = iter
-                #    if = {
-                #        limit = {
-                #            set_temp_variable = {temp_move_id = temp_wchess_pinned_tiles_array^iter}
-                #            check_variable = {
-                #                temp_wchess_pinned_direction^temp_move_id = @ACTIVATE
-                #            }
-                #        }
-                #        set_variable = {wchess_halochecks_array^iter = @ACTIVATE}
-                #    }
-                #}
-
                 if = {
                     limit = {
                         check_variable = {wchess_game_turn = 1}
@@ -221,7 +170,6 @@ scripted_gui = {
                                         temp_wchess_pinned_direction^temp_wchess_pin_index = @ACTIVATE
                                     }
                                 }
-                                log = "Pinned. Direction [?temp_wchess_pin_index]"
 
                                 for_each_loop = {
                                     array = wchess_highlights_array
@@ -245,7 +193,6 @@ scripted_gui = {
                                     index = iter
                                     set_variable = {wchess_highlights_array^iter = temp_wchess_possible_moves^iter}
                                 }
-                                log = "No pin"
                             }
 
                             # Castling logic goes here

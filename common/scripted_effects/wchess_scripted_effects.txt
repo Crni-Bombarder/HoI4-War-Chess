@@ -902,6 +902,44 @@ wchess_set_promote_pawn_interface_position = {
 # This function switch the turn to the opponent
 # Inputs : None
 wchess_switch_turn = {
+
+    clear_array = wchess_halochecks_array
+    resize_array = {
+        array = wchess_halochecks_array
+        size = 64
+        value = @DEACTIVATE
+    }
+
+    set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+    clear_temp_array = temp_wchess_piece_array
+    resize_temp_array = {
+        array = temp_wchess_piece_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_pieces_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_piece_array^iter = val}
+    }
+    wchess_get_check = yes
+
+    if = {
+        limit = {
+            check_variable = {temp_wchess_check_piece_index > -1}
+        }
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        wchess_get_king_id = yes
+        set_variable = {
+            wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
+        }
+
+        var:wchess_opponent = {
+            wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
+        }
+    }
+
     if = {
         limit = {
             check_variable = {
@@ -1125,6 +1163,167 @@ wchess_get_pinned_pieces = {
 
             add_to_temp_variable = {temp_x = incr_x}
             add_to_temp_variable = {temp_y = incr_y}
+        }
+    }
+}
+
+# Function : wchess_get_check
+# Context : Independant
+# This function return the id of the piece checking the king
+# A pinned direction is when a piece is blocking an attacking piece
+# Inputs : temp_wchess_color       - Color to check for checks (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_check_piece_index - The index of the enemy piece checking the king, or -1 if none
+wchess_get_check = {
+
+    set_temp_variable = {temp_wchess_own_color = temp_wchess_color}
+    set_temp_variable = {temp_wchess_opponent_color = @BLACK}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_color = @BLACK}
+        }
+        set_temp_variable = {temp_wchess_opponent_color = @WHITE}
+    }
+
+    wchess_get_king_id = yes
+
+    set_temp_variable = {temp_wchess_check_piece_index = -1}
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = check_piece
+        index = check_iter
+        break = check_break
+
+        if = {
+            limit = {
+                check_variable = {
+                    var = check_piece
+                    value = @EMPTY
+                    compare = not_equals
+                }
+                set_temp_variable = {temp_wchess_piece_value = check_piece}
+                subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                modulo_temp_variable = {temp_wchess_piece_value = 2}
+                check_variable = {
+                    var = temp_wchess_piece_value
+                    value = temp_wchess_opponent_color
+                    compare = equals
+                }
+            }
+
+            set_temp_variable = {temp_wchess_id = check_iter}
+            set_temp_variable = {temp_wchess_color = temp_wchess_opponent_color}
+
+            clear_temp_array = temp_wchess_highlights_array
+            resize_temp_array = {
+                array = temp_wchess_highlights_array
+                value = @DEACTIVATE
+                size = 64
+            }
+            set_temp_variable    = {temp_wchess_piece_type = check_piece}
+            subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+            divide_temp_variable = {temp_wchess_piece_type = 2}
+            add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+            clamp_temp_variable = {
+                var = temp_wchess_piece_type
+                min = 0
+                max = 6
+            }
+            round_temp_variable = temp_wchess_piece_type
+
+            if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_QUEEN
+                    }
+                }
+                wchess_get_queen_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_BISHOP
+                    }
+                }
+                wchess_get_bishop_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_ROOK
+                    }
+                }
+                wchess_get_rook_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_KNIGHT
+                    }
+                }
+                wchess_get_knight_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_PAWN
+                    }
+                }
+                
+                # First set the forward direction
+                set_temp_variable = {temp_wchess_forward = -8}
+                if = {
+                    limit = {
+                        check_variable = {temp_wchess_color = @BLACK}
+                    }
+                    set_temp_variable = {temp_wchess_forward = 8}
+                }
+                set_temp_variable    = {temp_x = check_iter}
+                modulo_temp_variable = {temp_x = 8}
+
+                # Pawn attack left
+                set_temp_variable = {temp_index_xy = check_iter}
+                add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+                add_to_temp_variable = {temp_index_xy = -1}
+                if = {
+                    limit = {
+                        check_variable = {
+                            temp_x > 0
+                        }
+                    }
+
+                    set_temp_variable = {
+                        temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+                    }
+                }
+
+                # Pawn attack right
+                set_temp_variable = {temp_index_xy = check_iter}
+                add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+                add_to_temp_variable = {temp_index_xy = 1}
+                if = {
+                    limit = {
+                        check_variable = {
+                            temp_x < 7
+                        }
+                    }
+
+                    set_temp_variable = {
+                        temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+                    }
+                }
+            }
+
+            if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_highlights_array^temp_wchess_king_id = @ACTIVATE
+                    }
+                }
+
+                set_temp_variable = {temp_wchess_check_piece_index = check_iter}
+                set_temp_variable = {check_break = 1}
+            }
         }
     }
 }
