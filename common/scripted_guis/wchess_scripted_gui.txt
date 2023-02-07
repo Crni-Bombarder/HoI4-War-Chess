@@ -29,6 +29,16 @@
 @S_MOVE           = 1
 @S_PAWN_PROMOTION = 2
 
+@ID_MOVE_NONE = 0
+@ID_MOVE_RIGHT = 1
+@ID_MOVE_LEFT = 2
+@ID_MOVE_UP = 3
+@ID_MOVE_DOWN = 4
+@ID_MOVE_UPRIGHT = 5
+@ID_MOVE_UPLEFT = 6
+@ID_MOVE_DOWNRIGHT = 7
+@ID_MOVE_DOWNLEFT = 8
+
 scripted_gui = {
     wchess_scripted_gui_board = {
         window_name = "wchess_gui_board"
@@ -83,16 +93,20 @@ scripted_gui = {
                     set_temp_variable = {temp_wchess_piece_array^iter = val}
                 }
                 set_temp_variable = {temp_wchess_color = wchess_color}
+                clear_temp_array = temp_wchess_pinned_tiles_array
                 resize_temp_array = {
-                    array = temp_wchess_attacked_array
-                    value = 0
+                    array = temp_wchess_pinned_tiles_array
+                    value = @ID_MOVE_NONE
                     size = 64
                 }
+                clear_temp_array = temp_wchess_pinned_direction
+                resize_temp_array = {
+                    array = temp_wchess_pinned_direction
+                    value = @DEACTIVATE
+                    size = 9
+                }
 
-                set_temp_variable = {temp_wchess_color = @WHITE}
-                wchess_get_king_id = yes
-
-                log = "King id : [?temp_wchess_king_id]"
+                wchess_get_pinned_pieces = yes
 
                 for_each_loop = {
                     array = wchess_halochecks_array
@@ -100,8 +114,9 @@ scripted_gui = {
                     index = iter
                     if = {
                         limit = {
+                            set_temp_variable = {temp_move_id = temp_wchess_pinned_tiles_array^iter}
                             check_variable = {
-                                temp_wchess_attacked_array^iter > 0
+                                temp_wchess_pinned_direction^temp_move_id = @ACTIVATE
                             }
                         }
                         set_variable = {wchess_halochecks_array^iter = @ACTIVATE}
@@ -209,7 +224,7 @@ scripted_gui = {
                                     limit = {
                                         check_variable = {wchess_color = @WHITE}
                                     }
-                                    set_temp_variable = {temp_wchess_castling_index = 56}
+                                    set_temp_variable = {temp_wchess_castling_index = 57}
                                 }
 
                                 if = {
@@ -837,9 +852,12 @@ scripted_gui = {
 
             wchess_debug_clean_halocheck_array_click = {
                 log = "Clearing wchess_halochecks_array"
-                set_variable = {wchess_display_promote_pawn = 1}
-                set_temp_variable = {temp_wchess_position_id = 5}
-                wchess_set_promote_pawn_interface_position = yes
+                clear_array = wchess_halochecks_array
+                resize_array = {
+                    array = wchess_halochecks_array
+                    size = 64
+                    value = @DEACTIVATE
+                }
             }
         }
     }
