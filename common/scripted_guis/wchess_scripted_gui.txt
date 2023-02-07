@@ -108,20 +108,20 @@ scripted_gui = {
 
                 wchess_get_pinned_pieces = yes
 
-                for_each_loop = {
-                    array = wchess_halochecks_array
-                    value = val
-                    index = iter
-                    if = {
-                        limit = {
-                            set_temp_variable = {temp_move_id = temp_wchess_pinned_tiles_array^iter}
-                            check_variable = {
-                                temp_wchess_pinned_direction^temp_move_id = @ACTIVATE
-                            }
-                        }
-                        set_variable = {wchess_halochecks_array^iter = @ACTIVATE}
-                    }
-                }
+                #for_each_loop = {
+                #    array = wchess_halochecks_array
+                #    value = val    
+                #    index = iter
+                #    if = {
+                #        limit = {
+                #            set_temp_variable = {temp_move_id = temp_wchess_pinned_tiles_array^iter}
+                #            check_variable = {
+                #                temp_wchess_pinned_direction^temp_move_id = @ACTIVATE
+                #            }
+                #        }
+                #        set_variable = {wchess_halochecks_array^iter = @ACTIVATE}
+                #    }
+                #}
 
                 if = {
                     limit = {
@@ -166,6 +166,7 @@ scripted_gui = {
                                 index = iter
                                 set_temp_variable = {temp_wchess_piece_array^iter = val}
                             }
+                            # Get moves for the piece
                             clear_temp_array = temp_wchess_highlights_array
                             resize_temp_array = {
                                 array = temp_wchess_highlights_array
@@ -187,12 +188,64 @@ scripted_gui = {
                             }
                             set_temp_variable = {temp_wchess_check_en = @ACTIVATE}
                             wchess_get_piece_moves = yes
-
+                            clear_temp_array = temp_wchess_possible_moves
                             for_each_loop = {
-                                array = wchess_highlights_array
-                                value = val
-                                index = iter
-                                set_variable = {wchess_highlights_array^iter = temp_wchess_highlights_array^iter}
+                                    array = temp_wchess_highlights_array
+                                    value = val
+                                    index = iter
+                                    set_variable = {temp_wchess_possible_moves^iter = val}
+                                }
+
+                            # Get pinned pieces
+                            set_temp_variable = {temp_wchess_color = wchess_color}
+                            clear_temp_array = temp_wchess_pinned_tiles_array
+                            resize_temp_array = {
+                                array = temp_wchess_pinned_tiles_array
+                                value = @ID_MOVE_NONE
+                                size = 64
+                            }
+                            clear_temp_array = temp_wchess_pinned_direction
+                            resize_temp_array = {
+                                array = temp_wchess_pinned_direction
+                                value = @DEACTIVATE
+                                size = 9
+                            }
+                            wchess_get_pinned_pieces = yes
+
+                            if = {
+                                limit = {
+                                    set_temp_variable = {
+                                        temp_wchess_pin_index = temp_wchess_pinned_tiles_array^i
+                                    }
+                                    check_variable = {
+                                        temp_wchess_pinned_direction^temp_wchess_pin_index = @ACTIVATE
+                                    }
+                                }
+                                log = "Pinned. Direction [?temp_wchess_pin_index]"
+
+                                for_each_loop = {
+                                    array = wchess_highlights_array
+                                    value = val
+                                    index = iter
+
+                                    if = {
+                                        limit = {
+                                            check_variable = {
+                                                temp_wchess_pinned_tiles_array^iter = temp_wchess_pin_index
+                                            }
+                                        }
+                                        set_variable = {wchess_highlights_array^iter = temp_wchess_possible_moves^iter}
+                                    }
+                                }
+
+                            } else = {
+                                for_each_loop = {
+                                    array = wchess_highlights_array
+                                    value = val
+                                    index = iter
+                                    set_variable = {wchess_highlights_array^iter = temp_wchess_possible_moves^iter}
+                                }
+                                log = "No pin"
                             }
 
                             # Castling logic goes here
