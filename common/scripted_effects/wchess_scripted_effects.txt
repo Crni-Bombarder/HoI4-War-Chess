@@ -619,9 +619,13 @@ wchess_get_king_moves = {
                 check_variable = {temp_wchess_color = @WHITE}
             }
 
-            temp_wchess_piece_array^temp_wchess_king_id_stored = @B_KING
+            set_temp_variable = {
+                temp_wchess_piece_array^temp_wchess_king_id_stored = @B_KING
+            }
         } else = {
-            temp_wchess_piece_array^temp_wchess_king_id_stored = @W_KING
+            set_temp_variable = {
+                temp_wchess_piece_array^temp_wchess_king_id_stored = @W_KING
+            }
         }
     }
 }
@@ -947,16 +951,47 @@ wchess_switch_turn = {
         limit = {
             check_variable = {temp_wchess_check_piece_index > -1}
         }
+
         set_temp_variable = {temp_wchess_color = wchess_opponent_color}
         wchess_get_king_id = yes
         set_variable = {
             wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
         }
 
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        clear_temp_array = temp_wchess_pinned_tiles_array
+        resize_temp_array = {
+            array = temp_wchess_pinned_tiles_array
+            value = @ID_MOVE_NONE
+            size = 64
+        }
+        wchess_get_pinned_pieces = yes
+
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        wchess_checkmate_check = yes
+
+        if = {
+            limit = {
+                check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+            }
+            log = "Checkmate"
+        }
+
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        wchess_get_king_id = yes
+
         var:wchess_opponent = {
             set_variable = {
                 wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
             }
+
+            set_variable = {
+                wchess_check_piece_id = temp_wchess_check_piece_index
+            }
+        }
+    } else = {
+        set_variable = {
+            wchess_check_piece_id = temp_wchess_check_piece_index
         }
     }
 
@@ -1053,13 +1088,13 @@ wchess_get_pinned_pieces = {
 
     wchess_get_king_id = yes
 
-    set_temp_variable = {temp_wchess_own_color = temp_wchess_color}
-    set_temp_variable = {temp_wchess_opponent_color = @BLACK}
+    set_temp_variable = {temp_wchess_get_pinned_color    = temp_wchess_color}
+    set_temp_variable = {temp_wchess_get_pinned_color_op = @BLACK}
     if = {
         limit = {
             check_variable = {temp_wchess_color = @BLACK}
         }
-        set_temp_variable = {temp_wchess_opponent_color = @WHITE}
+        set_temp_variable = {temp_wchess_get_pinned_color_op = @WHITE}
     }
 
     for_each_loop = {
@@ -1131,7 +1166,7 @@ wchess_get_pinned_pieces = {
                 if = {
                     limit = {
                         check_variable = {
-                            temp_wchess_piece_value = temp_wchess_opponent_color
+                            temp_wchess_piece_value = temp_wchess_get_pinned_color_op
                         }
                     }
                     add_to_temp_variable = {temp_wchess_piece_number = 1}
@@ -1143,7 +1178,7 @@ wchess_get_pinned_pieces = {
                         size = 64
                     }
                     set_temp_variable = {temp_wchess_id = temp_index_xy}
-                    set_temp_variable = {temp_wchess_color = temp_wchess_opponent_color}
+                    set_temp_variable = {temp_wchess_color = temp_wchess_get_pinned_color_op}
                     if = {
                         limit = {
                             check_variable = {temp_wchess_blocking_piece_index > -1}
@@ -1346,4 +1381,134 @@ wchess_get_check = {
             }
         }
     }
+}
+
+# Function : wchess_checkmate_check
+# Context : Independant
+# This function check for a checkmate in case the king is check
+# A pinned direction is when a piece is blocking an attacking piece
+# Inputs : temp_wchess_color              - Color to check for checks (0 black, 1 white)
+#          temp_wchess_piece_array        - The input pieces array
+#          temp_wchess_check_piece_index  - The id of piece checking the king
+#          temp_wchess_pinned_tiles_array - The pinned direction tiles array
+#          temp_wchess_pinned_direction   - The direction where there is a pin
+# Outputs: temp_wchess_checkmate_state - Return @ACTIVATE if checkmated, @DEACTIVATE otherwise
+wchess_checkmate_check = {
+
+    set_temp_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+    set_temp_variable = {temp_wchess_checkmate_check_color    = temp_wchess_color}
+    set_temp_variable = {temp_wchess_checkmate_check_color_op = @BLACK}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_color = @BLACK}
+        }
+        set_temp_variable = {temp_wchess_checkmate_check_color_op = @WHITE}
+    }
+
+    # Can the king move ?
+    wchess_get_king_id = yes
+
+    set_temp_variable = {temp_wchess_id = temp_wchess_king_id}
+    set_temp_variable = {temp_wchess_inc_allies = 0}
+    set_temp_variable = {temp_wchess_check_en = @ACTIVATE}
+    clear_temp_array = temp_wchess_highlights_array
+    resize_temp_array = {
+        array = temp_wchess_highlights_array
+        value = @DEACTIVATE
+        size = 64
+    }
+    wchess_get_king_moves = yes
+
+    for_each_loop = {
+        array = temp_wchess_highlights_array
+        value = val
+        index = iter
+        break = break
+
+        if = {
+            limit = {
+                check_variable = {val = @ACTIVATE}
+            }
+
+            set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+            set_temp_variable = {break = 1}
+        }
+    }
+
+    if = {
+        limit = {
+            check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+        }
+
+        # Can the piece be attacked ?
+
+        set_temp_variable = {temp_wchess_color = temp_wchess_checkmate_check_color}
+        # Set an oponent piece of the allied king to avoid computing his moves
+        set_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = temp_wchess_checkmate_check_color_op
+        }
+        add_to_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = 3
+        }
+        wchess_get_attacked_tiles = yes
+
+        if = {
+            limit = {
+                check_variable = {
+                    temp_wchess_attacked_array^temp_wchess_check_piece_index > 0
+                }
+            }
+            set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+        }
+
+        if = {
+            limit = {
+                check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+                # Knight cannot be blocked -> Already checkmated
+                NOT = {
+                    OR = {
+                        check_variable = {
+                            temp_wchess_piece_array^temp_wchess_check_piece_index = @B_KNIGHT
+                        }
+                        check_variable = {
+                            temp_wchess_piece_array^temp_wchess_check_piece_index = @W_KNIGHT
+                        }
+                    }
+                }
+            }
+
+            # Can the direction be blocked ?
+            for_each_loop = {
+                array = temp_wchess_attacked_array
+                value = temp_attacks
+                index = iter
+                break = break
+                
+                if = {
+                    limit = {
+                        check_variable = {temp_attacks > @ID_MOVE_NONE}
+                        set_temp_variable = {
+                            temp_wchess_pinned_direction_value = temp_wchess_pinned_tiles_array^temp_wchess_check_piece_index
+                        }
+                        check_variable = {
+                            temp_wchess_pinned_tiles_array^iter = temp_wchess_pinned_direction_value
+                        }
+                    }
+
+                    set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+                }
+            }
+            
+        }
+
+    }
+
+    # Restore the king
+    set_temp_variable = {
+        temp_wchess_piece_array^temp_wchess_king_id = temp_wchess_checkmate_check_color
+    }
+    add_to_temp_variable = {
+        temp_wchess_piece_array^temp_wchess_king_id = 1
+    }
+    
 }
