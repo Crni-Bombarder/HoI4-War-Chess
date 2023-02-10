@@ -580,6 +580,13 @@ wchess_get_king_moves = {
         } else = {
             set_temp_variable = {temp_wchess_color = @WHITE}
         }
+
+        # Ignore the king in the attacked tile computation
+        set_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_id = @EMPTY
+        }
+        # Save the king id to restore it after
+        set_temp_variable = {temp_wchess_king_id_stored = temp_wchess_id}
         
         wchess_get_attacked_tiles = yes
 
@@ -604,6 +611,17 @@ wchess_get_king_moves = {
             } else = {
                 set_temp_variable = {temp_wchess_highlights_array^iter = @DEACTIVATE}
             }
+        }
+
+        # Restore the temp array, in case it's used afterward
+        if = {
+            limit = {
+                check_variable = {temp_wchess_color = @WHITE}
+            }
+
+            temp_wchess_piece_array^temp_wchess_king_id_stored = @B_KING
+        } else = {
+            temp_wchess_piece_array^temp_wchess_king_id_stored = @W_KING
         }
     }
 }
@@ -936,7 +954,9 @@ wchess_switch_turn = {
         }
 
         var:wchess_opponent = {
-            wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
+            set_variable = {
+                wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
+            }
         }
     }
 
