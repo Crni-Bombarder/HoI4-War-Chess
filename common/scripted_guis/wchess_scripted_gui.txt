@@ -195,7 +195,7 @@ scripted_gui = {
                                 }
                             }
 
-                            # Castling logic goes here
+                            # Castling logic
                             if = {
                                 limit = {
                                     set_temp_variable    = {temp_wchess_piece_type = v}
@@ -297,6 +297,53 @@ scripted_gui = {
 
                             set_variable = {wchess_selected_id = i}
                             set_variable = {wchess_play_state  = @S_MOVE}
+
+                            # If in check, filter the moves
+                            if = {
+                                limit = {
+                                    check_variable = {wchess_check_piece_id > -1}
+                                    # The king filter his own moves
+                                    NOT = {
+                                        OR = {
+                                            check_variable = {v = @B_KING}
+                                            check_variable = {v = @W_KING}
+                                        }
+                                    }
+                                }
+
+                                set_temp_variable = {
+                                    temp_wchess_check_piece_value = wchess_pieces_array^wchess_check_piece_id
+                                }
+                                set_temp_variable = {
+                                    temp_wchess_check_direction = temp_wchess_pinned_tiles_array^wchess_check_piece_id
+                                }
+                                for_each_loop  = {
+                                    array = temp_wchess_pinned_tiles_array
+                                    value = tiles_pinned_direction
+                                    index = tiles_index
+
+                                    if = {
+                                        limit = {
+                                            check_variable = {
+                                                var = iter
+                                                value = wchess_check_piece_id
+                                                compare = not_equals
+                                            }
+                                            OR = {
+                                                check_variable = {
+                                                    var = tiles_pinned_direction
+                                                    value = temp_wchess_check_direction
+                                                    compare = not_equals
+                                                }
+                                                check_variable = {temp_wchess_check_piece_value = @B_KNIGHT}
+                                                check_variable = {temp_wchess_check_piece_value = @W_KNIGHT}
+                                            }
+                                        }
+
+                                        set_variable = {wchess_highlights_array^tiles_index = @DEACTIVATE}
+                                    }
+                                }
+                            }
 
                             set_variable = {wchess_highlights_array^i = @ACTIVATE}
                         }
