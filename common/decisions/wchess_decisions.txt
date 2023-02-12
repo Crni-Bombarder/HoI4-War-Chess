@@ -115,7 +115,11 @@ wchess_decision_categories = {
                     }
                     set_variable = {
                         var = ROOT.wchess_game_turn
-                        value = 1
+                        value = @ACTIVATE
+                    }
+                    set_variable = {
+                        var = ROOT.wchess_draw_stalemate
+                        value = @ACTIVATE
                     }
                     set_variable = {
                         var = ROOT.wchess_play_state

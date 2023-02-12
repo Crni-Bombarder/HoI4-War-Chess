@@ -74,7 +74,7 @@ scripted_gui = {
 
                 if = {
                     limit = {
-                        check_variable = {wchess_game_turn = 1}
+                        check_variable = {wchess_game_turn = @ACTIVATE}
                     }
 
                     # State : Piece / Pawn selection
@@ -299,6 +299,7 @@ scripted_gui = {
                             set_variable = {wchess_play_state  = @S_MOVE}
 
                             # If in check, filter the moves
+                            log = "[?wchess_check_piece_id]"
                             if = {
                                 limit = {
                                     check_variable = {wchess_check_piece_id > -1}
@@ -880,6 +881,9 @@ scripted_gui = {
                 set_variable = {wchess_king_moved = 0}
                 set_variable = {wchess_left_rook_moved = 0}
                 set_variable = {wchess_right_rook_moved = 0}
+                set_variable = {wchess_check_piece_id = -1}
+                set_variable = {wchess_game_turn = @ACTIVATE}
+                set_variable = {wchess_color = @WHITE}
             }
 
             wchess_debug_clean_highlight_array_click = {

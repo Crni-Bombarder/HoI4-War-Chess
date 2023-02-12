@@ -79,42 +79,49 @@ wchess_create_board = {
         }
 
         # Black pieces
-        set_variable = {wchess_pieces_array^0 = @B_ROOK}
-        set_variable = {wchess_pieces_array^1 = @B_KNIGHT}
-        set_variable = {wchess_pieces_array^2 = @B_BISHOP}
-        set_variable = {wchess_pieces_array^3 = @B_QUEEN}
-        set_variable = {wchess_pieces_array^4 = @B_KING}
-        set_variable = {wchess_pieces_array^5 = @B_BISHOP}
-        set_variable = {wchess_pieces_array^6 = @B_KNIGHT}
-        set_variable = {wchess_pieces_array^7 = @B_ROOK}
-        # Black pawns
-        set_variable = {wchess_pieces_array^8  = @B_PAWN}
-        set_variable = {wchess_pieces_array^9  = @B_PAWN}
-        set_variable = {wchess_pieces_array^10 = @B_PAWN}
-        set_variable = {wchess_pieces_array^11 = @B_PAWN}
-        set_variable = {wchess_pieces_array^12 = @B_PAWN}
-        set_variable = {wchess_pieces_array^13 = @B_PAWN}
-        set_variable = {wchess_pieces_array^14 = @B_PAWN}
-        set_variable = {wchess_pieces_array^15 = @B_PAWN}
+        #set_variable = {wchess_pieces_array^0 = @B_ROOK}
+        #set_variable = {wchess_pieces_array^1 = @B_KNIGHT}
+        #set_variable = {wchess_pieces_array^2 = @B_BISHOP}
+        #set_variable = {wchess_pieces_array^3 = @B_QUEEN}
+        #set_variable = {wchess_pieces_array^4 = @B_KING}
+        #set_variable = {wchess_pieces_array^5 = @B_BISHOP}
+        #set_variable = {wchess_pieces_array^6 = @B_KNIGHT}
+        #set_variable = {wchess_pieces_array^7 = @B_ROOK}
+        ## Black pawns
+        #set_variable = {wchess_pieces_array^8  = @B_PAWN}
+        #set_variable = {wchess_pieces_array^9  = @B_PAWN}
+        #set_variable = {wchess_pieces_array^10 = @B_PAWN}
+        #set_variable = {wchess_pieces_array^11 = @B_PAWN}
+        #set_variable = {wchess_pieces_array^12 = @B_PAWN}
+        #set_variable = {wchess_pieces_array^13 = @B_PAWN}
+        #set_variable = {wchess_pieces_array^14 = @B_PAWN}
+        #set_variable = {wchess_pieces_array^15 = @B_PAWN}
+#
+        ## White pawns
+        #set_variable = {wchess_pieces_array^48 = @W_PAWN}
+        #set_variable = {wchess_pieces_array^49 = @W_PAWN}
+        #set_variable = {wchess_pieces_array^50 = @W_PAWN}
+        #set_variable = {wchess_pieces_array^51 = @W_PAWN}
+        #set_variable = {wchess_pieces_array^52 = @W_PAWN}
+        #set_variable = {wchess_pieces_array^53 = @W_PAWN}
+        #set_variable = {wchess_pieces_array^54 = @W_PAWN}
+        #set_variable = {wchess_pieces_array^55 = @W_PAWN}
+        ## White pieces
+        #set_variable = {wchess_pieces_array^56 = @W_ROOK}
+        #set_variable = {wchess_pieces_array^57 = @W_KNIGHT}
+        #set_variable = {wchess_pieces_array^58 = @W_BISHOP}
+        #set_variable = {wchess_pieces_array^59 = @W_QUEEN}
+        #set_variable = {wchess_pieces_array^60 = @W_KING}
+        #set_variable = {wchess_pieces_array^61 = @W_BISHOP}
+        #set_variable = {wchess_pieces_array^62 = @W_KNIGHT}
+        #set_variable = {wchess_pieces_array^63 = @W_ROOK}
 
-        # White pawns
-        set_variable = {wchess_pieces_array^48 = @W_PAWN}
-        set_variable = {wchess_pieces_array^49 = @W_PAWN}
-        set_variable = {wchess_pieces_array^50 = @W_PAWN}
-        set_variable = {wchess_pieces_array^51 = @W_PAWN}
-        set_variable = {wchess_pieces_array^52 = @W_PAWN}
-        set_variable = {wchess_pieces_array^53 = @W_PAWN}
-        set_variable = {wchess_pieces_array^54 = @W_PAWN}
-        set_variable = {wchess_pieces_array^55 = @W_PAWN}
-        # White pieces
-        set_variable = {wchess_pieces_array^56 = @W_ROOK}
-        set_variable = {wchess_pieces_array^57 = @W_KNIGHT}
-        set_variable = {wchess_pieces_array^58 = @W_BISHOP}
-        set_variable = {wchess_pieces_array^59 = @W_QUEEN}
-        set_variable = {wchess_pieces_array^60 = @W_KING}
-        set_variable = {wchess_pieces_array^61 = @W_BISHOP}
-        set_variable = {wchess_pieces_array^62 = @W_KNIGHT}
-        set_variable = {wchess_pieces_array^63 = @W_ROOK}
+        set_variable = {wchess_pieces_array^0 = @B_KING}
+        set_variable = {wchess_pieces_array^25 = @W_ROOK}
+        set_variable = {wchess_pieces_array^10 = @W_KING}
+
+
+
     }
 }
 
@@ -622,10 +629,12 @@ wchess_get_king_moves = {
             set_temp_variable = {
                 temp_wchess_piece_array^temp_wchess_king_id_stored = @B_KING
             }
+            set_temp_variable = {temp_wchess_color = @BLACK}
         } else = {
             set_temp_variable = {
                 temp_wchess_piece_array^temp_wchess_king_id_stored = @W_KING
             }
+            set_temp_variable = {temp_wchess_color = @WHITE}
         }
     }
 }
@@ -657,6 +666,7 @@ wchess_get_piece_moves = {
                 temp_wchess_piece_type = @ID_KING
             }
         }
+        set_temp_variable = {temp_wchess_check_en = @ACTIVATE}
         wchess_get_king_moves = yes
 
     } else_if = {
@@ -864,6 +874,71 @@ wchess_get_attacked_tiles = {
     }
 }
 
+# Function : wchess_get_all_moves
+# Context : Independant
+# This function compute all the tiles that can be moved onto
+# Inputs : temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_en_passant  - If not -1, an en passant can be done at that column
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_moves_array - The tiles that can be moved
+wchess_get_moves_array = {
+    clear_temp_array = temp_wchess_moves_array
+    resize_temp_array = {
+        array = temp_wchess_moves_array
+        size = 64
+        value = @DEACTIVATE
+    }
+
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = piece
+        index = iter
+
+        if = {
+            limit = {
+                check_variable = {
+                    var = piece
+                    value = @EMPTY
+                    compare = not_equals
+                }
+                set_temp_variable = {temp_wchess_piece_value = piece}
+                subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                modulo_temp_variable = {temp_wchess_piece_value = 2}
+                check_variable = {
+                    var = temp_wchess_piece_value
+                    value = temp_wchess_color
+                    compare = equals
+                }
+            }
+
+            set_temp_variable = {temp_wchess_id = iter}
+
+            clear_temp_array = temp_wchess_highlights_array
+            resize_temp_array = {
+                array = temp_wchess_highlights_array
+                value = @DEACTIVATE
+                size = 64
+            }
+
+            wchess_get_piece_moves = yes
+
+            for_each_loop = {
+                array = temp_wchess_highlights_array
+                index = iter_highlight
+                value = value_highlight
+                if = {
+                    limit = {
+                        check_variable = {value_highlight = @ACTIVATE}
+                    }
+                    
+                    log = "Can move to [?iter_highlight]"
+                    set_temp_variable = {temp_wchess_moves_array^iter_highlight = @ACTIVATE}
+                }
+            }
+        }
+    }
+}
+
 # Function : wchess_set_promote_pawn_interface_position
 # Context : Player
 # This function move     the pawn promotion interface to the correct tiles
@@ -931,6 +1006,9 @@ wchess_switch_turn = {
         size = 64
         value = @DEACTIVATE
     }
+    set_variable = {
+        wchess_check_piece_id = -1
+    }
 
     set_temp_variable = {temp_wchess_color = wchess_opponent_color}
     clear_temp_array = temp_wchess_piece_array
@@ -990,8 +1068,33 @@ wchess_switch_turn = {
             }
         }
     } else = {
-        set_variable = {
-            wchess_check_piece_id = temp_wchess_check_piece_index
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        var:wchess_opponent = {
+            set_temp_variable = {temp_wchess_en_passant = wchess_en_passant}
+        }
+        wchess_get_moves_array = yes
+        set_temp_variable = {temp_wchess_stalemate = @ACTIVATE}
+        for_each_loop = {
+            array = temp_wchess_moves_array
+            value = tiles_move
+
+            if = {
+                limit = {
+                    check_variable = {tiles_move = @ACTIVATE}
+                }
+                set_temp_variable = {temp_wchess_stalemate = @DEACTIVATE}
+            }
+        }
+
+        # If stalemate, stop the game, and draw by stalemate
+        if = {
+            limit = {
+                check_variable = {temp_wchess_stalemate = @ACTIVATE}
+            }
+
+            set_variable = {wchess_draw_stalemate = @ACTIVATE}
+            set_variable = {wchess_game_turn = @DEACTIVATE}
+            log = "Stalemate"
         }
     }
 
@@ -1510,5 +1613,4 @@ wchess_checkmate_check = {
     add_to_temp_variable = {
         temp_wchess_piece_array^temp_wchess_king_id = 1
     }
-    
 }
