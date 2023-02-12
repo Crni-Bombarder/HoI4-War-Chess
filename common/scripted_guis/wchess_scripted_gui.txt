@@ -39,6 +39,8 @@
 @ID_MOVE_DOWNRIGHT = 7
 @ID_MOVE_DOWNLEFT = 8
 
+@DRAW_NB_MOVE = 49 # Number of moves before a draw minus 1
+
 scripted_gui = {
     wchess_scripted_gui_board = {
         window_name = "wchess_gui_board"
@@ -299,7 +301,6 @@ scripted_gui = {
                             set_variable = {wchess_play_state  = @S_MOVE}
 
                             # If in check, filter the moves
-                            log = "[?wchess_check_piece_id]"
                             if = {
                                 limit = {
                                     check_variable = {wchess_check_piece_id > -1}
@@ -557,6 +558,24 @@ scripted_gui = {
                                     wchess_king_moved = 1
                                 }
                             } else = {
+                                # Reset move counter if pawn move, or a piece is captured
+                                set_temp_varaible = {temp_wchess_draw_move_reset = @DEACTIVATE}
+                                if = {
+                                    limit = {
+                                        OR = {
+                                            check_variable = {wchess_pieces_array^wchess_selected_id = @B_PAWN}
+                                            check_variable = {wchess_pieces_array^wchess_selected_id = @W_PAWN}
+                                            check_variable = {
+                                                var = wchess_pieces_array^i
+                                                value = @EMPTY
+                                                compare = not_equals
+                                            }
+                                        }
+                                    }
+
+                                    set_temp_variable = {temp_wchess_draw_move_reset = @ACTIVATE}
+                                }
+
                                 # Normal move
                                 set_variable = {
                                     wchess_pieces_array^i = wchess_pieces_array^wchess_selected_id
@@ -674,6 +693,7 @@ scripted_gui = {
                     set_variable = {wchess_play_state = @S_SELECTION}
                     set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
 
+                    set_temp_variable = {temp_wchess_draw_move_reset = @ACTIVATE}
                     wchess_switch_turn = yes
                 }
             }
@@ -703,6 +723,7 @@ scripted_gui = {
                     set_variable = {wchess_play_state = @S_SELECTION}
                     set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
 
+                    set_temp_variable = {temp_wchess_draw_move_reset = @ACTIVATE}
                     wchess_switch_turn = yes
                 }
             }
@@ -732,6 +753,7 @@ scripted_gui = {
                     set_variable = {wchess_play_state = @S_SELECTION}
                     set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
 
+                    set_temp_variable = {temp_wchess_draw_move_reset = @ACTIVATE}
                     wchess_switch_turn = yes
                 }
             }
@@ -761,6 +783,7 @@ scripted_gui = {
                     set_variable = {wchess_play_state = @S_SELECTION}
                     set_variable = {wchess_display_promote_pawn = @DEACTIVATE}
 
+                    set_temp_variable = {temp_wchess_draw_move_reset = @ACTIVATE}
                     wchess_switch_turn = yes
                 }
             }
@@ -882,6 +905,7 @@ scripted_gui = {
                 set_variable = {wchess_left_rook_moved = 0}
                 set_variable = {wchess_right_rook_moved = 0}
                 set_variable = {wchess_check_piece_id = -1}
+                set_variable = {wchess_draw_nmb_moves = 0}
                 set_variable = {wchess_game_turn = @ACTIVATE}
                 set_variable = {wchess_color = @WHITE}
             }
