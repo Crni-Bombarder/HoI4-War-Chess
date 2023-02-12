@@ -1,5 +1,5 @@
 
-@WINDOWS_SIZE_X = 597
+@WINDOWS_SIZE_X = 693
 @WINDOWS_SIZE_Y = 602
 
 @WINDOWS_PROMOTE_SIZE_X = 280
@@ -16,6 +16,9 @@
 
 @TILE_GRID_GRIDBOX_POS_X = -245 # -(TILE_GRID_SIZE_X/2 - TILE_GRID_TILE_SIZE_X/2)
 @TILE_GRID_GRIDBOX_POS_Y = 0
+
+@DRAW_BUTTON_POS_X = 588
+@DRAW_BUTTON_POS_Y = 248
 
 guiTypes = {
     containerWindowType  = {
@@ -48,6 +51,17 @@ guiTypes = {
             orientation = "upper_left"
             spriteType = "GFX_wchess_board_background"
             alwaystransparent = yes
+        }
+
+        buttonType = {
+            name = "wchess_draw_button"
+            position = {
+                x = @DRAW_BUTTON_POS_X
+                y = @DRAW_BUTTON_POS_Y
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_draw_button"
+            clicksound = click_default
         }
 
         containerWindowType = {

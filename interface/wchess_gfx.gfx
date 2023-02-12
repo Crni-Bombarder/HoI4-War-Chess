@@ -26,4 +26,9 @@ spriteTypes = {
         textureFile = "gfx/wchess/wchess_pieces.dds"
         noOfFrames = 13
     }
+
+    spriteType = {
+        name = "GFX_wchess_draw_button"
+        textureFile = "gfx/wchess/wchess_draw_button.dds"
+    }
 }

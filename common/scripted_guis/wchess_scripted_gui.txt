@@ -559,7 +559,7 @@ scripted_gui = {
                                 }
                             } else = {
                                 # Reset move counter if pawn move, or a piece is captured
-                                set_temp_varaible = {temp_wchess_draw_move_reset = @DEACTIVATE}
+                                set_temp_variable = {temp_wchess_draw_move_reset = @DEACTIVATE}
                                 if = {
                                     limit = {
                                         OR = {
@@ -787,6 +787,34 @@ scripted_gui = {
                     wchess_switch_turn = yes
                 }
             }
+
+            wchess_draw_button_click = {
+                if = {
+                    limit = {
+                        check_variable = {wchess_game_turn = @ACTIVATE}
+                    }
+
+                    # Send a draw proposal
+                    if = {
+                        limit = {
+                            check_variable = {wchess_opponent = ROOT}
+                        }
+
+                        set_variable = {wchess_draw_agreement = @ACTIVATE}
+                        set_variable = {wchess_game_turn = @DEACTIVATE}
+                        log = "Draw by agreement (One country game)"
+                    } else = {
+                        var:wchess_opponent = {
+                            set_variable = {wchess_draw_button_visible = @ACTIVATE}
+                        }
+                    }
+                } else = {
+                    set_variable = {wchess_draw_agreement = @ACTIVATE}
+                    var:wchess_opponent = {
+                        set_variable = {wchess_draw_agreement = @ACTIVATE}
+                    }
+                }
+            }
         }
 
         properties = {
@@ -849,6 +877,10 @@ scripted_gui = {
             wchess_promote_bishop_visible = {
                 check_variable = {wchess_display_promote_pawn = @ACTIVATE}
             }
+
+            wchess_draw_button_visible = {
+                check_variable = {wchess_display_draw_button = @ACTIVATE}
+            }
         }
     }
 
@@ -907,6 +939,7 @@ scripted_gui = {
                 set_variable = {wchess_check_piece_id = -1}
                 set_variable = {wchess_draw_nmb_moves = 0}
                 set_variable = {wchess_game_turn = @ACTIVATE}
+                set_variable = {wchess_display_draw_button = @ACTIVATE}
                 set_variable = {wchess_color = @WHITE}
             }
 

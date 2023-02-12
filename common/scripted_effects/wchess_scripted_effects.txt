@@ -1131,11 +1131,17 @@ wchess_switch_turn = {
         }
     }
 
+    # Draw proposal button, clear any pending draw proposal
+    set_variable = {wchess_display_draw_button = @DEACTIVATE}
+    var:wchess_opponent = {
+        set_variable = {wchess_display_draw_button = @ACTIVATE}
+    }
+
     if = {
         limit = {
             check_variable = {
-                    wchess_opponent = ROOT
-                }
+                wchess_opponent = ROOT
+            }
         }
         if = {
             limit = {
