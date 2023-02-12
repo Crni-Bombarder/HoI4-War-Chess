@@ -31,4 +31,9 @@ spriteTypes = {
         name = "GFX_wchess_draw_button"
         textureFile = "gfx/wchess/wchess_draw_button.dds"
     }
+
+    spriteType = {
+        name = "GFX_wchess_abandon_button"
+        textureFile = "gfx/wchess/wchess_abandon_button.dds"
+    }
 }

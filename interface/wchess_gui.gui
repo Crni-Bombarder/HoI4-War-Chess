@@ -20,6 +20,9 @@
 @DRAW_BUTTON_POS_X = 588
 @DRAW_BUTTON_POS_Y = 248
 
+@ABANDON_BUTTON_POS_X = 645
+@ABANDON_BUTTON_POS_Y = 555
+
 guiTypes = {
     containerWindowType  = {
         name = "wchess_gui_board"
@@ -61,6 +64,17 @@ guiTypes = {
             }
             orientation = "upper_left"
             spriteType = "GFX_wchess_draw_button"
+            clicksound = click_default
+        }
+
+        buttonType = {
+            name = "wchess_abandon_button"
+            position = {
+                x = @ABANDON_BUTTON_POS_X
+                y = @ABANDON_BUTTON_POS_Y
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_abandon_button"
             clicksound = click_default
         }
 
