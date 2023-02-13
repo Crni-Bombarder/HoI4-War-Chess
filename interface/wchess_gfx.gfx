@@ -36,4 +36,44 @@ spriteTypes = {
         name = "GFX_wchess_abandon_button"
         textureFile = "gfx/wchess/wchess_abandon_button.dds"
     }
+
+    spriteType = {
+        name = "GFX_wchess_check_button"
+        textureFile = "gfx/wchess/wchess_check_button.dds"
+    }
+
+    spriteType = {
+        name = "GFX_wchess_black_victory_background"
+        textureFile = "gfx/wchess/wchess_black_victory_background.dds"
+    }
+
+    spriteType = {
+        name = "GFX_wchess_white_victory_background"
+        textureFile = "gfx/wchess/wchess_white_victory_background.dds"
+    }
+
+    spriteType = {
+        name = "GFX_wchess_victory_background"
+        textureFile = "gfx/wchess/wchess_victory_background.dds"
+    }
+
+    spriteType = {
+        name = "GFX_wchess_defeat_background"
+        textureFile = "gfx/wchess/wchess_defeat_background.dds"
+    }
+
+    spriteType = {
+        name = "GFX_wchess_draw_agreement_background"
+        textureFile = "gfx/wchess/wchess_draw_agreement_background.dds"
+    }
+
+    spriteType = {
+        name = "GFX_wchess_draw_stalemate_background"
+        textureFile = "gfx/wchess/wchess_draw_stalemate_background.dds"
+    }
+
+    spriteType = {
+        name = "GFX_wchess_draw_50_moves_background"
+        textureFile = "gfx/wchess/wchess_draw_50_moves_background.dds"
+    }
 }

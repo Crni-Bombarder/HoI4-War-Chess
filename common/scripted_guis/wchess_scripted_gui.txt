@@ -822,7 +822,6 @@ scripted_gui = {
             }
 
             wchess_abandon_button_click = {
-                log = "Abandon button"
 
                 set_variable = {wchess_game_turn = @DEACTIVATE}
                 if = {
@@ -918,6 +917,55 @@ scripted_gui = {
         }
     }
 
+    wchess_scripted_gui_end_game = {
+        window_name = "wchess_gui_end_game"
+
+        context_type = player_context
+
+        visible = {
+            OR = {
+                check_variable = {wchess_draw_stalemate = @ACTIVATE}
+                check_variable = {wchess_draw_50_moves  = @ACTIVATE}
+                check_variable = {wchess_draw_agreement = @ACTIVATE}
+                check_variable = {wchess_victory_white  = @ACTIVATE}
+                check_variable = {wchess_victory_black  = @ACTIVATE}
+                check_variable = {wchess_defeated       = @ACTIVATE}
+                check_variable = {wchess_winner         = @ACTIVATE}
+            }
+        }
+
+        triggers = {
+            wchess_draw_stalemate_background_visible = {
+                check_variable = {wchess_draw_stalemate = @ACTIVATE}
+            }
+
+            wchess_draw_50_moves_background_visible = {
+                check_variable = {wchess_draw_50_moves = @ACTIVATE}
+            }
+
+            wchess_draw_agreement_background_visible = {
+                check_variable = {wchess_draw_agreement = @ACTIVATE}
+            }
+
+            wchess_white_victory_background_visible = {
+                check_variable = {wchess_victory_white = @ACTIVATE}
+            }
+
+            wchess_black_victory_background_visible = {
+                check_variable = {wchess_victory_black = @ACTIVATE}
+            }
+
+            wchess_defeat_background_visible = {
+                check_variable = {wchess_defeated = @ACTIVATE}
+            }
+
+            wchess_victory_background_visible = {
+                check_variable = {wchess_winner = @ACTIVATE}
+            }
+        }
+
+    }
+
     # ########################################## #
     # ################# DEBUG ################## #
     # ########################################## #
@@ -976,6 +1024,13 @@ scripted_gui = {
                 set_variable = {wchess_display_draw_button = @ACTIVATE}
                 set_variable = {wchess_color = @WHITE}
                 set_variable = {wchess_play_state = @S_SELECTION}
+                set_variable = {wchess_draw_stalemate = @DEACTIVATE}
+                set_variable = {wchess_draw_50_moves  = @DEACTIVATE}
+                set_variable = {wchess_draw_agreement = @DEACTIVATE}
+                set_variable = {wchess_victory_white  = @DEACTIVATE}
+                set_variable = {wchess_victory_black  = @DEACTIVATE}
+                set_variable = {wchess_defeated       = @DEACTIVATE}
+                set_variable = {wchess_winner         = @DEACTIVATE}
             }
 
             wchess_debug_clean_highlight_array_click = {

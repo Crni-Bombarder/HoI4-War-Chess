@@ -1109,7 +1109,7 @@ wchess_switch_turn = {
             check_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
         }
 
-        set_variable = {wchess_draw_moves = @ACTIVATE}
+        set_variable = {wchess_draw_50_moves = @ACTIVATE}
         set_variable = {wchess_game_turn = @DEACTIVATE}
         log = "Draw by 50-Moves rules"
     } else_if = {
@@ -1375,7 +1375,6 @@ wchess_get_pinned_pieces = {
 # Function : wchess_get_check
 # Context : Independant
 # This function return the id of the piece checking the king
-# A pinned direction is when a piece is blocking an attacking piece
 # Inputs : temp_wchess_color       - Color to check for checks (0 black, 1 white)
 #          temp_wchess_piece_array - The input pieces array
 # Outputs: temp_wchess_check_piece_index - The index of the enemy piece checking the king, or -1 if none
@@ -1535,8 +1534,7 @@ wchess_get_check = {
 
 # Function : wchess_checkmate_check
 # Context : Independant
-# This function check for a checkmate in case the king is check
-# A pinned direction is when a piece is blocking an attacking piece
+# This function check for a checkmate in case the king is checked
 # Inputs : temp_wchess_color              - Color to check for checks (0 black, 1 white)
 #          temp_wchess_piece_array        - The input pieces array
 #          temp_wchess_check_piece_index  - The id of piece checking the king
