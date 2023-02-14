@@ -5,31 +5,27 @@ wchess_decision_categories_desc:0 "Why do men need to die ? Just decide the outc
 wchess_start_game_alone:0      "Start a game of chess alone"
 wchess_start_game_alone_desc:0 "Start a game where you play the two side"
 
-wchess_challenge:0 "I challenge you, [FROM.GetID.owner.GetName]!"
+wchess_display_board:0      "Display the board"
+wchess_display_board_desc:0 "Display the current game board"
+
+wchess_hide_board:0      "Hide the board"
+wchess_hide_board_desc:0 "Hide the current game board"
+
+wchess_enter_pool:0      "Enter the chess pool"
+wchess_enter_pool_desc:0 "Allow player to challenge you to a game of chess"
+
+wchess_leave_pool:0      "Leave the chess pool"
+wchess_leave_pool_desc:0 "Players will not be able to challenge you"
+
+wchess_challenge:0 "I challenge you, [FROM.GetID.owner.GetName] [FROM.GetFlag]!"
 wchess_challenge_desc:0 "Throw the gauntlet, provoke your opponent into a bloody game of chess !"
 
-wchess_events.1.t:0 "Challenge from [?ROOT.wchess_challenged.GetNameDef] accepted"
-wchess_events.1.desc:0 "You will play against [?ROOT.wchess_challenged.GetLeader]\nBeeing challenged, you can pick your color, or let your adversary choose."
-wchess_events.1.a:0 "The Blacks"
-wchess_events.1.b:0 "The Whites"
-wchess_events.1.c:0 "[?ROOT.wchess_challenged.GetLeader] can decide."
+wchess_events.1.t:0 "Challenge from [?ROOT.wchess_challenger.GetNameDef] received"
+wchess_events.1.desc:0 "You have been challenged by [?ROOT.wchess_challenger.GetLeader]\nBeeing challenged, you can pick your color, or let your adversary choose."
+wchess_events.1.a:0 "I will not play against him !"
+wchess_events.1.b:0 "The Blacks"
+wchess_events.1.c:0 "The Whites"
 
 wchess_events.2.t:0 "Our challenge has been refused !"
-wchess_events.2.desc:0 "The challenge sent to [?ROOT.wchess_challenger.GetLeader] has been refused"
+wchess_events.2.desc:0 "The challenge sent to [?FROM.GetLeader] has been refused"
 wchess_events.2.a:0 "Fine."
-wchess_events.2.b:0 "Call the journalists, let all the world know of their cowardice !"
-
-# Someone has been shamed
-wchess_events.3.t:0 "[?ROOT.wchess_shamed.GetNameDefCap] refused a chess game"
-wchess_events.3.desc:0 "Contrary to all the traditions and values of the human race, [?ROOT.wchess_shamed.GetLeader] has refused a chess game from [?ROOT.wchess_has_shamed.GetLeader]"
-wchess_events.3.a:0 "Oh, the humanity!"
-
-# You have been shamed
-wchess_events.4.t:0 "[?ROOT.wchess_challenged.GetNameDef] has publicly denounced us!"
-wchess_events.4.desc:0 "All the newspapers are now aware that we have refused the chess challenge. What a disgrace!"
-wchess_events.4.a:0 "Damnation!"
-
-# You have shamed someone
-wchess_events.5.t:0 "Earthquake in the media"
-wchess_events.5.desc:0 "The printing presses around the world are going crazy. The story that we leaked about [?ROOT.wchess_challenger.GetLeader] denying our right to a chess game is having unprecendented concequences in the diplomatic world"
-wchess_events.5.a:0 "Serve them right !"

@@ -814,7 +814,7 @@ scripted_gui = {
                         log = "Draw by agreement (One country game)"
                     } else = {
                         var:wchess_opponent = {
-                            set_variable = {wchess_draw_button_visible = @ACTIVATE}
+                            set_variable = {wchess_display_draw_button = @ACTIVATE}
                         }
                     }
                 } else = {
@@ -992,6 +992,7 @@ scripted_gui = {
         visible = {
             has_country_flag = wchess_start_game
             has_country_flag = wchess_display_game
+            is_debug = yes
         }
 
         effects = {

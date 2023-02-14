@@ -48,146 +48,117 @@ wchess_decision_categories = {
             set_variable = {wchess_game_turn = @ACTIVATE}
             set_variable = {wchess_play_state = @S_SELECTION}
 
+            set_variable = {wchess_display_draw_button = @ACTIVATE}
+
             wchess_init_variables = yes
             wchess_create_board = yes
         }
 
     }
 
-    wchess_challenge = {
-        state_target = yes
-        on_map_mode = map_only
+    wchess_display_board = {
         visible = {
             is_ai = no
-            AND = {
-                NOT = {
-                    has_variable = ROOT.wchess_challenged
-                }
-                NOT = {
-                    has_variable = ROOT.wchess_challenger
-                }
+            has_country_flag = wchess_start_game
+            NOT = {
+                has_country_flag = wchess_display_game
             }
         }
-        target_root_trigger = {
-            AND = {
-                NOT = {
-                    has_variable = ROOT.wchess_challenged
-                }
-                NOT = {
-                    has_variable = ROOT.wchess_challenger
-                }
-            }
-        }
-        target_trigger = {
-            FROM = {
-                is_capital = yes
-                owner = {
-                    is_neighbor_of = ROOT
-                    AND = {
-                        NOT = {
-                            has_variable = ROOT.wchess_challenged
-                        }
-                        NOT = {
-                            has_variable = ROOT.wchess_challenger
-                        }
-                    }
-                }
-            }
-        }
+
         complete_effect = {
-            FROM = {
-                owner = {
-                    set_variable = {
-                        var = ROOT.wchess_challenger
-                        value = THIS
-                    }
-                    set_variable = {
-                        var = THIS.wchess_challenged
-                        value = ROOT
-                    }
-
-                    # DEBUG : Force the game to start
-                    ## The challenged start with the black
-                    #set_variable = {
-                    #    var = THIS.wchess_start_game
-                    #    value = 1
-                    #}
-                    #set_variable = {
-                    #    var = THIS.wchess_color
-                    #    value = @WHITE
-                    #}
-                    #set_variable = {
-                    #    var = THIS.wchess_opponent
-                    #    value = ROOT
-                    #}
-                    #clear_variable = THIS.wchess_game_turn
-                    # The challenger start with the white
-                    set_variable = {
-                        var = ROOT.wchess_start_game
-                        value = 1
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_color
-                        value = @WHITE
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_opponent_color
-                        value = @BLACK
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_opponent
-                        value = ROOT
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_game_turn
-                        value = @ACTIVATE
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_play_state
-                        value = @S_SELECTION
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_king_moved
-                        value = 0
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_left_rook_moved
-                        value = 0
-                    }
-                    set_variable = {
-                        var = ROOT.wchess_right_rook_moved
-                        value = 0
-                    }
-
-                    wchess_create_board = yes
-                }
-            }
+            set_country_flag = wchess_display_game
         }
     }
 
-    # DEBUG : bypass for now
-    wchess_mission_challenged = {
-        days_mission_timeout = 7
-        selectable_mission = yes
+    wchess_hide_board = {
         visible = {
-            #has_variable = ROOT.wchess_challenged
-            always = no
+            is_ai = no
+            has_country_flag = wchess_start_game
+            has_country_flag = wchess_display_game
         }
-        activation = {
-            #has_variable = ROOT.wchess_challenged
-            always = no
-        }
+
         complete_effect = {
-            country_event = wchess_events.1
+            clr_country_flag = wchess_display_game
         }
-        timeout_effect = {
-            var:ROOT.wchess_challenged = {
-                country_event = wchess_events.2
+    }
+
+    wchess_enter_pool = {
+        visible = {
+            is_ai = no
+            NOT = {
+                has_country_flag = wchess_start_game
+                has_country_flag = wchess_in_chess_pool
+                has_country_flag = wchess_has_chanllenged
+            }
+        }
+
+        complete_effect = {
+            set_country_flag = wchess_in_chess_pool
+        }
+    }
+
+    wchess_leave_pool = {
+        visible = {
+            is_ai = no
+            has_country_flag = wchess_in_chess_pool
+            NOT = {
+                has_country_flag = wchess_start_game
+                has_country_flag = wchess_chanllenged
+            }
+        }
+
+        complete_effect = {
+            clr_country_flag = wchess_in_chess_pool
+        }
+    }
+
+    wchess_challenge = {
+        on_map_mode = map_and_decision_view
+        visible = {
+            is_ai = no
+            NOT = {
+                has_country_flag = wchess_start_game
+                has_country_flag = wchess_chanllenged
+                has_country_flag = wchess_has_chanllenged
+            }
+        }
+
+        target_root_trigger = {
+            NOT = {
+                has_country_flag = wchess_start_game
+                has_country_flag = wchess_chanllenged
+                has_country_flag = wchess_has_chanllenged
+            }
+        }
+
+        target_trigger = {
+            FROM = {
+                # DEBUG
+                #is_player = yes
+                has_country_flag = wchess_in_chess_pool
+                NOT = {
+                    has_country_flag = wchess_start_game
+                    has_country_flag = wchess_chanllenged
+                    has_country_flag = wchess_has_chanllenged
+                }
+            }
+        }
+
+        complete_effect = {
+            hidden_effect = {
+                set_variable = {wchess_player_challenged = FROM}
+                FROM = {
+                    set_variable = {wchess_player_challenger = ROOT}
+                    country_event = wchess_events.1
+                }
             }
         }
     }
 
     wchess_debug_clr_variable = {
+        visible = {
+            is_debug = yes
+        }
         complete_effect = {
             every_country = {
                 clear_variable = THIS.wchess_challenged
@@ -204,6 +175,9 @@ wchess_decision_categories = {
     }
 
     wchess_debug_display_gui = {
+        visible = {
+            is_debug = yes
+        }
         complete_effect = {
             set_variable = {
                 var = ROOT.wchess_debug_show_gui
@@ -213,6 +187,9 @@ wchess_decision_categories = {
     }
 
     wchess_debug_hide_gui = {
+        visible = {
+            is_debug = yes
+        }
         complete_effect = {
             clear_variable = ROOT.wchess_debug_show_gui
         }
