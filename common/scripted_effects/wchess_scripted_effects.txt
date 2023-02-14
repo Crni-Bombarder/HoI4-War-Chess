@@ -1069,6 +1069,12 @@ wchess_switch_turn = {
         wchess_get_king_id = yes
 
         var:wchess_opponent = {
+            clear_array = wchess_halochecks_array
+            resize_array = {
+                array = wchess_halochecks_array
+                size = 64
+                value = @DEACTIVATE
+            }
             set_variable = {
                 wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
             }
