@@ -29,6 +29,31 @@
 @S_MOVE      = 1
 
 wchess_decision_categories = {
+
+    wchess_start_game_alone = {
+        visible = {
+            is_ai = no
+            NOT = {
+                has_country_flag = wchess_start_game
+            }
+        }
+
+        complete_effect = {
+            set_country_flag = wchess_start_game
+            set_country_flag = wchess_display_game
+
+            set_variable = {wchess_color = @WHITE}
+            set_variable = {wchess_opponent_color = @BLACK}
+            set_variable = {wchess_opponent = ROOT}
+            set_variable = {wchess_game_turn = @ACTIVATE}
+            set_variable = {wchess_play_state = @S_SELECTION}
+
+            wchess_init_variables = yes
+            wchess_create_board = yes
+        }
+
+    }
+
     wchess_challenge = {
         state_target = yes
         on_map_mode = map_only
@@ -118,10 +143,6 @@ wchess_decision_categories = {
                         value = @ACTIVATE
                     }
                     set_variable = {
-                        var = ROOT.wchess_draw_stalemate
-                        value = @ACTIVATE
-                    }
-                    set_variable = {
                         var = ROOT.wchess_play_state
                         value = @S_SELECTION
                     }
@@ -176,6 +197,8 @@ wchess_decision_categories = {
                 clear_variable = THIS.wchess_start_game
                 clear_variable = THIS.wchess_color
                 clear_variable = THIS.wchess_opponent
+                clr_country_flag = wchess_start_game
+                clr_country_flag = wchess_display_game
             }
         }
     }

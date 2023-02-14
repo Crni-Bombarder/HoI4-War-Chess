@@ -2,6 +2,9 @@
 wchess_decision_categories:0      "Play chess with your neighboors"
 wchess_decision_categories_desc:0 "Why do men need to die ? Just decide the outcome of your conflict with a game of chess.\n It is also a strategy game after all"
 
+wchess_start_game_alone:0      "Start a game of chess alone"
+wchess_start_game_alone_desc:0 "Start a game where you play the two side"
+
 wchess_challenge:0 "I challenge you, [FROM.GetID.owner.GetName]!"
 wchess_challenge_desc:0 "Throw the gauntlet, provoke your opponent into a bloody game of chess !"
 

@@ -43,6 +43,29 @@
 
 @DRAW_NB_MOVE = 49 # Number of moves before a draw minus 1
 
+# Function : wchess_init_variables
+# Context : Player
+# Initialize in the player context the variables for castling and the end game flags.
+wchess_init_variables = {
+    set_variable = {wchess_king_moved                = 0}
+    set_variable = {wchess_left_rook_moved           = 0}
+    set_variable = {wchess_right_rook_moved          = 0}
+    set_variable = {wchess_king_moved_opponent       = 0}
+    set_variable = {wchess_left_rook_moved_opponent  = 0}
+    set_variable = {wchess_right_rook_moved_opponent = 0}
+    set_variable = {wchess_check_piece_id = -1}
+
+    set_variable = {wchess_display_draw_button = @ACTIVATE}
+
+    set_variable = {wchess_draw_stalemate = @DEACTIVATE}
+    set_variable = {wchess_draw_50_moves  = @DEACTIVATE}
+    set_variable = {wchess_draw_agreement = @DEACTIVATE}
+    set_variable = {wchess_victory_white  = @DEACTIVATE}
+    set_variable = {wchess_victory_black  = @DEACTIVATE}
+    set_variable = {wchess_defeated       = @DEACTIVATE}
+    set_variable = {wchess_winner         = @DEACTIVATE}
+}
+
 # Function : wchess_create_board
 # Context : Player
 # Initialize in the player context the pieces, highlights and halochecks array.
@@ -1048,7 +1071,29 @@ wchess_switch_turn = {
             limit = {
                 check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
             }
-            log = "Checkmate"
+            
+            if = {
+                limit = {
+                    check_variable = {
+                        wchess_opponent = ROOT
+                    }
+                }
+
+                if = {
+                    limit = {
+                        check_variable = {
+                            wchess_color = @WHITE
+                        }
+                    }
+
+                    set_variable = {wchess_victory_white = @ACTIVATE}
+                } else = {
+                    set_variable = {wchess_victory_black = @ACTIVATE}
+                }
+
+                set_variable = {wchess_game_turn = @DEACTIVATE}
+                set_variable = {wchess_display_draw_button = @DEACTIVATE}
+            }
         }
 
         set_temp_variable = {temp_wchess_color = wchess_opponent_color}
@@ -1090,7 +1135,6 @@ wchess_switch_turn = {
 
             set_variable = {wchess_draw_stalemate = @ACTIVATE}
             set_variable = {wchess_game_turn = @DEACTIVATE}
-            log = "Draw by Stalemate"
         }
     }
 
@@ -1111,7 +1155,6 @@ wchess_switch_turn = {
 
         set_variable = {wchess_draw_50_moves = @ACTIVATE}
         set_variable = {wchess_game_turn = @DEACTIVATE}
-        log = "Draw by 50-Moves rules"
     } else_if = {
         limit = {
             check_variable = {wchess_color = @BLACK}
@@ -1150,6 +1193,24 @@ wchess_switch_turn = {
                     wchess_opponent = ROOT
                 }
             }
+
+            # Swap castling variables
+            set_temp_variable = {temp_wchess_king_moved       = wchess_king_moved}
+            set_temp_variable = {temp_wchess_left_rook_moved  = wchess_left_rook_moved}
+            set_temp_variable = {temp_wchess_right_rook_moved = wchess_right_rook_moved}
+            set_variable = {wchess_king_moved       = wchess_king_moved_opponent}
+            set_variable = {wchess_left_rook_moved  = wchess_left_rook_moved_opponent}
+            set_variable = {wchess_right_rook_moved = wchess_right_rook_moved_opponent}
+            set_variable = {
+                wchess_king_moved_opponent = temp_wchess_king_moved
+            }
+            set_variable = {
+                wchess_left_rook_moved_opponent = temp_wchess_left_rook_moved
+            }
+            set_variable = {
+                wchess_right_rook_moved_opponent = temp_wchess_right_rook_moved
+            }
+
             if = {
                 limit = {
                     check_variable = {
@@ -1591,6 +1652,9 @@ wchess_checkmate_check = {
         # Can the piece be attacked ?
 
         set_temp_variable = {temp_wchess_color = temp_wchess_checkmate_check_color}
+        var:wchess_opponent = {
+            set_temp_variable = {temp_wchess_en_passant = wchess_en_passant}
+        }
         # Set an oponent piece of the allied king to avoid computing his moves
         set_temp_variable = {
             temp_wchess_piece_array^temp_wchess_king_id = temp_wchess_checkmate_check_color_op
@@ -1598,12 +1662,12 @@ wchess_checkmate_check = {
         add_to_temp_variable = {
             temp_wchess_piece_array^temp_wchess_king_id = 3
         }
-        wchess_get_attacked_tiles = yes
+        wchess_get_all_moves = yes
 
         if = {
             limit = {
                 check_variable = {
-                    temp_wchess_attacked_array^temp_wchess_check_piece_index > 0
+                    temp_wchess_moves_array^temp_wchess_check_piece_index = @ACTIVATE
                 }
             }
             set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
@@ -1627,14 +1691,14 @@ wchess_checkmate_check = {
 
             # Can the direction be blocked ?
             for_each_loop = {
-                array = temp_wchess_attacked_array
-                value = temp_attacks
+                array = temp_wchess_moves_array
+                value = temp_move
                 index = iter
                 break = break
                 
                 if = {
                     limit = {
-                        check_variable = {temp_attacks > @ID_MOVE_NONE}
+                        check_variable = {temp_move = @ACTIVATE}
                         set_temp_variable = {
                             temp_wchess_pinned_direction_value = temp_wchess_pinned_tiles_array^temp_wchess_check_piece_index
                         }
@@ -1644,6 +1708,8 @@ wchess_checkmate_check = {
                     }
 
                     set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+                    set_variable = {wchess_halochecks_array^iter = @ACTIVATE}
+                    set_temp_variable = {break = 1}
                 }
             }
             

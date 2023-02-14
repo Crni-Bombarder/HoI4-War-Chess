@@ -48,7 +48,8 @@ scripted_gui = {
         context_type = player_context
 
         visible = {
-            has_variable = wchess_start_game
+            has_country_flag = wchess_start_game
+            has_country_flag = wchess_display_game
         }
 
         dynamic_lists = {
@@ -382,6 +383,10 @@ scripted_gui = {
                              # Delete the passed pawn
                             if = {
                                 limit = {
+                                    OR = {
+                                        check_variable = {wchess_pieces_array^wchess_selected_id = @W_PAWN}
+                                        check_variable = {wchess_pieces_array^wchess_selected_id = @B_PAWN}
+                                    }
                                     set_temp_variable = {temp_wchess_en_passant_dx = i}
                                     subtract_from_temp_variable = {temp_wchess_en_passant_dx = wchess_selected_id}
                                     if = {
@@ -834,17 +839,17 @@ scripted_gui = {
                             check_variable = {wchess_color = @WHITE}
                         }
 
-                        log = "Black win by abandon"
                         set_variable = {wchess_victory_black = @ACTIVATE}
                     } else = {
-                        log = "White win by abandon"
                         set_variable = {wchess_victory_white = @ACTIVATE}
                     }
                 } else = {
-                    log = "Game abandonned"
                     set_variable = {wchess_defeated = @ACTIVATE}
                     var:wchess_opponent = {
                         set_variable = {wchess_winner = @ACTIVATE}
+                        set_variable = {wchess_game_turn = @DEACTIVATE}
+                        clear_array = wchess_highlights_array
+                        clear_array = wchess_halochecks_array
                     }
                 }
             }
@@ -923,6 +928,8 @@ scripted_gui = {
         context_type = player_context
 
         visible = {
+            has_country_flag = wchess_start_game
+            has_country_flag = wchess_display_game
             OR = {
                 check_variable = {wchess_draw_stalemate = @ACTIVATE}
                 check_variable = {wchess_draw_50_moves  = @ACTIVATE}
@@ -931,6 +938,13 @@ scripted_gui = {
                 check_variable = {wchess_victory_black  = @ACTIVATE}
                 check_variable = {wchess_defeated       = @ACTIVATE}
                 check_variable = {wchess_winner         = @ACTIVATE}
+            }
+        }
+
+        effects = {
+            wchess_end_game_button_click = {
+                clr_country_flag = wchess_start_game
+                clr_country_flag = wchess_display_game
             }
         }
 
@@ -976,7 +990,8 @@ scripted_gui = {
         context_type = player_context
 
         visible = {
-            has_variable = wchess_start_game
+            has_country_flag = wchess_start_game
+            has_country_flag = wchess_display_game
         }
 
         effects = {
@@ -1018,7 +1033,7 @@ scripted_gui = {
                 set_variable = {wchess_king_moved = 0}
                 set_variable = {wchess_left_rook_moved = 0}
                 set_variable = {wchess_right_rook_moved = 0}
-                set_variable = {wchess_check_piece_id = -1}
+                set_variable = {wchess_check_id = -1}
                 set_variable = {wchess_draw_nmb_moves = 0}
                 set_variable = {wchess_game_turn = @ACTIVATE}
                 set_variable = {wchess_display_draw_button = @ACTIVATE}
