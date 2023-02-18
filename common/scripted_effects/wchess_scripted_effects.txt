@@ -95,6 +95,13 @@ wchess_create_board = {
             value = @DEACTIVATE
         }
 
+        clear_array = wchess_moved_array
+        resize_array = {
+            array = wchess_moved_array
+            size = 64
+            value = @DEACTIVATE
+        }
+
         clear_array = wchess_halochecks_array
         resize_array = {
             array = wchess_halochecks_array
@@ -1116,8 +1123,27 @@ wchess_switch_turn = {
                 set_variable = {wchess_game_turn = @DEACTIVATE}
                 set_variable = {wchess_display_draw_button = @DEACTIVATE}
                 
+                clear_temp_array = temp_wchess_piece_array
+                resize_temp_array = {
+                    array = temp_wchess_piece_array
+                    value = 0
+                    size = 64
+                }
+                for_each_loop = {
+                    array = wchess_pieces_array
+                    value = val
+                    index = iter
+                    set_temp_variable = {temp_wchess_piece_array^iter = val}
+                }
 
                 var:wchess_opponent = {
+                    for_each_loop = {
+                        array = temp_wchess_piece_array
+                        value = val
+                        index = iter
+                        set_variable = {wchess_pieces_array^iter = val}
+                    }
+
                     set_variable = {wchess_defeated = @ACTIVATE}
                     set_variable = {wchess_game_turn = @DEACTIVATE}
                     set_variable = {wchess_display_draw_button = @DEACTIVATE}
@@ -1258,29 +1284,52 @@ wchess_switch_turn = {
             }
         } else = {
             set_variable = {wchess_game_turn = @DEACTIVATE}
-            clear_temp_array = temp_wchess_piece_array
-            resize_temp_array = {
-                array = temp_wchess_piece_array
-                value = 0
-                size = 64
-            }
-            for_each_loop = {
-                array = wchess_pieces_array
-                value = val
-                index = iter
-                set_temp_variable = {temp_wchess_piece_array^iter = val}
-            }
 
             var:wchess_opponent = {
-                for_each_loop = {
-                    array = temp_wchess_piece_array
-                    value = val
-                    index = iter
-                    set_variable = {wchess_pieces_array^iter = val}
-                }
-
                 set_variable = {wchess_game_turn = @ACTIVATE}
             }
+        }
+    }
+
+    clear_temp_array = temp_wchess_piece_array
+    resize_temp_array = {
+        array = temp_wchess_piece_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_pieces_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_piece_array^iter = val}
+    }
+
+    clear_temp_array = temp_wchess_moved_array
+    resize_temp_array = {
+        array = temp_wchess_moved_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_moved_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_moved_array^iter = val}
+    }
+
+    var:wchess_opponent = {
+        for_each_loop = {
+            array = temp_wchess_piece_array
+            value = val
+            index = iter
+            set_variable = {wchess_pieces_array^iter = val}
+        }
+
+        for_each_loop = {
+            array = temp_wchess_moved_array
+            value = val
+            index = iter
+            set_variable = {wchess_moved_array^iter = val}
         }
     }
 }

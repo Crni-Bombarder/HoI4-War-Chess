@@ -5,8 +5,8 @@
 @WINDOWS_PROMOTE_SIZE_X = 280
 @WINDOWS_PROMOTE_SIZE_Y = 70
 
-@TILE_GRID_CORNER_LEFT_POS_X = 25
-@TILE_GRID_CORNER_LEFT_POS_Y = 12
+@TILE_GRID_CORNER_LEFT_POS_X = 26
+@TILE_GRID_CORNER_LEFT_POS_Y = 13
 
 @TILE_GRID_TILE_SIZE_X = 70
 @TILE_GRID_TILE_SIZE_Y = 70
@@ -103,6 +103,24 @@ guiTypes = {
 
             gridboxtype = {
                 name = "wchess_grid_halochecks"
+                position = {
+                    x = @TILE_GRID_GRIDBOX_POS_X
+                    y = @TILE_GRID_GRIDBOX_POS_Y
+                }
+                size = {
+                    width  = @TILE_GRID_SIZE_X
+                    height = @TILE_GRID_SIZE_Y
+                }
+                slotsize = {
+                    width  = @TILE_GRID_TILE_SIZE_X
+                    height = @TILE_GRID_TILE_SIZE_Y
+                }
+                max_slots_horizontal = 8
+                max_slots_vertical   = 8
+            }
+
+            gridboxtype = {
+                name = "wchess_grid_moved"
                 position = {
                     x = @TILE_GRID_GRIDBOX_POS_X
                     y = @TILE_GRID_GRIDBOX_POS_Y
@@ -252,6 +270,28 @@ guiTypes = {
                 y = 0
             }
             spriteType = "GFX_wchess_tile_highlight"
+            alwaystransparent = yes
+        }
+    }
+
+    containerWindowType = {
+        name = "wchess_moved_cell"
+        position = {
+            x = 0
+            y = 0
+        }
+        size = {
+            width  = 70
+            height = 70
+        }
+
+        iconType = {
+            name = "wchess_moved_tile"
+            position = {
+                x = 0
+                y = 0
+            }
+            spriteType = "GFX_wchess_tile_moved"
             alwaystransparent = yes
         }
     }

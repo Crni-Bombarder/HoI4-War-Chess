@@ -59,6 +59,12 @@ scripted_gui = {
                 entry_container = wchess_piece_cell
             }
 
+            wchess_grid_moved = {
+                array = wchess_moved_array
+                change_scope = no
+                entry_container = wchess_moved_cell
+            }
+
             wchess_grid_highlights = {
                 array = wchess_highlights_array
                 change_scope = no
@@ -380,7 +386,9 @@ scripted_gui = {
                                 }
                             }
 
-                             # Delete the passed pawn
+                            clear_array = wchess_moved_array
+
+                            # Delete the passed pawn
                             if = {
                                 limit = {
                                     OR = {
@@ -560,6 +568,20 @@ scripted_gui = {
                                     }
                                 }
 
+                                # Display move
+                                clear_array = wchess_moved_array
+                                resize_array = {
+                                    array = wchess_moved_array
+                                    size = 64
+                                    value = @DEACTIVATE
+                                }
+                                set_variable = {
+                                    wchess_moved_array^temp_wchess_index_castle_rook = @ACTIVATE
+                                }
+                                set_variable = {
+                                    wchess_moved_array^temp_wchess_index_castle_king = @ACTIVATE
+                                }
+
                                 set_variable = {
                                     wchess_king_moved = 1
                                 }
@@ -588,6 +610,20 @@ scripted_gui = {
                                 }
                                 set_variable = {
                                     wchess_pieces_array^wchess_selected_id = @EMPTY
+                                }
+
+                                # Display move
+                                clear_array = wchess_moved_array
+                                resize_array = {
+                                    array = wchess_moved_array
+                                    size = 64
+                                    value = @DEACTIVATE
+                                }
+                                set_variable = {
+                                    wchess_moved_array^i = @ACTIVATE
+                                }
+                                set_variable = {
+                                    wchess_moved_array^wchess_selected_id = @ACTIVATE
                                 }
                             }
 
@@ -847,6 +883,10 @@ scripted_gui = {
 
         properties = {
             wchess_piece_tile = {
+                frame = v
+            }
+
+            wchess_moved_tile = {
                 frame = v
             }
 

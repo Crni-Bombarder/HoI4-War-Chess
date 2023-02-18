@@ -22,6 +22,12 @@ spriteTypes = {
     }
 
     spriteType = {
+        name = "GFX_wchess_tile_moved"
+        textureFile = "gfx/wchess/wchess_tile_moved.dds"
+        noOfFrames = 2
+    }
+
+    spriteType = {
         name = "GFX_wchess_pieces"
         textureFile = "gfx/wchess/wchess_pieces.dds"
         noOfFrames = 13
