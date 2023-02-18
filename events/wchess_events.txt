@@ -49,12 +49,8 @@ country_event = {
     option = {
         name = wchess_events.1.b
 
-        log = "Select BLACK"
-
         set_country_flag = wchess_start_game
         set_country_flag = wchess_display_game
-
-        log = "wchess_player_challenged [?wchess_player_challenger]"
 
         set_variable = {wchess_color = @BLACK}
         set_variable = {wchess_opponent_color = @WHITE}
@@ -68,7 +64,6 @@ country_event = {
         wchess_create_board = yes
 
         var:wchess_opponent = {
-            log = "Setting the challenger"
             set_country_flag = wchess_start_game
             set_country_flag = wchess_display_game
 
@@ -86,6 +81,36 @@ country_event = {
     }
     option = {
         name = wchess_events.1.c
+
+        set_country_flag = wchess_start_game
+        set_country_flag = wchess_display_game
+
+        set_variable = {wchess_color = @WHITE}
+        set_variable = {wchess_opponent_color = @BLACK}
+        set_variable = {wchess_opponent = wchess_player_challenger}
+        set_variable = {wchess_game_turn = @ACTIVATE}
+        set_variable = {wchess_play_state = @S_SELECTION}
+
+        set_variable = {wchess_display_draw_button = @ACTIVATE}
+
+        wchess_init_variables = yes
+        wchess_create_board = yes
+
+        var:wchess_opponent = {
+            set_country_flag = wchess_start_game
+            set_country_flag = wchess_display_game
+
+            set_variable = {wchess_color = @BLACK}
+            set_variable = {wchess_opponent_color = @WHITE}
+            set_variable = {wchess_opponent = wchess_player_challenged}
+            set_variable = {wchess_game_turn = @DEACTIVATE}
+            set_variable = {wchess_play_state = @S_SELECTION}
+
+            set_variable = {wchess_display_draw_button = @DEACTIVATE}
+
+            wchess_init_variables = yes
+            wchess_create_board = yes
+        }
     }
 }
 

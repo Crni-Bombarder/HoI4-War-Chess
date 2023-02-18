@@ -62,6 +62,7 @@ wchess_init_variables = {
     set_variable = {wchess_victory_black  = @DEACTIVATE}
     set_variable = {wchess_defeated       = @DEACTIVATE}
     set_variable = {wchess_winner         = @DEACTIVATE}
+    clr_country_flag = wchess_draw_agreement_received
 }
 
 # Function : wchess_create_board

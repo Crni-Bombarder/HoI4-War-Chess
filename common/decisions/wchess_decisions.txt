@@ -113,7 +113,7 @@ wchess_decision_categories = {
     }
 
     wchess_challenge = {
-        on_map_mode = map_and_decision_view
+        on_map_mode = map_and_decisions_view
         visible = {
             is_ai = no
             NOT = {

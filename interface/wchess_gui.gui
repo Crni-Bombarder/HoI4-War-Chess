@@ -29,6 +29,12 @@
 @RESULTS_BUTTON_POS_X = 193
 @RESULTS_BUTTON_POS_Y = 159
 
+@DRAW_QUESTION_CHECK_POS_X = 78
+@DRAW_QUESTION_CHECK_POS_Y = 140
+
+@DRAW_QUESTION_CROSS_POS_X = 298
+@DRAW_QUESTION_CROSS_POS_Y = 140
+
 guiTypes = {
     containerWindowType  = {
         name = "wchess_gui_board"
@@ -380,6 +386,62 @@ guiTypes = {
             spriteType = "GFX_wchess_check_button"
             clicksound = click_default
         }
+    }
+
+    containerWindowType  = {
+        name = "wchess_gui_draw_question"
+        position = {
+            x = 0
+            y = 0
+        }
+        orientation = center
+        origo = center
+        size = {
+            width  = @WINDOWS_RESULTS_SIZE_X
+            height = @WINDOWS_RESULTS_SIZE_Y
+        }
+        moveable = yes
+        
+        click_to_front = yes
+
+        background = {
+            name = "background_end_game"
+            quadTextureSprite = "GFX_tiled_plain_bg"
+        }
+
+        iconType = {
+            name = "wchess_draw_question_background"
+            position = {
+                x = 0
+                y = 0
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_draw_question_background"
+            alwaystransparent = yes
+        }
+
+        buttonType = {
+            name = "wchess_draw_accept_button"
+            position = {
+                x = @DRAW_QUESTION_CHECK_POS_X
+                y = @DRAW_QUESTION_CHECK_POS_Y
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_check_button"
+            clicksound = click_default
+        }
+
+        buttonType = {
+            name = "wchess_draw_refuse_button"
+            position = {
+                x = @DRAW_QUESTION_CROSS_POS_X
+                y = @DRAW_QUESTION_CROSS_POS_Y
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_cross_button"
+            clicksound = click_default
+        }
+
     }
 
     # ########################################## #

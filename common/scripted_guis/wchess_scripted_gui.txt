@@ -798,30 +798,20 @@ scripted_gui = {
             }
 
             wchess_draw_button_click = {
+                # Send a draw proposal
                 if = {
                     limit = {
-                        check_variable = {wchess_game_turn = @ACTIVATE}
+                        check_variable = {wchess_opponent = ROOT}
                     }
 
-                    # Send a draw proposal
-                    if = {
-                        limit = {
-                            check_variable = {wchess_opponent = ROOT}
-                        }
-
-                        set_variable = {wchess_draw_agreement = @ACTIVATE}
-                        set_variable = {wchess_game_turn = @DEACTIVATE}
-                        log = "Draw by agreement (One country game)"
-                    } else = {
-                        var:wchess_opponent = {
-                            set_variable = {wchess_display_draw_button = @ACTIVATE}
-                        }
-                    }
-                } else = {
+                    set_variable = {wchess_display_draw_button = @DEACTIVATE}
                     set_variable = {wchess_draw_agreement = @ACTIVATE}
+                    set_variable = {wchess_game_turn = @DEACTIVATE}
+                    log = "Draw by agreement (One country game)"
+                } else = {
+                    set_variable = {wchess_display_draw_button = @DEACTIVATE}
                     var:wchess_opponent = {
-                        set_variable = {wchess_draw_agreement = @ACTIVATE}
-                        set_variable = {wchess_game_turn = @DEACTIVATE}
+                        set_country_flag = wchess_draw_agreement_received
                     }
                 }
             }
@@ -977,7 +967,33 @@ scripted_gui = {
                 check_variable = {wchess_winner = @ACTIVATE}
             }
         }
+    }
 
+    wchess_scripted_gui_draw_question = {
+        window_name = "wchess_gui_draw_question"
+
+        context_type = player_context
+
+        visible = {
+            has_country_flag = wchess_start_game
+            has_country_flag = wchess_display_game
+            has_country_flag = wchess_draw_agreement_received
+        }
+
+        effects = {
+            wchess_draw_accept_button_click = {
+                clr_country_flag = wchess_draw_agreement_received
+                set_variable = {wchess_draw_agreement = @ACTIVATE}
+                var:wchess_opponent = {
+                    set_variable = {wchess_draw_agreement = @ACTIVATE}
+                    set_variable = {wchess_game_turn = @DEACTIVATE}
+                }
+            }
+
+            wchess_draw_refuse_button_click = {
+                clr_country_flag = wchess_draw_agreement_received
+            }
+        }
     }
 
     # ########################################## #
