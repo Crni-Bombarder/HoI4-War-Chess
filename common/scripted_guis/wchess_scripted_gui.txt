@@ -455,17 +455,9 @@ scripted_gui = {
                                     set_temp_variable = {
                                         temp_wchess_piece_type = wchess_pieces_array^wchess_selected_id
                                     }
-                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
-                                    divide_temp_variable = {temp_wchess_piece_type = 2}
-                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
-                                    clamp_temp_variable = {
-                                        var = temp_wchess_piece_type
-                                        min = 0
-                                        max = 6
-                                    }
-                                    round_temp_variable = temp_wchess_piece_type
-                                    check_variable = {
-                                        temp_wchess_piece_type = @ID_ROOK
+                                    OR = {
+                                        check_variable = {temp_wchess_piece_type = @B_ROOK}
+                                        check_variable = {temp_wchess_piece_type = @W_ROOK}
                                     }
                                 }
 
@@ -490,30 +482,15 @@ scripted_gui = {
                                     set_temp_variable = {
                                         temp_wchess_piece_type = wchess_pieces_array^wchess_selected_id
                                     }
-                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
-                                    divide_temp_variable = {temp_wchess_piece_type = 2}
-                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
-                                    clamp_temp_variable = {
-                                        var = temp_wchess_piece_type
-                                        min = 0
-                                        max = 6
-                                    }
-                                    round_temp_variable = temp_wchess_piece_type
-                                    check_variable = {
-                                        temp_wchess_piece_type = @ID_KING
-                                    }
-                                    set_temp_variable    = {temp_wchess_piece_type = v}
-                                    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
-                                    divide_temp_variable = {temp_wchess_piece_type = 2}
-                                    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
-                                    clamp_temp_variable = {
-                                        var = temp_wchess_piece_type
-                                        min = 0
-                                        max = 6
-                                    }
-                                    round_temp_variable = temp_wchess_piece_type
-                                    check_variable = {
-                                        temp_wchess_piece_type = @ID_ROOK
+                                    OR = {
+                                        AND = {
+                                            check_variable = {temp_wchess_piece_type = B_KING}
+                                            check_variable = {v = B_ROOK}
+                                        }
+                                        AND = {
+                                            check_variable = {temp_wchess_piece_type = W_KING}
+                                            check_variable = {v = W_ROOK}
+                                        }
                                     }
                                 }
                                 
