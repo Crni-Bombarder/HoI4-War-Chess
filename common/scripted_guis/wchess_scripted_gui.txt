@@ -412,7 +412,6 @@ scripted_gui = {
                                         multiply_temp_variable = {temp_wchess_en_passant_dx = -1}
                                     }
                                     modulo_temp_variable = {temp_wchess_en_passant_dx = 8}
-                                    log = "En passant dx [?temp_wchess_en_passant_dx]"
                                     OR = {
                                         check_variable = {temp_wchess_en_passant_dx = 1}
                                         check_variable = {temp_wchess_en_passant_dx = 7}
@@ -828,7 +827,6 @@ scripted_gui = {
                     set_variable = {wchess_display_draw_button = @DEACTIVATE}
                     set_variable = {wchess_draw_agreement = @ACTIVATE}
                     set_variable = {wchess_game_turn = @DEACTIVATE}
-                    log = "Draw by agreement (One country game)"
                 } else = {
                     set_variable = {wchess_display_draw_button = @DEACTIVATE}
                     var:wchess_opponent = {
