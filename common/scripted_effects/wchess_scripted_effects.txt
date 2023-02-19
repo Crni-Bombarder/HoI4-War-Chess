@@ -58,6 +58,7 @@ wchess_init_variables = {
     set_variable = {wchess_draw_stalemate = @DEACTIVATE}
     set_variable = {wchess_draw_50_moves  = @DEACTIVATE}
     set_variable = {wchess_draw_agreement = @DEACTIVATE}
+    set_variable = {wchess_draw_material =  @DEACTIVATE}
     set_variable = {wchess_victory_white  = @DEACTIVATE}
     set_variable = {wchess_victory_black  = @DEACTIVATE}
     set_variable = {wchess_defeated       = @DEACTIVATE}
@@ -1233,11 +1234,41 @@ wchess_switch_turn = {
         }
     }
 
+    # Draw by insifficient material
+    clear_temp_array = temp_wchess_piece_array
+    resize_temp_array = {
+        array = temp_wchess_piece_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_pieces_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_piece_array^iter = val}
+    }
+    wchess_draw_material_check = yes
+    if = {
+        limit = {
+            check_variable = {temp_wchess_draw_material = @ACTIVATE}
+        }
+
+        set_variable = {wchess_draw_material = @ACTIVATE}
+        set_variable = {wchess_game_turn = @DEACTIVATE}
+        set_variable = {wchess_display_draw_button = @DEACTIVATE}
+        var:wchess_opponent = {
+            set_variable = {wchess_draw_material = @ACTIVATE}
+            set_variable = {wchess_game_turn = @DEACTIVATE}
+            set_variable = {wchess_display_draw_button = @DEACTIVATE} 
+        }
+    }
+
     if = {
         limit = {
             check_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
             check_variable = {wchess_draw_stalemate = @DEACTIVATE}
             check_variable = {wchess_draw_50_moves = @DEACTIVATE}
+            check_variable = {wchess_draw_material = @DEACTIVATE}
         }
 
         # Draw proposal button, clear any pending draw proposal
@@ -1829,5 +1860,171 @@ wchess_checkmate_check = {
     }
     add_to_temp_variable = {
         temp_wchess_piece_array^temp_wchess_king_id = 1
+    }
+}
+
+# Function : wchess_draw_material_check
+# Context : Independant
+# This function check if the a draw by lack of material occured
+# Inputs : temp_wchess_piece_array   - The input pieces array
+# Outputs: temp_wchess_draw_material - Return @ACTIVATE if draw, @DEACTIVATE otherwise
+wchess_draw_material_check = {
+    # Each side has either :
+    #   - One king
+    #   - One king and one bishop
+    #   - One king and one knight
+
+    set_temp_variable = {temp_wchess_draw_material = @ACTIVATE}
+
+    set_temp_variable = {temp_wchess_black_bishop = -1}
+    set_temp_variable = {temp_wchess_white_bishop = -1}
+    set_temp_variable = {temp_wchess_blackwhite_knight = -1}
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = piece_value
+        index = iter
+        break = break
+
+        if = {
+            limit = {
+                check_variable = {piece_value = @B_BISHOP}
+            }
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_black_bishop > -1}
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+
+            set_temp_variable = {temp_row_color = iter}
+            divide_temp_variable = {temp_row_color = 8}
+            add_to_temp_variable = {temp_row_color = -0.5}
+            clamp_temp_variable = {
+                var = temp_row_color
+                min = 0
+                max = 7
+            }
+            round_temp_variable = temp_row_color
+            modulo_temp_variable = {temp_row_color = 2}
+            set_temp_variable = {temp_wchess_black_bishop = iter}
+            modulo_temp_variable = {temp_wchess_black_bishop = 2}
+            add_to_temp_variable = {temp_wchess_black_bishop = temp_row_color}
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_white_bishop > -1}
+                    NOT = {
+                        check_variable = {temp_wchess_black_bishop = temp_wchess_white_bishop}
+                    }
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+        } else_if = {
+            limit = {
+                check_variable = {piece_value = @W_BISHOP}
+            }
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_white_bishop > -1}
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+
+            set_temp_variable = {temp_row_color = iter}
+            divide_temp_variable = {temp_row_color = 8}
+            add_to_temp_variable = {temp_row_color = -0.5}
+            clamp_temp_variable = {
+                var = temp_row_color
+                min = 0
+                max = 7
+            }
+            round_temp_variable = temp_row_color
+            modulo_temp_variable = {temp_row_color = 2}
+            set_temp_variable = {temp_wchess_white_bishop = iter}
+            modulo_temp_variable = {temp_wchess_white_bishop = 2}
+            add_to_temp_variable = {temp_wchess_white_bishop = temp_row_color}
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_black_bishop > -1}
+                    NOT = {
+                        check_variable = {temp_wchess_white_bishop = temp_wchess_black_bishop}
+                    }
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+        } else_if = {
+            limit = {
+                OR = {
+                    check_variable = {piece_value = @B_KNIGHT}
+                    check_variable = {piece_value = @W_KNIGHT}
+                }
+            }
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_blackwhite_knight > -1}
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+            
+            set_temp_variable = {temp_wchess_blackwhite_knight = 1}
+        } else_if = {
+            limit = {
+                NOT = {
+                    OR = {
+                        check_variable = {piece_value = @B_KING}
+                        check_variable = {piece_value = @W_KING}
+                        check_variable = {piece_value = @EMPTY}
+                    }
+                }
+            }
+
+            set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+            set_temp_variable = {break = 1}
+        }
+    }
+
+    if = {
+        limit = {
+            NOT = {
+                OR = {
+                    # King alone
+                    AND = {
+                        check_variable = {temp_wchess_black_bishop = -1}
+                        check_variable = {temp_wchess_white_bishop = -1}
+                        check_variable = {temp_wchess_blackwhite_knight = -1}
+                    }
+                    # King versus bishop
+                    AND = {
+                        OR = {
+                            check_variable = {temp_wchess_black_bishop > -1}
+                            check_variable = {temp_wchess_white_bishop > -1}
+                        }
+                        check_variable = {temp_wchess_blackwhite_knight = -1}
+                    }
+                    # King versus knight
+                    AND = {
+                        check_variable = {temp_wchess_black_bishop = -1}
+                        check_variable = {temp_wchess_white_bishop = -1}
+                        check_variable = {temp_wchess_blackwhite_knight =  1}
+                    }
+                }
+            }
+        }
+
+        set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
     }
 }

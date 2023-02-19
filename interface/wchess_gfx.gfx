@@ -89,6 +89,11 @@ spriteTypes = {
     }
 
     spriteType = {
+        name = "GFX_wchess_draw_material_background"
+        textureFile = "gfx/wchess/wchess_draw_material_background.dds"
+    }
+
+    spriteType = {
         name = "GFX_wchess_draw_question_background"
         textureFile = "gfx/wchess/wchess_draw_question_background.dds"
     }

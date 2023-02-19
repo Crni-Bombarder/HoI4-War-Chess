@@ -963,6 +963,7 @@ scripted_gui = {
             OR = {
                 check_variable = {wchess_draw_stalemate = @ACTIVATE}
                 check_variable = {wchess_draw_50_moves  = @ACTIVATE}
+                check_variable = {wchess_draw_material  = @ACTIVATE}
                 check_variable = {wchess_draw_agreement = @ACTIVATE}
                 check_variable = {wchess_victory_white  = @ACTIVATE}
                 check_variable = {wchess_victory_black  = @ACTIVATE}
@@ -985,6 +986,10 @@ scripted_gui = {
 
             wchess_draw_50_moves_background_visible = {
                 check_variable = {wchess_draw_50_moves = @ACTIVATE}
+            }
+
+            wchess_draw_material_background_visible = {
+                check_variable = {wchess_draw_material = @ACTIVATE}
             }
 
             wchess_draw_agreement_background_visible = {
@@ -1018,6 +1023,14 @@ scripted_gui = {
             has_country_flag = wchess_start_game
             has_country_flag = wchess_display_game
             has_country_flag = wchess_draw_agreement_received
+            check_variable = {wchess_draw_stalemate = @DEACTIVATE}
+            check_variable = {wchess_draw_50_moves  = @DEACTIVATE}
+            check_variable = {wchess_draw_material  = @DEACTIVATE}
+            check_variable = {wchess_draw_agreement = @DEACTIVATE}
+            check_variable = {wchess_victory_white  = @DEACTIVATE}
+            check_variable = {wchess_victory_black  = @DEACTIVATE}
+            check_variable = {wchess_defeated       = @DEACTIVATE}
+            check_variable = {wchess_winner         = @DEACTIVATE}
         }
 
         effects = {

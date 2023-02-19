@@ -416,6 +416,17 @@ guiTypes = {
             alwaystransparent = yes
         }
 
+        iconType = {
+            name = "wchess_draw_material_background"
+            position = {
+                x = 0
+                y = 0
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_draw_material_background"
+            alwaystransparent = yes
+        }
+
         buttonType = {
             name = "wchess_end_game_button"
             position = {
