@@ -491,12 +491,12 @@ scripted_gui = {
                                     }
                                     OR = {
                                         AND = {
-                                            check_variable = {temp_wchess_piece_type = B_KING}
-                                            check_variable = {v = B_ROOK}
+                                            check_variable = {temp_wchess_piece_type = @B_KING}
+                                            check_variable = {v = @B_ROOK}
                                         }
                                         AND = {
-                                            check_variable = {temp_wchess_piece_type = W_KING}
-                                            check_variable = {v = W_ROOK}
+                                            check_variable = {temp_wchess_piece_type = @W_KING}
+                                            check_variable = {v = @W_ROOK}
                                         }
                                     }
                                 }
