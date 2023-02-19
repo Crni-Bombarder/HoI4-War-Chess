@@ -883,6 +883,14 @@ scripted_gui = {
                 frame = v
             }
 
+            wchess_black_player_flag = {
+                image = [?wchess_black_player.GetFlag]
+            }
+
+            wchess_white_player_flag = {
+                image = [?wchess_white_player.GetFlag]
+            }
+
             wchess_pawn_promote_background = {
                 x = wchess_promote_pawn_background_pos_x
                 y = wchess_promote_pawn_background_pos_y
@@ -933,6 +941,44 @@ scripted_gui = {
 
             wchess_draw_button_visible = {
                 check_variable = {wchess_display_draw_button = @ACTIVATE}
+            }
+
+            wchess_black_player_green_ball_visible = {
+                OR = {
+                    check_variable = {wchess_game_turn = @ACTIVATE}
+                    var:wchess_opponent = {
+                        check_variable = {wchess_game_turn = @ACTIVATE}
+                    }
+                }
+                OR = {
+                    AND = {
+                        check_variable = {wchess_game_turn = @ACTIVATE}
+                        check_variable = {wchess_color = @BLACK}
+                    }
+                    AND = {
+                        check_variable = {wchess_game_turn = @DEACTIVATE}
+                        check_variable = {wchess_color = @WHITE}
+                    }
+                }
+            }
+
+            wchess_white_player_green_ball_visible = {
+                OR = {
+                    check_variable = {wchess_game_turn = @ACTIVATE}
+                    var:wchess_opponent = {
+                        check_variable = {wchess_game_turn = @ACTIVATE}
+                    }
+                }
+                OR = {
+                    AND = {
+                        check_variable = {wchess_game_turn = @ACTIVATE}
+                        check_variable = {wchess_color = @WHITE}
+                    }
+                    AND = {
+                        check_variable = {wchess_game_turn = @DEACTIVATE}
+                        check_variable = {wchess_color = @BLACK}
+                    }
+                }
             }
         }
     }

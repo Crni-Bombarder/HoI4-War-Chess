@@ -45,6 +45,8 @@ wchess_decision_categories = {
             set_variable = {wchess_color = @WHITE}
             set_variable = {wchess_opponent_color = @BLACK}
             set_variable = {wchess_opponent = ROOT}
+            set_variable = {wchess_black_player = ROOT}
+            set_variable = {wchess_white_player = ROOT}
             set_variable = {wchess_game_turn = @ACTIVATE}
             set_variable = {wchess_play_state = @S_SELECTION}
 

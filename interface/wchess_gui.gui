@@ -35,6 +35,18 @@
 @DRAW_QUESTION_CROSS_POS_X = 298
 @DRAW_QUESTION_CROSS_POS_Y = 140
 
+@BLACK_PLAYER_FLAG_POS_X = 607
+@BLACK_PLAYER_FLAG_POS_Y = 105
+
+@BLACK_PLAYER_BALL_POS_X = 630
+@BLACK_PLAYER_BALL_POS_Y = 75
+
+@WHITE_PLAYER_FLAG_POS_X = 607
+@WHITE_PLAYER_FLAG_POS_Y = 440
+
+@WHITE_PLAYER_BALL_POS_X = 630
+@WHITE_PLAYER_BALL_POS_Y = 494
+
 guiTypes = {
     containerWindowType  = {
         name = "wchess_gui_board"
@@ -88,6 +100,50 @@ guiTypes = {
             orientation = "upper_left"
             spriteType = "GFX_wchess_abandon_button"
             clicksound = click_default
+        }
+
+        iconType = {
+            name = "wchess_black_player_flag"
+            position = {
+                x = @BLACK_PLAYER_FLAG_POS_X
+                y = @BLACK_PLAYER_FLAG_POS_Y
+            }
+            orientation = "upper_left"
+            quadTextureSprite = "GFX_flag_medium"
+            alwaystransparent = yes
+        }
+
+        iconType = {
+            name = "wchess_black_player_green_ball"
+            position = {
+                x = @BLACK_PLAYER_BALL_POS_X
+                y = @BLACK_PLAYER_BALL_POS_Y
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_green_ball"
+            alwaystransparent = yes
+        }
+
+        iconType = {
+            name = "wchess_white_player_flag"
+            position = {
+                x = @WHITE_PLAYER_FLAG_POS_X
+                y = @WHITE_PLAYER_FLAG_POS_Y
+            }
+            orientation = "upper_left"
+            quadTextureSprite = "GFX_flag_medium"
+            alwaystransparent = yes
+        }
+
+        iconType = {
+            name = "wchess_white_player_green_ball"
+            position = {
+                x = @WHITE_PLAYER_BALL_POS_X
+                y = @WHITE_PLAYER_BALL_POS_Y
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_green_ball"
+            alwaystransparent = yes
         }
 
         containerWindowType = {
@@ -592,35 +648,3 @@ guiTypes = {
         }
     }
 }
-
-#iconType = {
-#    name = "wchess_test_tile_highlight"
-#    position = {
-#        x = 0
-#        y = 0
-#    }
-#    orientation = "upper_left"
-#    spriteType = "GFX_wchess_tile_highlight"
-#    alwaystransparent = yes
-#}
-#iconType = {
-#    name = "wchess_test_tile_halocheck"
-#    position = {
-#        x = 3
-#        y = 3
-#    }
-#    orientation = "upper_left"
-#    spriteType = "GFX_wchess_tile_halocheck"
-#    alwaystransparent = yes
-#}
-#iconType = {
-#    name = "wchess_test_pieces"
-#    position = {
-#        x = 3
-#        y = 3
-#    }
-#    orientation = "upper_left"
-#    spriteType = "GFX_wchess_pieces"
-#    frame = 2
-#    alwaystransparent = yes
-#}

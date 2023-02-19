@@ -97,4 +97,9 @@ spriteTypes = {
         name = "GFX_wchess_draw_question_background"
         textureFile = "gfx/wchess/wchess_draw_question_background.dds"
     }
+
+    spriteType = {
+        name = "GFX_wchess_green_ball"
+        textureFile = "gfx/wchess/wchess_green_ball.dds"
+    }
 }

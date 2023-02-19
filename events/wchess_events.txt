@@ -55,6 +55,8 @@ country_event = {
         set_variable = {wchess_color = @BLACK}
         set_variable = {wchess_opponent_color = @WHITE}
         set_variable = {wchess_opponent = wchess_player_challenger}
+        set_variable = {wchess_black_player = ROOT}
+        set_variable = {wchess_white_player = wchess_player_challenger}
         set_variable = {wchess_game_turn = @DEACTIVATE}
         set_variable = {wchess_play_state = @S_SELECTION}
 
@@ -70,6 +72,8 @@ country_event = {
             set_variable = {wchess_color = @WHITE}
             set_variable = {wchess_opponent_color = @BLACK}
             set_variable = {wchess_opponent = wchess_player_challenged}
+            set_variable = {wchess_black_player = wchess_player_challenged}
+            set_variable = {wchess_white_player = THIS}
             set_variable = {wchess_game_turn = @ACTIVATE}
             set_variable = {wchess_play_state = @S_SELECTION}
 
@@ -88,6 +92,8 @@ country_event = {
         set_variable = {wchess_color = @WHITE}
         set_variable = {wchess_opponent_color = @BLACK}
         set_variable = {wchess_opponent = wchess_player_challenger}
+        set_variable = {wchess_black_player = wchess_player_challenger}
+        set_variable = {wchess_white_player = ROOT}
         set_variable = {wchess_game_turn = @ACTIVATE}
         set_variable = {wchess_play_state = @S_SELECTION}
 
@@ -103,6 +109,8 @@ country_event = {
             set_variable = {wchess_color = @BLACK}
             set_variable = {wchess_opponent_color = @WHITE}
             set_variable = {wchess_opponent = wchess_player_challenged}
+            set_variable = {wchess_black_player = THIS}
+            set_variable = {wchess_white_player = wchess_player_challenged}
             set_variable = {wchess_game_turn = @DEACTIVATE}
             set_variable = {wchess_play_state = @S_SELECTION}
 
