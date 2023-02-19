@@ -1,0 +1,2049 @@
+@B_KING   = 1
+@W_KING   = 2
+@B_QUEEN  = 3
+@W_QUEEN  = 4
+@B_BISHOP = 5
+@W_BISHOP = 6
+@B_ROOK   = 7
+@W_ROOK   = 8
+@B_KNIGHT = 9
+@W_KNIGHT = 10
+@B_PAWN   = 11
+@W_PAWN   = 12
+@EMPTY    = 13
+
+@ID_KING   = 0
+@ID_QUEEN  = 1
+@ID_BISHOP = 2
+@ID_ROOK   = 3
+@ID_KNIGHT = 4
+@ID_PAWN   = 5
+
+@BLACK = 0
+@WHITE = 1
+
+@ACTIVATE = 1
+@DEACTIVATE = 2
+
+@S_SELECTION = 0
+@S_MOVE      = 1
+@S_PAWN_PROMOTION = 2
+
+@ID_MOVE_NONE = 0
+@ID_MOVE_RIGHT = 1
+@ID_MOVE_LEFT = 2
+@ID_MOVE_UP = 3
+@ID_MOVE_DOWN = 4
+@ID_MOVE_UPRIGHT = 5
+@ID_MOVE_UPLEFT = 6
+@ID_MOVE_DOWNRIGHT = 7
+@ID_MOVE_DOWNLEFT = 8
+
+@PROMOTE_PAWN_POS_Y_OFFSET = 60
+
+@DRAW_NB_MOVE = 49 # Number of moves before a draw minus 1
+
+# Function : wchess_init_variables
+# Context : Player
+# Initialize in the player context the variables for castling and the end game flags.
+wchess_init_variables = {
+    set_variable = {wchess_king_moved                = 0}
+    set_variable = {wchess_left_rook_moved           = 0}
+    set_variable = {wchess_right_rook_moved          = 0}
+    set_variable = {wchess_king_moved_opponent       = 0}
+    set_variable = {wchess_left_rook_moved_opponent  = 0}
+    set_variable = {wchess_right_rook_moved_opponent = 0}
+    set_variable = {wchess_check_piece_id = -1}
+    set_variable = {wchess_double_check   = @DEACTIVATE}
+
+    set_variable = {wchess_draw_stalemate = @DEACTIVATE}
+    set_variable = {wchess_draw_50_moves  = @DEACTIVATE}
+    set_variable = {wchess_draw_agreement = @DEACTIVATE}
+    set_variable = {wchess_draw_material =  @DEACTIVATE}
+    set_variable = {wchess_victory_white  = @DEACTIVATE}
+    set_variable = {wchess_victory_black  = @DEACTIVATE}
+    set_variable = {wchess_defeated       = @DEACTIVATE}
+    set_variable = {wchess_winner         = @DEACTIVATE}
+    clr_country_flag = wchess_draw_agreement_received
+}
+
+# Function : wchess_create_board
+# Context : Player
+# Initialize in the player context the pieces, highlights and halochecks array.
+wchess_create_board = {
+
+    resize_temp_array = {
+        array = temp_array
+        size = 2
+        value = 0
+    }
+    set_temp_variable = {temp_array^0 = ROOT}
+    set_temp_variable = {temp_array^1 = THIS}
+
+    for_each_scope_loop = {
+        array = temp_array
+
+        clear_array = wchess_pieces_array
+        resize_array = {
+            array = wchess_pieces_array
+            size = 64
+            value = @EMPTY
+        }
+
+        clear_array = wchess_highlights_array
+        resize_array = {
+            array = wchess_highlights_array
+            size = 64
+            value = @DEACTIVATE
+        }
+
+        clear_array = wchess_moved_array
+        resize_array = {
+            array = wchess_moved_array
+            size = 64
+            value = @DEACTIVATE
+        }
+
+        clear_array = wchess_halochecks_array
+        resize_array = {
+            array = wchess_halochecks_array
+            size = 64
+            value = @DEACTIVATE
+        }
+
+        # Black pieces
+        set_variable = {wchess_pieces_array^0 = @B_ROOK}
+        set_variable = {wchess_pieces_array^1 = @B_KNIGHT}
+        set_variable = {wchess_pieces_array^2 = @B_BISHOP}
+        set_variable = {wchess_pieces_array^3 = @B_QUEEN}
+        set_variable = {wchess_pieces_array^4 = @B_KING}
+        set_variable = {wchess_pieces_array^5 = @B_BISHOP}
+        set_variable = {wchess_pieces_array^6 = @B_KNIGHT}
+        set_variable = {wchess_pieces_array^7 = @B_ROOK}
+        # Black pawns
+        set_variable = {wchess_pieces_array^8  = @B_PAWN}
+        set_variable = {wchess_pieces_array^9  = @B_PAWN}
+        set_variable = {wchess_pieces_array^10 = @B_PAWN}
+        set_variable = {wchess_pieces_array^11 = @B_PAWN}
+        set_variable = {wchess_pieces_array^12 = @B_PAWN}
+        set_variable = {wchess_pieces_array^13 = @B_PAWN}
+        set_variable = {wchess_pieces_array^14 = @B_PAWN}
+        set_variable = {wchess_pieces_array^15 = @B_PAWN}
+
+        # White pawns
+        set_variable = {wchess_pieces_array^48 = @W_PAWN}
+        set_variable = {wchess_pieces_array^49 = @W_PAWN}
+        set_variable = {wchess_pieces_array^50 = @W_PAWN}
+        set_variable = {wchess_pieces_array^51 = @W_PAWN}
+        set_variable = {wchess_pieces_array^52 = @W_PAWN}
+        set_variable = {wchess_pieces_array^53 = @W_PAWN}
+        set_variable = {wchess_pieces_array^54 = @W_PAWN}
+        set_variable = {wchess_pieces_array^55 = @W_PAWN}
+        # White pieces
+        set_variable = {wchess_pieces_array^56 = @W_ROOK}
+        set_variable = {wchess_pieces_array^57 = @W_KNIGHT}
+        set_variable = {wchess_pieces_array^58 = @W_BISHOP}
+        set_variable = {wchess_pieces_array^59 = @W_QUEEN}
+        set_variable = {wchess_pieces_array^60 = @W_KING}
+        set_variable = {wchess_pieces_array^61 = @W_BISHOP}
+        set_variable = {wchess_pieces_array^62 = @W_KNIGHT}
+        set_variable = {wchess_pieces_array^63 = @W_ROOK}
+
+    }
+}
+
+# Function : wchess_generic_get_move
+# Context : Independant
+# A generic function that compute the possibles moves of a piece
+# Inputs : temp_wchess_move_scan_x -| The moves direction as coordinates offset
+#          temp_wchess_move_scan_y -|
+#          temp_wchess_move_iter   - Boolean if the moves can be iterated (Straight line)
+#          temp_wchess_inc_allies  - Boolean if the allies protected are included
+#          temp_wchess_id          - The initial position id
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The output highlighted positions
+wchess_generic_get_move = {
+    for_each_loop = {
+        array = temp_wchess_move_scan_x
+        value = incr_x
+        index = iter
+        set_temp_variable = {incr_y = temp_wchess_move_scan_y^iter}
+
+        set_temp_variable = {temp_x = temp_wchess_id}
+        modulo_temp_variable = {temp_x = 8}
+        set_temp_variable = {temp_y = temp_wchess_id}
+        divide_temp_variable = {temp_y = 8}
+        add_to_temp_variable = {temp_y = -0.5}
+        clamp_temp_variable = {
+            var = temp_y
+            min = 0
+            max = 7
+        }
+        round_temp_variable = temp_y
+        
+        add_to_temp_variable = {temp_x = incr_x}
+        add_to_temp_variable = {temp_y = incr_y}
+        set_temp_variable    = {temp_wchess_break_flag = 0}
+        while_loop_effect = {
+            limit = {
+                NOT = {
+                    OR = {
+                        check_variable = {
+                            temp_x < 0
+                        }
+                        check_variable = {
+                            temp_x > 7
+                        }
+                        check_variable = {
+                            temp_y < 0
+                        }
+                        check_variable = {
+                            temp_y > 7
+                        }
+                        check_variable = {
+                            temp_wchess_break_flag = 1
+                        }
+                    }
+                }
+            }
+
+            set_temp_variable = {temp_index_xy = temp_y}
+            multiply_temp_variable = {temp_index_xy = 8}
+            add_to_temp_variable = {temp_index_xy = temp_x}
+            set_temp_variable = {temp_wchess_highlights_array^temp_index_xy = @ACTIVATE}
+
+            if = {
+                limit = {
+                    OR = {
+                        check_variable = {
+                            var = temp_wchess_piece_array^temp_index_xy
+                            value = @EMPTY
+                            compare = not_equals
+                        }
+                        check_variable = {temp_wchess_move_iter = 0}
+                    }
+                }
+
+                set_temp_variable = {temp_wchess_break_flag = 1}
+                if = {
+                    limit = {
+                        check_variable = {
+                            var = temp_wchess_piece_array^temp_index_xy
+                            value = @EMPTY
+                            compare = not_equals
+                        }
+                        check_variable = {
+                            temp_wchess_inc_allies = 0
+                        }
+                        set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
+                        subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                        modulo_temp_variable = {temp_wchess_piece_value = 2}
+                        check_variable = {
+                            var = temp_wchess_piece_value
+                            value = temp_wchess_color
+                            compare = equals
+                        }
+                    }
+                    set_temp_variable = {temp_wchess_highlights_array^temp_index_xy = @DEACTIVATE}
+                }
+            }
+
+            add_to_temp_variable = {temp_x = incr_x}
+            add_to_temp_variable = {temp_y = incr_y}
+        }
+    }
+}
+
+# Function : wchess_get_rook_moves
+# Context : Independant
+# This function compute the possible moves of a rook
+# Inputs : temp_wchess_id          - The rook position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_inc_allies  - Boolean if the allies protected are included
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_rook_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 1}
+    resize_temp_array = {temp_wchess_move_scan_x = 4}
+    resize_temp_array = {temp_wchess_move_scan_y = 4}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  0} # Bottom
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Left
+    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  0} # Top
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_bishop_moves
+# Context : Independant
+# This function compute the possible moves of a bishop
+# Inputs : temp_wchess_id          - The bishop position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_inc_allies  - Boolean if the allies protected are included
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_bishop_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 1}
+    resize_temp_array = {temp_wchess_move_scan_x = 4}
+    resize_temp_array = {temp_wchess_move_scan_y = 4}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Bottom-right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^1 = -1} # Bottom-left
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Top-left
+    set_temp_variable = {temp_wchess_move_scan_y^2 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  1} # Top-right
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_queen_moves
+# Context : Independant
+# This function compute the possible moves of a queen
+# Inputs : temp_wchess_id          - The queen position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_inc_allies  - Boolean if the allies protected are included
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_queen_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 1}
+    resize_temp_array = {temp_wchess_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_move_scan_y = 8}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  0} # Bottom
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Left
+    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  0} # Top
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^4 =  1} # Bottom-right
+    set_temp_variable = {temp_wchess_move_scan_y^4 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^5 = -1} # Bottom-left
+    set_temp_variable = {temp_wchess_move_scan_y^5 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^6 = -1} # Top-left
+    set_temp_variable = {temp_wchess_move_scan_y^6 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^7 =  1} # Top-right
+    set_temp_variable = {temp_wchess_move_scan_y^7 = -1}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_knight_moves
+# Context : Independant
+# This function compute the possible moves of a queen
+# Inputs : temp_wchess_id          - The knight position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_inc_allies  - Boolean if the allies protected are included
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_knight_moves = {
+    set_temp_variable = {temp_wchess_move_iter = 0}
+    resize_temp_array = {temp_wchess_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_move_scan_y = 8}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  2}
+    set_temp_variable = {temp_wchess_move_scan_y^0 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  2}
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -2}
+    set_temp_variable = {temp_wchess_move_scan_y^2 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^3 = -2}
+    set_temp_variable = {temp_wchess_move_scan_y^3 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^4 =  1}
+    set_temp_variable = {temp_wchess_move_scan_y^4 =  2}
+    set_temp_variable = {temp_wchess_move_scan_x^5 = -1}
+    set_temp_variable = {temp_wchess_move_scan_y^5 =  2}
+    set_temp_variable = {temp_wchess_move_scan_x^6 = -1}
+    set_temp_variable = {temp_wchess_move_scan_y^6 = -2}
+    set_temp_variable = {temp_wchess_move_scan_x^7 =  1}
+    set_temp_variable = {temp_wchess_move_scan_y^7 = -2}
+
+    wchess_generic_get_move = yes
+}
+
+# Function : wchess_get_pawn_moves
+# Context : Independant
+# This function compute the possible moves of a pawn
+# Inputs : temp_wchess_id          - The pawn position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_en_passant  - If not -1, an en passant can be done at that column
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_pawn_moves = {
+
+    # First set the forward direction
+    set_temp_variable = {temp_wchess_forward = -8}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_color = @BLACK}
+        }
+        set_temp_variable = {temp_wchess_forward = 8}
+    }
+
+    set_temp_variable    = {temp_x = temp_wchess_id}
+    modulo_temp_variable = {temp_x = 8}
+    set_temp_variable    = {temp_y = temp_wchess_id}
+    divide_temp_variable = {temp_y = 8}
+    add_to_temp_variable = {temp_y = -0.5}
+    round_temp_variable  = temp_y
+
+    # Attack left
+    set_temp_variable = {temp_index_xy = temp_wchess_id}
+    add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+    if = {
+        limit = {
+            check_variable = {
+                temp_x > 0
+            }
+            add_to_temp_variable = {temp_index_xy = -1}
+            set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
+            OR = {
+                # Normal
+                AND = {
+                    check_variable = {
+                        var = temp_wchess_piece_array^temp_index_xy
+                        value = @EMPTY
+                        compare = not_equals
+                    }
+                    subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                    modulo_temp_variable = {temp_wchess_piece_value = 2}
+                    check_variable = {
+                        var = temp_wchess_piece_value
+                        value = temp_wchess_color
+                        compare = not_equals
+                    }
+                }
+                # En passant
+                AND = {
+                    check_variable = {
+                        var = temp_wchess_en_passant
+                        value = -1
+                        compare = not_equals
+                    }
+                    set_temp_variable = {temp_wchess_en_passant_left = temp_wchess_en_passant}
+                    subtract_from_temp_variable = {temp_wchess_en_passant_left = temp_x}
+                    check_variable = {
+                        temp_wchess_en_passant_left = -1
+                    }
+                    OR = {
+                        AND = {
+                            check_variable = {temp_wchess_color = @BLACK}
+                            check_variable = {temp_y = 4}
+                        }
+                        AND = {
+                            check_variable = {temp_wchess_color = @WHITE}
+                            check_variable = {temp_y = 3}
+                        }
+                    }
+                }
+            }
+        }
+
+        set_temp_variable = {
+            temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+        }
+    }
+
+    # Attack right
+    set_temp_variable = {temp_index_xy = temp_wchess_id}
+    add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+    if = {
+        limit = {
+            check_variable = {
+                temp_x < 7
+            }
+            add_to_temp_variable = {temp_index_xy = 1}
+            set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
+            OR = {
+                # Normal
+                AND = {
+                    check_variable = {
+                        var = temp_wchess_piece_array^temp_index_xy
+                        value = @EMPTY
+                        compare = not_equals
+                    }
+                    subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                    modulo_temp_variable = {temp_wchess_piece_value = 2}
+                    check_variable = {
+                        var = temp_wchess_piece_value
+                        value = temp_wchess_color
+                        compare = not_equals
+                    }
+                }
+                # En passant
+                AND = {
+                    check_variable = {
+                        var = temp_wchess_en_passant
+                        value = -1
+                        compare = not_equals
+                    }
+                    set_temp_variable = {temp_wchess_en_passant_right = temp_wchess_en_passant}
+                    subtract_from_temp_variable = {temp_wchess_en_passant_right = temp_x}
+                    check_variable = {
+                        temp_wchess_en_passant_right = 1
+                    }
+                    OR = {
+                        AND = {
+                            check_variable = {temp_wchess_color = @BLACK}
+                            check_variable = {temp_y = 4}
+                        }
+                        AND = {
+                            check_variable = {temp_wchess_color = @WHITE}
+                            check_variable = {temp_y = 3}
+                        }
+                    }
+                }
+            }
+        }
+
+        set_temp_variable = {
+            temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+        }
+    }
+
+    # Move
+    set_temp_variable = {temp_index_xy = temp_wchess_id}
+    add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+
+    if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_array^temp_index_xy = @EMPTY
+            }
+        }
+
+        set_temp_variable = {
+            temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+        }
+
+        if = {
+            limit = {
+                add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+                NOT = {
+                    check_variable = {
+                        temp_index_xy < 0
+                    }
+                    check_variable = {
+                        temp_index_xy > 63
+                    }
+                }
+                OR = {
+                    AND = {
+                        check_variable = {temp_wchess_color = @BLACK}
+                        check_variable = {temp_y = 1}
+                    }
+                    AND = {
+                        check_variable = {temp_wchess_color = @WHITE}
+                        check_variable = {temp_y = 6}
+                    }
+                }
+                check_variable = {
+                    temp_wchess_piece_array^temp_index_xy = @EMPTY
+                }
+            }
+
+            set_temp_variable = {
+                temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+            }
+        }
+    }
+}
+
+# Function : wchess_get_king_moves
+# Context : Independant
+# This function compute the possible moves of a king
+# Inputs : temp_wchess_id          - The king position id
+#          temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_inc_allies  - Boolean if the allies protected are included
+#          temp_wchess_piece_array - The input pieces array
+#          temp_wchess_check_en    - Activate the check verification
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_king_moves = {
+
+    set_temp_variable = {temp_wchess_move_iter = 0}
+    resize_temp_array = {temp_wchess_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_move_scan_y = 8}
+    set_temp_variable = {temp_wchess_move_scan_x^0 =  1} # Right
+    set_temp_variable = {temp_wchess_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^1 =  0} # Bottom
+    set_temp_variable = {temp_wchess_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^2 = -1} # Left
+    set_temp_variable = {temp_wchess_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_move_scan_x^3 =  0} # Top
+    set_temp_variable = {temp_wchess_move_scan_y^3 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^4 =  1} # Bottom-right
+    set_temp_variable = {temp_wchess_move_scan_y^4 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^5 = -1} # Bottom-left
+    set_temp_variable = {temp_wchess_move_scan_y^5 =  1}
+    set_temp_variable = {temp_wchess_move_scan_x^6 = -1} # Top-left
+    set_temp_variable = {temp_wchess_move_scan_y^6 = -1}
+    set_temp_variable = {temp_wchess_move_scan_x^7 =  1} # Top-right
+    set_temp_variable = {temp_wchess_move_scan_y^7 = -1}
+
+    wchess_generic_get_move = yes
+
+    if = {
+        limit = {
+            check_variable = {temp_wchess_check_en = @ACTIVATE}
+        }
+
+        resize_temp_array = {
+            array = temp_wchess_highlights_array_filtered
+            value = 0
+            size = 64
+        }
+        for_each_loop = {
+            array = temp_wchess_highlights_array
+            value = val
+            index = iter
+            set_temp_variable = {temp_wchess_highlights_array_filtered^iter = val}
+        }
+
+        # Get the attacked tiles, disable move for attacked tiles
+        if = {
+            limit = {
+                check_variable = {temp_wchess_color = @WHITE}
+            }
+
+            set_temp_variable = {temp_wchess_color = @BLACK}
+        } else = {
+            set_temp_variable = {temp_wchess_color = @WHITE}
+        }
+
+        # Ignore the king in the attacked tile computation
+        set_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_id = @EMPTY
+        }
+        # Save the king id to restore it after
+        set_temp_variable = {temp_wchess_king_id_stored = temp_wchess_id}
+        
+        wchess_get_attacked_tiles = yes
+
+        for_each_loop = {
+            array = temp_wchess_attacked_array
+            value = attacks
+            index = iter
+
+            if = {
+                limit = {
+                    check_variable = {attacks > 0}
+                    check_variable = {temp_wchess_highlights_array_filtered^iter = @ACTIVATE}
+                }
+                set_temp_variable = {temp_wchess_highlights_array^iter = @DEACTIVATE}
+            
+            } else_if = {
+                limit = {
+                    check_variable = {temp_wchess_highlights_array_filtered^iter = @ACTIVATE}
+                }
+                set_temp_variable = {temp_wchess_highlights_array^iter = @ACTIVATE}
+        
+            } else = {
+                set_temp_variable = {temp_wchess_highlights_array^iter = @DEACTIVATE}
+            }
+        }
+
+        # Restore the temp array, in case it's used afterward
+        if = {
+            limit = {
+                check_variable = {temp_wchess_color = @WHITE}
+            }
+
+            set_temp_variable = {
+                temp_wchess_piece_array^temp_wchess_king_id_stored = @B_KING
+            }
+            set_temp_variable = {temp_wchess_color = @BLACK}
+        } else = {
+            set_temp_variable = {
+                temp_wchess_piece_array^temp_wchess_king_id_stored = @W_KING
+            }
+            set_temp_variable = {temp_wchess_color = @WHITE}
+        }
+    }
+}
+
+# Function : wchess_get_piece_moves
+# Context : Independant
+# This function compute the possible moves of a piece
+# Inputs : temp_wchess_id          - The piece position id
+#          temp_wchess_color       - Attacking color (0 black, 1 white)
+#          temp_wchess_en_passant  - If not -1, an en passant can be done at that column
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_highlights_array - The allowed move array
+wchess_get_piece_moves = {
+    set_temp_variable    = {temp_wchess_piece_type = temp_wchess_piece_array^temp_wchess_id}
+    subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+    divide_temp_variable = {temp_wchess_piece_type = 2}
+    add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+    clamp_temp_variable = {
+        var = temp_wchess_piece_type
+        min = 0
+        max = 6
+    }
+    round_temp_variable = temp_wchess_piece_type
+    set_temp_variable = {temp_wchess_inc_allies = 0}
+
+    if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_KING
+            }
+        }
+        set_temp_variable = {temp_wchess_check_en = @ACTIVATE}
+        wchess_get_king_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_QUEEN
+            }
+        }
+        wchess_get_queen_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_BISHOP
+            }
+        }
+        wchess_get_bishop_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_ROOK
+            }
+        }
+        wchess_get_rook_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_KNIGHT
+            }
+        }
+        wchess_get_knight_moves = yes
+
+    } else_if = {
+        limit = {
+            check_variable = {
+                temp_wchess_piece_type = @ID_PAWN
+            }
+        }
+        wchess_get_pawn_moves = yes
+    }
+}
+
+# Function : wchess_get_attacked_tiles
+# Context : Independant
+# This function compute all the attacked tiles and the number of pieces attacking
+# Inputs : temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_attacked_array - The attacked tiles array
+wchess_get_attacked_tiles = {
+    clear_temp_array = temp_wchess_attacked_array
+    resize_temp_array = {
+        array = temp_wchess_attacked_array
+        size = 64
+        value = 0
+    }
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = piece
+        index = iter
+
+        if = {
+            limit = {
+                check_variable = {
+                    var = piece
+                    value = @EMPTY
+                    compare = not_equals
+                }
+                set_temp_variable = {temp_wchess_piece_value = piece}
+                subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                modulo_temp_variable = {temp_wchess_piece_value = 2}
+                check_variable = {
+                    var = temp_wchess_piece_value
+                    value = temp_wchess_color
+                    compare = equals
+                }
+            }
+
+            set_temp_variable = {temp_wchess_inc_allies = 1}
+            set_temp_variable = {temp_wchess_id = iter}
+
+            clear_temp_array = temp_wchess_highlights_array
+            resize_temp_array = {
+                array = temp_wchess_highlights_array
+                value = @DEACTIVATE
+                size = 64
+            }
+            set_temp_variable    = {temp_wchess_piece_type = piece}
+            subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+            divide_temp_variable = {temp_wchess_piece_type = 2}
+            add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+            clamp_temp_variable = {
+                var = temp_wchess_piece_type
+                min = 0
+                max = 6
+            }
+            round_temp_variable = temp_wchess_piece_type
+
+            if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_KING
+                    }
+                }
+                set_temp_variable = {temp_wchess_check_en = @DEACTIVATE}
+                wchess_get_king_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_QUEEN
+                    }
+                }
+                wchess_get_queen_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_BISHOP
+                    }
+                }
+                wchess_get_bishop_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_ROOK
+                    }
+                }
+                wchess_get_rook_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_KNIGHT
+                    }
+                }
+                wchess_get_knight_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_PAWN
+                    }
+                }
+                
+                # First set the forward direction
+                set_temp_variable = {temp_wchess_forward = -8}
+                if = {
+                    limit = {
+                        check_variable = {temp_wchess_color = @BLACK}
+                    }
+                    set_temp_variable = {temp_wchess_forward = 8}
+                }
+                set_temp_variable    = {temp_x = iter}
+                modulo_temp_variable = {temp_x = 8}
+
+                # Pawn attack left
+                set_temp_variable = {temp_index_xy = iter}
+                add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+                add_to_temp_variable = {temp_index_xy = -1}
+                if = {
+                    limit = {
+                        check_variable = {
+                            temp_x > 0
+                        }
+                    }
+
+                    set_temp_variable = {
+                        temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+                    }
+                }
+
+                # Pawn attack right
+                set_temp_variable = {temp_index_xy = iter}
+                add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+                add_to_temp_variable = {temp_index_xy = 1}
+                if = {
+                    limit = {
+                        check_variable = {
+                            temp_x < 7
+                        }
+                    }
+
+                    set_temp_variable = {
+                        temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+                    }
+                }
+            }
+
+            for_each_loop = {
+                array = temp_wchess_highlights_array
+                index = iter_highlight
+                value = value_highlight
+                if = {
+                    limit = {
+                        check_variable = {value_highlight = @ACTIVATE}
+                    }
+
+                    add_to_temp_variable = {temp_wchess_attacked_array^iter_highlight = 1}
+                }
+            }
+        }
+    }
+}
+
+# Function : wchess_get_moves_array
+# Context : Independant
+# This function compute all the tiles that can be moved onto
+# Inputs : temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_en_passant  - If not -1, an en passant can be done at that column
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_moves_array - The tiles that can be moved
+wchess_get_moves_array = {
+    clear_temp_array = temp_wchess_moves_array
+    resize_temp_array = {
+        array = temp_wchess_moves_array
+        size = 64
+        value = @DEACTIVATE
+    }
+
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = piece
+        index = iter
+
+        if = {
+            limit = {
+                check_variable = {
+                    var = piece
+                    value = @EMPTY
+                    compare = not_equals
+                }
+                set_temp_variable = {temp_wchess_piece_value = piece}
+                subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                modulo_temp_variable = {temp_wchess_piece_value = 2}
+                check_variable = {
+                    var = temp_wchess_piece_value
+                    value = temp_wchess_color
+                    compare = equals
+                }
+            }
+
+            set_temp_variable = {temp_wchess_id = iter}
+
+            clear_temp_array = temp_wchess_highlights_array
+            resize_temp_array = {
+                array = temp_wchess_highlights_array
+                value = @DEACTIVATE
+                size = 64
+            }
+
+            wchess_get_piece_moves = yes
+
+            for_each_loop = {
+                array = temp_wchess_highlights_array
+                index = iter_highlight
+                value = value_highlight
+                if = {
+                    limit = {
+                        check_variable = {value_highlight = @ACTIVATE}
+                    }
+                    
+                    set_temp_variable = {temp_wchess_moves_array^iter_highlight = @ACTIVATE}
+                }
+            }
+        }
+    }
+}
+
+# Function : wchess_set_promote_pawn_interface_position
+# Context : Player
+# This function move     the pawn promotion interface to the correct tiles
+# Inputs : temp_wchess_position_id  - Column ID (0-7 white, 8-15 black)
+wchess_set_promote_pawn_interface_position = {
+    set_temp_variable = {temp_pos_x = temp_wchess_position_id}
+    modulo_temp_variable = {temp_pos_x = 8}
+    multiply_temp_variable = {temp_pos_x = 70}
+
+    set_temp_variable = {temp_pos_y = @PROMOTE_PAWN_POS_Y_OFFSET}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_position_id > 7}
+        }
+
+        set_temp_variable = {temp_pos_y = 70}
+        multiply_temp_variable = {temp_pos_y = 4}
+        subtract_from_temp_variable = {temp_pos_y = @PROMOTE_PAWN_POS_Y_OFFSET}
+
+        set_variable = {wchess_promote_queen_frame  = @B_QUEEN}
+        set_variable = {wchess_promote_knight_frame = @B_KNIGHT}
+        set_variable = {wchess_promote_rook_frame   = @B_ROOK}
+        set_variable = {wchess_promote_bishop_frame = @B_BISHOP}
+    } else = {
+        set_variable = {wchess_promote_queen_frame  = @W_QUEEN}
+        set_variable = {wchess_promote_knight_frame = @W_KNIGHT}
+        set_variable = {wchess_promote_rook_frame   = @W_ROOK}
+        set_variable = {wchess_promote_bishop_frame = @W_BISHOP}
+    }
+
+    set_variable = {wchess_promote_pawn_background_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_background_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_x = 3}
+    add_to_temp_variable = {temp_pos_y = 3}
+
+    set_variable = {wchess_promote_pawn_queen_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_queen_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_y = 70}
+
+    set_variable = {wchess_promote_pawn_knight_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_knight_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_y = 70}
+
+    set_variable = {wchess_promote_pawn_rook_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_rook_pos_y = temp_pos_y}
+
+    add_to_temp_variable = {temp_pos_y = 70}
+
+    set_variable = {wchess_promote_pawn_bishop_pos_x = temp_pos_x}
+    set_variable = {wchess_promote_pawn_bishop_pos_y = temp_pos_y}
+}
+
+# Function : wchess_switch_turn
+# Context : Player
+# This function switch the turn to the opponent
+# Inputs : temp_wchess_draw_move_reset - Reset the move draw counter if @ACTIVATE
+wchess_switch_turn = {
+
+    clear_array = wchess_halochecks_array
+    resize_array = {
+        array = wchess_halochecks_array
+        size = 64
+        value = @DEACTIVATE
+    }
+    set_variable = {
+        wchess_check_piece_id = -1
+    }
+    set_variable = {
+        wchess_double_check = @DEACTIVATE
+    }
+
+    set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+    clear_temp_array = temp_wchess_piece_array
+    resize_temp_array = {
+        array = temp_wchess_piece_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_pieces_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_piece_array^iter = val}
+    }
+    wchess_get_check = yes
+
+    set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_check_piece_index > -1}
+        }
+
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        wchess_get_king_id = yes
+        set_variable = {
+            wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
+        }
+
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        clear_temp_array = temp_wchess_pinned_tiles_array
+        resize_temp_array = {
+            array = temp_wchess_pinned_tiles_array
+            value = @ID_MOVE_NONE
+            size = 64
+        }
+        wchess_get_pinned_pieces = yes
+
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        wchess_checkmate_check = yes
+
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        wchess_get_king_id = yes
+
+        var:wchess_opponent = {
+            clear_array = wchess_halochecks_array
+            resize_array = {
+                array = wchess_halochecks_array
+                size = 64
+                value = @DEACTIVATE
+            }
+            set_variable = {
+                wchess_halochecks_array^temp_wchess_king_id = @ACTIVATE
+            }
+
+            set_variable = {
+                wchess_check_piece_id = temp_wchess_check_piece_index
+            }
+            set_variable = {
+                wchess_double_check = temp_wchess_double_check
+            }
+        }
+
+        if = {
+            limit = {
+                check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+            }
+            
+            if = {
+                limit = {
+                    check_variable = {
+                        wchess_opponent = ROOT
+                    }
+                }
+
+                if = {
+                    limit = {
+                        check_variable = {
+                            wchess_color = @WHITE
+                        }
+                    }
+
+                    set_variable = {wchess_victory_white = @ACTIVATE}
+                } else = {
+                    set_variable = {wchess_victory_black = @ACTIVATE}
+                }
+
+                set_variable = {wchess_game_turn = @DEACTIVATE}
+                set_variable = {wchess_display_draw_button = @DEACTIVATE}
+            } else = {
+                set_variable = {wchess_winner = @ACTIVATE}
+                set_variable = {wchess_game_turn = @DEACTIVATE}
+                set_variable = {wchess_display_draw_button = @DEACTIVATE}
+                
+                clear_temp_array = temp_wchess_piece_array
+                resize_temp_array = {
+                    array = temp_wchess_piece_array
+                    value = 0
+                    size = 64
+                }
+                for_each_loop = {
+                    array = wchess_pieces_array
+                    value = val
+                    index = iter
+                    set_temp_variable = {temp_wchess_piece_array^iter = val}
+                }
+
+                var:wchess_opponent = {
+                    for_each_loop = {
+                        array = temp_wchess_piece_array
+                        value = val
+                        index = iter
+                        set_variable = {wchess_pieces_array^iter = val}
+                    }
+
+                    set_variable = {wchess_defeated = @ACTIVATE}
+                    set_variable = {wchess_game_turn = @DEACTIVATE}
+                    set_variable = {wchess_display_draw_button = @DEACTIVATE}
+                }
+            }
+        }
+
+    } else = {
+        set_temp_variable = {temp_wchess_color = wchess_opponent_color}
+        var:wchess_opponent = {
+            set_temp_variable = {temp_wchess_en_passant = wchess_en_passant}
+        }
+        wchess_get_moves_array = yes
+        set_temp_variable = {temp_wchess_stalemate = @ACTIVATE}
+        for_each_loop = {
+            array = temp_wchess_moves_array
+            value = tiles_move
+
+            if = {
+                limit = {
+                    check_variable = {tiles_move = @ACTIVATE}
+                }
+                set_temp_variable = {temp_wchess_stalemate = @DEACTIVATE}
+            }
+        }
+
+        # If stalemate, stop the game, and draw by stalemate
+        if = {
+            limit = {
+                check_variable = {temp_wchess_stalemate = @ACTIVATE}
+            }
+
+            set_variable = {wchess_draw_stalemate = @ACTIVATE}
+            set_variable = {wchess_game_turn = @DEACTIVATE}
+            set_variable = {wchess_display_draw_button = @DEACTIVATE}
+
+            var:wchess_opponent = {
+                set_variable = {wchess_draw_stalemate = @ACTIVATE}
+                set_variable = {wchess_game_turn = @DEACTIVATE}
+                set_variable = {wchess_display_draw_button = @DEACTIVATE} 
+            }
+        }
+    }
+
+    if = {
+        limit = {
+            check_variable = {temp_wchess_draw_move_reset = @ACTIVATE}
+        }
+
+        set_variable = {wchess_draw_nmb_moves = 0}
+        var:wchess_opponent = {
+            set_variable = {wchess_draw_nmb_moves = 0}
+        }
+    } else_if = {
+        limit = {
+            check_variable = {wchess_draw_nmb_moves > @DRAW_NB_MOVE}
+            check_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+        }
+
+        set_variable = {wchess_draw_50_moves = @ACTIVATE}
+        set_variable = {wchess_game_turn = @DEACTIVATE}
+        set_variable = {wchess_display_draw_button = @DEACTIVATE} 
+
+        var:wchess_opponent = {
+            set_variable = {wchess_draw_50_moves = @ACTIVATE}
+            set_variable = {wchess_game_turn = @DEACTIVATE}
+            set_variable = {wchess_display_draw_button = @DEACTIVATE} 
+        }
+    } else_if = {
+        limit = {
+            check_variable = {wchess_color = @BLACK}
+        }
+
+        add_to_variable = {wchess_draw_nmb_moves = 1}
+        if = {
+            limit = {
+                check_variable = {
+                    var = ROOT
+                    value = wchess_opponent
+                    compare = not_equals
+                }
+            }
+
+            var:wchess_opponent = {
+                add_to_variable = {wchess_draw_nmb_moves = 1}
+            }
+        }
+    }
+
+    # Draw by insifficient material
+    clear_temp_array = temp_wchess_piece_array
+    resize_temp_array = {
+        array = temp_wchess_piece_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_pieces_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_piece_array^iter = val}
+    }
+    wchess_draw_material_check = yes
+    if = {
+        limit = {
+            check_variable = {temp_wchess_draw_material = @ACTIVATE}
+        }
+
+        set_variable = {wchess_draw_material = @ACTIVATE}
+        set_variable = {wchess_game_turn = @DEACTIVATE}
+        set_variable = {wchess_display_draw_button = @DEACTIVATE}
+        var:wchess_opponent = {
+            set_variable = {wchess_draw_material = @ACTIVATE}
+            set_variable = {wchess_game_turn = @DEACTIVATE}
+            set_variable = {wchess_display_draw_button = @DEACTIVATE} 
+        }
+    }
+
+    if = {
+        limit = {
+            check_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+            check_variable = {wchess_draw_stalemate = @DEACTIVATE}
+            check_variable = {wchess_draw_50_moves = @DEACTIVATE}
+            check_variable = {wchess_draw_material = @DEACTIVATE}
+        }
+
+        # Draw proposal button, clear any pending draw proposal
+        set_variable = {wchess_display_draw_button = @DEACTIVATE}
+        var:wchess_opponent = {
+            set_variable = {wchess_display_draw_button = @ACTIVATE}
+        }
+
+        if = {
+            limit = {
+                check_variable = {
+                    wchess_opponent = ROOT
+                }
+            }
+
+            # Swap castling variables
+            set_temp_variable = {temp_wchess_king_moved       = wchess_king_moved}
+            set_temp_variable = {temp_wchess_left_rook_moved  = wchess_left_rook_moved}
+            set_temp_variable = {temp_wchess_right_rook_moved = wchess_right_rook_moved}
+            set_variable = {wchess_king_moved       = wchess_king_moved_opponent}
+            set_variable = {wchess_left_rook_moved  = wchess_left_rook_moved_opponent}
+            set_variable = {wchess_right_rook_moved = wchess_right_rook_moved_opponent}
+            set_variable = {
+                wchess_king_moved_opponent = temp_wchess_king_moved
+            }
+            set_variable = {
+                wchess_left_rook_moved_opponent = temp_wchess_left_rook_moved
+            }
+            set_variable = {
+                wchess_right_rook_moved_opponent = temp_wchess_right_rook_moved
+            }
+
+            if = {
+                limit = {
+                    check_variable = {
+                        wchess_color = @BLACK
+                    }
+                }
+                set_variable = {wchess_color = @WHITE}
+                set_variable = {wchess_opponent_color = @BLACK}
+            } else = {
+                set_variable = {wchess_color = @BLACK}
+                set_variable = {wchess_opponent_color = @WHITE}
+            }
+        } else = {
+            set_variable = {wchess_game_turn = @DEACTIVATE}
+
+            var:wchess_opponent = {
+                set_variable = {wchess_game_turn = @ACTIVATE}
+            }
+        }
+    }
+
+    clear_temp_array = temp_wchess_piece_array
+    resize_temp_array = {
+        array = temp_wchess_piece_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_pieces_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_piece_array^iter = val}
+    }
+
+    clear_temp_array = temp_wchess_moved_array
+    resize_temp_array = {
+        array = temp_wchess_moved_array
+        value = 0
+        size = 64
+    }
+    for_each_loop = {
+        array = wchess_moved_array
+        value = val
+        index = iter
+        set_temp_variable = {temp_wchess_moved_array^iter = val}
+    }
+
+    var:wchess_opponent = {
+        for_each_loop = {
+            array = temp_wchess_piece_array
+            value = val
+            index = iter
+            set_variable = {wchess_pieces_array^iter = val}
+        }
+
+        for_each_loop = {
+            array = temp_wchess_moved_array
+            value = val
+            index = iter
+            set_variable = {wchess_moved_array^iter = val}
+        }
+    }
+}
+
+# Function : wchess_get_king_id
+# Context : Independant
+# This function return the position of the allied king
+# Inputs : temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_king_id - The id of the allied king
+wchess_get_king_id = {
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = piece
+        index = iter
+        break = break
+
+        if = {
+            limit = {
+                OR = {
+                    AND = {
+                        check_variable = {temp_wchess_color = @WHITE}
+                        check_variable = {piece = @W_KING}
+                    }
+                    AND = {
+                        check_variable = {temp_wchess_color = @BLACK}
+                        check_variable = {piece = @B_KING}
+                    }
+                }
+            }
+
+            set_temp_variable = {temp_wchess_king_id = iter}
+            set_temp_variable = {break = 1}
+        }
+    }
+}
+
+# Function : wchess_get_pinned_pieces
+# Context : Independant
+# This function return an array of pinned direction to the king
+# A pinned direction is when a piece is blocking an attacking piece
+# Inputs : temp_wchess_color       - Allied color (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_pinned_tiles_array - The pinned direction tiles array
+#          temp_wchess_pinned_direction   - The direction where there is a pin
+wchess_get_pinned_pieces = {
+    resize_temp_array = {temp_wchess_pin_move_scan_x = 8}
+    resize_temp_array = {temp_wchess_pin_move_scan_y = 8}
+    resize_temp_array = {temp_wchess_pin_move_id = 8}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^0 =  1} # Right
+    set_temp_variable = {temp_wchess_pin_move_scan_y^0 =  0}
+    set_temp_variable = {temp_wchess_pin_move_id^0 = @ID_MOVE_RIGHT}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^1 =  0} # Bottom
+    set_temp_variable = {temp_wchess_pin_move_scan_y^1 =  1}
+    set_temp_variable = {temp_wchess_pin_move_id^1 = @ID_MOVE_DOWN}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^2 = -1} # Left
+    set_temp_variable = {temp_wchess_pin_move_scan_y^2 =  0}
+    set_temp_variable = {temp_wchess_pin_move_id^2 = @ID_MOVE_LEFT}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^3 =  0} # Top
+    set_temp_variable = {temp_wchess_pin_move_scan_y^3 = -1}
+    set_temp_variable = {temp_wchess_pin_move_id^3 = @ID_MOVE_UP}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^4 =  1} # Bottom-right
+    set_temp_variable = {temp_wchess_pin_move_scan_y^4 =  1}
+    set_temp_variable = {temp_wchess_pin_move_id^4 = @ID_MOVE_DOWNRIGHT}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^5 = -1} # Bottom-left
+    set_temp_variable = {temp_wchess_pin_move_scan_y^5 =  1}
+    set_temp_variable = {temp_wchess_pin_move_id^5 = @ID_MOVE_DOWNLEFT}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^6 = -1} # Top-left
+    set_temp_variable = {temp_wchess_pin_move_scan_y^6 = -1}
+    set_temp_variable = {temp_wchess_pin_move_id^6 = @ID_MOVE_UPLEFT}
+    set_temp_variable = {temp_wchess_pin_move_scan_x^7 =  1} # Top-right
+    set_temp_variable = {temp_wchess_pin_move_scan_y^7 = -1}
+    set_temp_variable = {temp_wchess_pin_move_id^7 = @ID_MOVE_UPRIGHT}
+
+    wchess_get_king_id = yes
+
+    set_temp_variable = {temp_wchess_get_pinned_color    = temp_wchess_color}
+    set_temp_variable = {temp_wchess_get_pinned_color_op = @BLACK}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_color = @BLACK}
+        }
+        set_temp_variable = {temp_wchess_get_pinned_color_op = @WHITE}
+    }
+
+    for_each_loop = {
+        array = temp_wchess_pin_move_scan_x
+        value = incr_x
+        index = iter
+        set_temp_variable = {incr_y = temp_wchess_pin_move_scan_y^iter}
+        set_temp_variable = {move_id = temp_wchess_pin_move_id^iter}
+
+        set_temp_variable = {temp_x = temp_wchess_king_id}
+        modulo_temp_variable = {temp_x = 8}
+        set_temp_variable = {temp_y = temp_wchess_king_id}
+        divide_temp_variable = {temp_y = 8}
+        add_to_temp_variable = {temp_y = -0.5}
+        clamp_temp_variable = {
+            var = temp_y
+            min = 0
+            max = 7
+        }
+        round_temp_variable = temp_y
+        
+        add_to_temp_variable = {temp_x = incr_x}
+        add_to_temp_variable = {temp_y = incr_y}
+        set_temp_variable    = {temp_wchess_piece_number = 0}
+        set_temp_variable    = {temp_wchess_blocking_piece_index = -1}
+        while_loop_effect = {
+            limit = {
+                NOT = {
+                    OR = {
+                        check_variable = {
+                            temp_x < 0
+                        }
+                        check_variable = {
+                            temp_x > 7
+                        }
+                        check_variable = {
+                            temp_y < 0
+                        }
+                        check_variable = {
+                            temp_y > 7
+                        }
+                        check_variable = {
+                            temp_wchess_piece_number > 1
+                        }
+                    }
+                }
+            }
+
+            set_temp_variable = {temp_index_xy = temp_y}
+            multiply_temp_variable = {temp_index_xy = 8}
+            add_to_temp_variable = {temp_index_xy = temp_x}
+            set_temp_variable = {temp_wchess_pinned_tiles_array^temp_index_xy = move_id}
+
+            if = {
+                limit = {
+                    check_variable = {
+                        var = temp_wchess_piece_array^temp_index_xy
+                        value = @EMPTY
+                        compare = not_equals
+                    }
+                }
+
+                add_to_temp_variable = {temp_wchess_piece_number = 1}
+
+                set_temp_variable = {temp_wchess_piece_value = temp_wchess_piece_array^temp_index_xy}
+                subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                modulo_temp_variable = {temp_wchess_piece_value = 2}
+
+                if = {
+                    limit = {
+                        check_variable = {
+                            temp_wchess_piece_value = temp_wchess_get_pinned_color_op
+                        }
+                    }
+                    add_to_temp_variable = {temp_wchess_piece_number = 1}
+
+                    clear_temp_array = temp_wchess_highlights_array
+                    resize_temp_array = {
+                        array = temp_wchess_highlights_array
+                        value = @DEACTIVATE
+                        size = 64
+                    }
+                    set_temp_variable = {temp_wchess_id = temp_index_xy}
+                    set_temp_variable = {temp_wchess_color = temp_wchess_get_pinned_color_op}
+                    if = {
+                        limit = {
+                            check_variable = {temp_wchess_blocking_piece_index > -1}
+                        }
+
+                        set_temp_variable = {
+                            temp_wchess_piece_array^temp_wchess_blocking_piece_index = @EMPTY
+                        }
+                    }
+
+                    wchess_get_piece_moves = yes
+
+                    if = {
+                        limit = {
+                            check_variable = {
+                                temp_wchess_highlights_array^temp_wchess_king_id = @ACTIVATE
+                            }
+                        }
+
+                        set_temp_variable = {temp_wchess_pinned_direction^move_id = @ACTIVATE}
+                    }
+
+                    if = {
+                        limit = {
+                            check_variable = {temp_wchess_blocking_piece_index > -1}
+                        }
+
+                        set_temp_variable = {
+                            temp_wchess_piece_array^temp_wchess_blocking_piece_index = temp_wchess_blocking_piece_value
+                        }
+                    }
+                } else = {
+                    set_temp_variable = {temp_wchess_blocking_piece_value = temp_wchess_piece_array^temp_index_xy}
+                    set_temp_variable = {temp_wchess_blocking_piece_index = temp_index_xy}
+                }
+            }
+
+            add_to_temp_variable = {temp_x = incr_x}
+            add_to_temp_variable = {temp_y = incr_y}
+        }
+    }
+}
+
+# Function : wchess_get_check
+# Context : Independant
+# This function return the id of the piece checking the king
+# Inputs : temp_wchess_color       - Color to check for checks (0 black, 1 white)
+#          temp_wchess_piece_array - The input pieces array
+# Outputs: temp_wchess_check_piece_index - The index of the enemy piece checking the king, or -1 if none
+#          temp_wchess_double_check      - If @ACTIVATE, the situation is a double check
+wchess_get_check = {
+
+    set_temp_variable = {temp_wchess_own_color = temp_wchess_color}
+    set_temp_variable = {temp_wchess_opponent_color = @BLACK}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_color = @BLACK}
+        }
+        set_temp_variable = {temp_wchess_opponent_color = @WHITE}
+    }
+
+    wchess_get_king_id = yes
+
+    set_temp_variable = {temp_wchess_check_piece_index = -1}
+    set_temp_variable = {temp_wchess_double_check = @DEACTIVATE}
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = check_piece
+        index = check_iter
+        break = check_break
+
+        if = {
+            limit = {
+                check_variable = {
+                    var = check_piece
+                    value = @EMPTY
+                    compare = not_equals
+                }
+                set_temp_variable = {temp_wchess_piece_value = check_piece}
+                subtract_from_temp_variable = {temp_wchess_piece_value = 1}
+                modulo_temp_variable = {temp_wchess_piece_value = 2}
+                check_variable = {
+                    var = temp_wchess_piece_value
+                    value = temp_wchess_opponent_color
+                    compare = equals
+                }
+            }
+
+            set_temp_variable = {temp_wchess_id = check_iter}
+            set_temp_variable = {temp_wchess_color = temp_wchess_opponent_color}
+
+            clear_temp_array = temp_wchess_highlights_array
+            resize_temp_array = {
+                array = temp_wchess_highlights_array
+                value = @DEACTIVATE
+                size = 64
+            }
+            set_temp_variable    = {temp_wchess_piece_type = check_piece}
+            subtract_from_temp_variable = {temp_wchess_piece_type = 1}
+            divide_temp_variable = {temp_wchess_piece_type = 2}
+            add_to_temp_variable = {temp_wchess_piece_type = -0.5}
+            clamp_temp_variable = {
+                var = temp_wchess_piece_type
+                min = 0
+                max = 6
+            }
+            round_temp_variable = temp_wchess_piece_type
+
+            if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_QUEEN
+                    }
+                }
+                wchess_get_queen_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_BISHOP
+                    }
+                }
+                wchess_get_bishop_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_ROOK
+                    }
+                }
+                wchess_get_rook_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_KNIGHT
+                    }
+                }
+                wchess_get_knight_moves = yes
+
+            } else_if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_piece_type = @ID_PAWN
+                    }
+                }
+                
+                # First set the forward direction
+                set_temp_variable = {temp_wchess_forward = -8}
+                if = {
+                    limit = {
+                        check_variable = {temp_wchess_color = @BLACK}
+                    }
+                    set_temp_variable = {temp_wchess_forward = 8}
+                }
+                set_temp_variable    = {temp_x = check_iter}
+                modulo_temp_variable = {temp_x = 8}
+
+                # Pawn attack left
+                set_temp_variable = {temp_index_xy = check_iter}
+                add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+                add_to_temp_variable = {temp_index_xy = -1}
+                if = {
+                    limit = {
+                        check_variable = {
+                            temp_x > 0
+                        }
+                    }
+
+                    set_temp_variable = {
+                        temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+                    }
+                }
+
+                # Pawn attack right
+                set_temp_variable = {temp_index_xy = check_iter}
+                add_to_temp_variable = {temp_index_xy = temp_wchess_forward}
+                add_to_temp_variable = {temp_index_xy = 1}
+                if = {
+                    limit = {
+                        check_variable = {
+                            temp_x < 7
+                        }
+                    }
+
+                    set_temp_variable = {
+                        temp_wchess_highlights_array^temp_index_xy = @ACTIVATE
+                    }
+                }
+            }
+
+            if = {
+                limit = {
+                    check_variable = {
+                        temp_wchess_highlights_array^temp_wchess_king_id = @ACTIVATE
+                    }
+                }
+
+                if = {
+                    limit = {
+                        check_variable = {temp_wchess_check_piece_index = -1}
+                    }
+
+                    set_temp_variable = {temp_wchess_check_piece_index = check_iter}
+                } else = {
+                    set_temp_variable = {temp_wchess_double_check = @ACTIVATE}
+                    set_temp_variable = {check_break = 1}
+                }
+            }
+        }
+    }
+}
+
+# Function : wchess_checkmate_check
+# Context : Independant
+# This function check for a checkmate in case the king is checked
+# Inputs : temp_wchess_color              - Color to check for checks (0 black, 1 white)
+#          temp_wchess_piece_array        - The input pieces array
+#          temp_wchess_check_piece_index  - The id of piece checking the king
+#          temp_wchess_double_check       - Flag for a double check
+#          temp_wchess_pinned_tiles_array - The pinned direction tiles array
+#          temp_wchess_pinned_direction   - The direction where there is a pin
+# Outputs: temp_wchess_checkmate_state - Return @ACTIVATE if checkmated, @DEACTIVATE otherwise
+wchess_checkmate_check = {
+
+    set_temp_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+    set_temp_variable = {temp_wchess_checkmate_check_color    = temp_wchess_color}
+    set_temp_variable = {temp_wchess_checkmate_check_color_op = @BLACK}
+    if = {
+        limit = {
+            check_variable = {temp_wchess_color = @BLACK}
+        }
+        set_temp_variable = {temp_wchess_checkmate_check_color_op = @WHITE}
+    }
+
+    # Can the king move ?
+    wchess_get_king_id = yes
+
+    set_temp_variable = {temp_wchess_id = temp_wchess_king_id}
+    set_temp_variable = {temp_wchess_inc_allies = 0}
+    set_temp_variable = {temp_wchess_check_en = @ACTIVATE}
+    clear_temp_array = temp_wchess_highlights_array
+    resize_temp_array = {
+        array = temp_wchess_highlights_array
+        value = @DEACTIVATE
+        size = 64
+    }
+    wchess_get_king_moves = yes
+
+    for_each_loop = {
+        array = temp_wchess_highlights_array
+        value = val
+        index = iter
+        break = break
+
+        if = {
+            limit = {
+                check_variable = {val = @ACTIVATE}
+            }
+
+            set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+            set_temp_variable = {break = 1}
+        }
+    }
+
+    if = {
+        limit = {
+            check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+            # The king has to move in case of a double check
+            check_variable = {temp_wchess_double_check = @DEACTIVATE}
+        }
+
+        # Can the piece be attacked ?
+
+        set_temp_variable = {temp_wchess_color = temp_wchess_checkmate_check_color}
+        var:wchess_opponent = {
+            set_temp_variable = {temp_wchess_en_passant = wchess_en_passant}
+        }
+        # Set an oponent piece of the allied king to avoid computing his moves
+        set_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = temp_wchess_checkmate_check_color_op
+        }
+        add_to_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = 3
+        }
+        wchess_get_moves_array = yes
+
+        if = {
+            limit = {
+                check_variable = {
+                    temp_wchess_moves_array^temp_wchess_check_piece_index = @ACTIVATE
+                }
+            }
+            set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+        }
+
+        if = {
+            limit = {
+                check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+                # Knight cannot be blocked -> Already checkmated
+                NOT = {
+                    OR = {
+                        check_variable = {
+                            temp_wchess_piece_array^temp_wchess_check_piece_index = @B_KNIGHT
+                        }
+                        check_variable = {
+                            temp_wchess_piece_array^temp_wchess_check_piece_index = @W_KNIGHT
+                        }
+                    }
+                }
+            }
+
+            # Can the direction be blocked ?
+            for_each_loop = {
+                array = temp_wchess_moves_array
+                value = temp_move
+                index = iter
+                break = break
+                
+                if = {
+                    limit = {
+                        check_variable = {temp_move = @ACTIVATE}
+                        set_temp_variable = {
+                            temp_wchess_pinned_direction_value = temp_wchess_pinned_tiles_array^temp_wchess_check_piece_index
+                        }
+                        check_variable = {
+                            temp_wchess_pinned_tiles_array^iter = temp_wchess_pinned_direction_value
+                        }
+                    }
+
+                    set_temp_variable = {temp_wchess_checkmate_state = @DEACTIVATE}
+                    set_temp_variable = {break = 1}
+                }
+            }
+            
+        }
+
+        # Restore the king
+        set_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = temp_wchess_checkmate_check_color
+        }
+        add_to_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = 1
+        }
+    }
+}
+
+# Function : wchess_draw_material_check
+# Context : Independant
+# This function check if the a draw by lack of material occured
+# Inputs : temp_wchess_piece_array   - The input pieces array
+# Outputs: temp_wchess_draw_material - Return @ACTIVATE if draw, @DEACTIVATE otherwise
+wchess_draw_material_check = {
+    # Each side has either :
+    #   - One king
+    #   - One king and one bishop
+    #   - One king and one knight
+
+    set_temp_variable = {temp_wchess_draw_material = @ACTIVATE}
+
+    set_temp_variable = {temp_wchess_black_bishop = -1}
+    set_temp_variable = {temp_wchess_white_bishop = -1}
+    set_temp_variable = {temp_wchess_blackwhite_knight = -1}
+    for_each_loop = {
+        array = temp_wchess_piece_array
+        value = piece_value
+        index = iter
+        break = break
+
+        if = {
+            limit = {
+                check_variable = {piece_value = @B_BISHOP}
+            }
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_black_bishop > -1}
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+
+            set_temp_variable = {temp_row_color = iter}
+            divide_temp_variable = {temp_row_color = 8}
+            add_to_temp_variable = {temp_row_color = -0.5}
+            clamp_temp_variable = {
+                var = temp_row_color
+                min = 0
+                max = 7
+            }
+            round_temp_variable = temp_row_color
+            modulo_temp_variable = {temp_row_color = 2}
+            set_temp_variable = {temp_wchess_black_bishop = iter}
+            modulo_temp_variable = {temp_wchess_black_bishop = 2}
+            add_to_temp_variable = {temp_wchess_black_bishop = temp_row_color}
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_white_bishop > -1}
+                    NOT = {
+                        check_variable = {temp_wchess_black_bishop = temp_wchess_white_bishop}
+                    }
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+        } else_if = {
+            limit = {
+                check_variable = {piece_value = @W_BISHOP}
+            }
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_white_bishop > -1}
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+
+            set_temp_variable = {temp_row_color = iter}
+            divide_temp_variable = {temp_row_color = 8}
+            add_to_temp_variable = {temp_row_color = -0.5}
+            clamp_temp_variable = {
+                var = temp_row_color
+                min = 0
+                max = 7
+            }
+            round_temp_variable = temp_row_color
+            modulo_temp_variable = {temp_row_color = 2}
+            set_temp_variable = {temp_wchess_white_bishop = iter}
+            modulo_temp_variable = {temp_wchess_white_bishop = 2}
+            add_to_temp_variable = {temp_wchess_white_bishop = temp_row_color}
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_black_bishop > -1}
+                    NOT = {
+                        check_variable = {temp_wchess_white_bishop = temp_wchess_black_bishop}
+                    }
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+        } else_if = {
+            limit = {
+                OR = {
+                    check_variable = {piece_value = @B_KNIGHT}
+                    check_variable = {piece_value = @W_KNIGHT}
+                }
+            }
+
+            if = {
+                limit = {
+                    check_variable = {temp_wchess_blackwhite_knight > -1}
+                }
+
+                set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+                set_temp_variable = {break = 1}
+            }
+            
+            set_temp_variable = {temp_wchess_blackwhite_knight = 1}
+        } else_if = {
+            limit = {
+                NOT = {
+                    OR = {
+                        check_variable = {piece_value = @B_KING}
+                        check_variable = {piece_value = @W_KING}
+                        check_variable = {piece_value = @EMPTY}
+                    }
+                }
+            }
+
+            set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+            set_temp_variable = {break = 1}
+        }
+    }
+
+    if = {
+        limit = {
+            NOT = {
+                OR = {
+                    # King alone
+                    AND = {
+                        check_variable = {temp_wchess_black_bishop = -1}
+                        check_variable = {temp_wchess_white_bishop = -1}
+                        check_variable = {temp_wchess_blackwhite_knight = -1}
+                    }
+                    # King versus bishop
+                    AND = {
+                        OR = {
+                            check_variable = {temp_wchess_black_bishop > -1}
+                            check_variable = {temp_wchess_white_bishop > -1}
+                        }
+                        check_variable = {temp_wchess_blackwhite_knight = -1}
+                    }
+                    # King versus knight
+                    AND = {
+                        check_variable = {temp_wchess_black_bishop = -1}
+                        check_variable = {temp_wchess_white_bishop = -1}
+                        check_variable = {temp_wchess_blackwhite_knight =  1}
+                    }
+                }
+            }
+        }
+
+        set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
+    }
+}

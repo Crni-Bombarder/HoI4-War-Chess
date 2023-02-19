@@ -1,0 +1,31 @@
+﻿l_english:
+wchess_decision_categories:0      "Play chess with your neighboors"
+wchess_decision_categories_desc:0 "Why do men need to die ? Just decide the outcome of your conflict with a game of chess.\n It is also a strategy game after all"
+
+wchess_start_game_alone:0      "Start a game of chess alone"
+wchess_start_game_alone_desc:0 "Start a game where you play the two side"
+
+wchess_display_board:0      "Display the board"
+wchess_display_board_desc:0 "Display the current game board"
+
+wchess_hide_board:0      "Hide the board"
+wchess_hide_board_desc:0 "Hide the current game board"
+
+wchess_enter_pool:0      "Enter the chess pool"
+wchess_enter_pool_desc:0 "Allow player to challenge you to a game of chess"
+
+wchess_leave_pool:0      "Leave the chess pool"
+wchess_leave_pool_desc:0 "Players will not be able to challenge you"
+
+wchess_challenge:0 "I challenge you, [FROM.GetID.owner.GetName] [FROM.GetFlag]!"
+wchess_challenge_desc:0 "Throw the gauntlet, provoke your opponent into a bloody game of chess !"
+
+wchess_events.1.t:0 "Challenge from [?ROOT.wchess_challenger.GetNameDef] received"
+wchess_events.1.desc:0 "You have been challenged by [?ROOT.wchess_challenger.GetLeader]\nBeeing challenged, you can pick your color, or let your adversary choose."
+wchess_events.1.a:0 "I will not play against him !"
+wchess_events.1.b:0 "The Blacks"
+wchess_events.1.c:0 "The Whites"
+
+wchess_events.2.t:0 "Our challenge has been refused !"
+wchess_events.2.desc:0 "The challenge sent to [?FROM.GetLeader] has been refused"
+wchess_events.2.a:0 "Fine."

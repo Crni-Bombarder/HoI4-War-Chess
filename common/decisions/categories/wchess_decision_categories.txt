@@ -1,0 +1,4 @@
+wchess_decision_categories = {
+    visible_when_empty = yes
+    priority = 100
+}
