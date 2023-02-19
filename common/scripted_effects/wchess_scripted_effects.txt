@@ -54,6 +54,7 @@ wchess_init_variables = {
     set_variable = {wchess_left_rook_moved_opponent  = 0}
     set_variable = {wchess_right_rook_moved_opponent = 0}
     set_variable = {wchess_check_piece_id = -1}
+    set_variable = {wchess_double_check   = @DEACTIVATE}
 
     set_variable = {wchess_draw_stalemate = @DEACTIVATE}
     set_variable = {wchess_draw_50_moves  = @DEACTIVATE}
@@ -1034,6 +1035,9 @@ wchess_switch_turn = {
     set_variable = {
         wchess_check_piece_id = -1
     }
+    set_variable = {
+        wchess_double_check = @DEACTIVATE
+    }
 
     set_temp_variable = {temp_wchess_color = wchess_opponent_color}
     clear_temp_array = temp_wchess_piece_array
@@ -1090,6 +1094,9 @@ wchess_switch_turn = {
 
             set_variable = {
                 wchess_check_piece_id = temp_wchess_check_piece_index
+            }
+            set_variable = {
+                wchess_double_check = temp_wchess_double_check
             }
         }
 
@@ -1577,6 +1584,7 @@ wchess_get_pinned_pieces = {
 # Inputs : temp_wchess_color       - Color to check for checks (0 black, 1 white)
 #          temp_wchess_piece_array - The input pieces array
 # Outputs: temp_wchess_check_piece_index - The index of the enemy piece checking the king, or -1 if none
+#          temp_wchess_double_check      - If @ACTIVATE, the situation is a double check
 wchess_get_check = {
 
     set_temp_variable = {temp_wchess_own_color = temp_wchess_color}
@@ -1591,6 +1599,7 @@ wchess_get_check = {
     wchess_get_king_id = yes
 
     set_temp_variable = {temp_wchess_check_piece_index = -1}
+    set_temp_variable = {temp_wchess_double_check = @DEACTIVATE}
     for_each_loop = {
         array = temp_wchess_piece_array
         value = check_piece
@@ -1724,8 +1733,16 @@ wchess_get_check = {
                     }
                 }
 
-                set_temp_variable = {temp_wchess_check_piece_index = check_iter}
-                set_temp_variable = {check_break = 1}
+                if = {
+                    limit = {
+                        check_variable = {temp_wchess_check_piece_index = -1}
+                    }
+
+                    set_temp_variable = {temp_wchess_check_piece_index = check_iter}
+                } else = {
+                    set_temp_variable = {temp_wchess_double_check = @ACTIVATE}
+                    set_temp_variable = {check_break = 1}
+                }
             }
         }
     }
@@ -1737,6 +1754,7 @@ wchess_get_check = {
 # Inputs : temp_wchess_color              - Color to check for checks (0 black, 1 white)
 #          temp_wchess_piece_array        - The input pieces array
 #          temp_wchess_check_piece_index  - The id of piece checking the king
+#          temp_wchess_double_check       - Flag for a double check
 #          temp_wchess_pinned_tiles_array - The pinned direction tiles array
 #          temp_wchess_pinned_direction   - The direction where there is a pin
 # Outputs: temp_wchess_checkmate_state - Return @ACTIVATE if checkmated, @DEACTIVATE otherwise
@@ -1785,6 +1803,8 @@ wchess_checkmate_check = {
     if = {
         limit = {
             check_variable = {temp_wchess_checkmate_state = @ACTIVATE}
+            # The king has to move in case of a double check
+            check_variable = {temp_wchess_double_check = @DEACTIVATE}
         }
 
         # Can the piece be attacked ?
@@ -1852,14 +1872,13 @@ wchess_checkmate_check = {
             
         }
 
-    }
-
-    # Restore the king
-    set_temp_variable = {
-        temp_wchess_piece_array^temp_wchess_king_id = temp_wchess_checkmate_check_color
-    }
-    add_to_temp_variable = {
-        temp_wchess_piece_array^temp_wchess_king_id = 1
+        # Restore the king
+        set_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = temp_wchess_checkmate_check_color
+        }
+        add_to_temp_variable = {
+            temp_wchess_piece_array^temp_wchess_king_id = 1
+        }
     }
 }
 
