@@ -1162,6 +1162,7 @@ wchess_switch_turn = {
     } else = {
         set_temp_variable = {temp_wchess_color = wchess_opponent_color}
         var:wchess_opponent = {
+            sound_effect = "wchess_piece_move_soundeffect"
             set_temp_variable = {temp_wchess_en_passant = wchess_en_passant}
         }
         wchess_get_moves_array = yes
@@ -1194,6 +1195,8 @@ wchess_switch_turn = {
                 set_variable = {wchess_display_draw_button = @DEACTIVATE} 
             }
         }
+
+        sound_effect = "wchess_piece_move_soundeffect"
     }
 
     if = {

@@ -1,0 +1,4 @@
+sound = {
+    name = "wchess_piece_move_sound"
+    file = "wchess/wchess_piece_move.wav"
+}

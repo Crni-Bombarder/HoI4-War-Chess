@@ -304,7 +304,7 @@ guiTypes = {
             orientation = "upper_left"
             spriteType = "GFX_wchess_pieces"
             frame = 1
-            clicksound = click_default
+            clicksound = none
         }
     }
 
