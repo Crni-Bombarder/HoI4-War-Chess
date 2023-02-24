@@ -47,6 +47,21 @@
 @WHITE_PLAYER_BALL_POS_X = 630
 @WHITE_PLAYER_BALL_POS_Y = 494
 
+@CAPTURED_PIECE_BLACK_GRID_CORNER_LEFT_POS_X = 587
+@CAPTURED_PIECE_BLACK_GRID_CORNER_LEFT_POS_Y = 212
+
+@CAPTURED_PIECE_WHITE_GRID_CORNER_LEFT_POS_X = 587
+@CAPTURED_PIECE_WHITE_GRID_CORNER_LEFT_POS_Y = 350
+
+@CAPTURED_PIECE_GRID_TILE_SIZE_X = 12
+@CAPTURED_PIECE_GRID_TILE_SIZE_Y = 16
+
+@CAPTURED_PIECE_GRID_NUMBER_X = 8
+@CAPTURED_PIECE_GRID_NUMBER_Y = 2
+
+@CAPTURED_PIECE_GRID_SIZE_X = 128
+@CAPTURED_PIECE_GRID_SIZE_Y = 32
+
 guiTypes = {
     containerWindowType  = {
         name = "wchess_gui_board"
@@ -66,7 +81,7 @@ guiTypes = {
 
         background = {
             name = "background_board"
-            quadTextureSprite = "GFX_tiled_plain_bg"
+            quadTextureSprite = "GFX_tiled_window_transparent"
         }
 
         iconType = {
@@ -144,6 +159,44 @@ guiTypes = {
             orientation = "upper_left"
             spriteType = "GFX_wchess_green_ball"
             alwaystransparent = yes
+        }
+
+        gridboxtype = {
+            name = "wchess_grid_captured_piece_black"
+            position = {
+                x = @CAPTURED_PIECE_BLACK_GRID_CORNER_LEFT_POS_X
+                y = @CAPTURED_PIECE_BLACK_GRID_CORNER_LEFT_POS_Y
+            }
+            size = {
+                width  = @CAPTURED_PIECE_GRID_SIZE_X
+                height = @CAPTURED_PIECE_GRID_SIZE_Y
+            }
+            slotsize = {
+                width  = @CAPTURED_PIECE_GRID_TILE_SIZE_X
+                height = @CAPTURED_PIECE_GRID_TILE_SIZE_Y
+            }
+            format = "LOWER_LEFT"
+            max_slots_horizontal = @CAPTURED_PIECE_GRID_NUMBER_X
+            max_slots_vertical   = @CAPTURED_PIECE_GRID_NUMBER_Y
+        }
+
+        gridboxtype = {
+            name = "wchess_grid_captured_piece_white"
+            position = {
+                x = @CAPTURED_PIECE_WHITE_GRID_CORNER_LEFT_POS_X
+                y = @CAPTURED_PIECE_WHITE_GRID_CORNER_LEFT_POS_Y
+            }
+            size = {
+                width  = @CAPTURED_PIECE_GRID_SIZE_X
+                height = @CAPTURED_PIECE_GRID_SIZE_Y
+            }
+            slotsize = {
+                width  = @CAPTURED_PIECE_GRID_TILE_SIZE_X
+                height = @CAPTURED_PIECE_GRID_TILE_SIZE_Y
+            }
+            format = "UPPER_LEFT"
+            max_slots_horizontal = @CAPTURED_PIECE_GRID_NUMBER_X
+            max_slots_vertical   = @CAPTURED_PIECE_GRID_NUMBER_Y
         }
 
         containerWindowType = {
@@ -371,6 +424,50 @@ guiTypes = {
             }
             spriteType = "GFX_wchess_tile_halocheck"
             alwaystransparent = yes
+        }
+    }
+
+    containerWindowType = {
+        name = "wchess_captured_piece_black_cell"
+        position = {
+            x = 0
+            y = 0
+        }
+        size = {
+            width  = 16
+            height = 16
+        }
+
+        iconType = {
+            name = "wchess_captured_piece_black_tile"
+            position = {
+                x = 0
+                y = 0
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_small_pieces"
+        }
+    }
+
+    containerWindowType = {
+        name = "wchess_captured_piece_white_cell"
+        position = {
+            x = 0
+            y = 0
+        }
+        size = {
+            width  = 16
+            height = 16
+        }
+
+        iconType = {
+            name = "wchess_captured_piece_white_tile"
+            position = {
+                x = 0
+                y = 0
+            }
+            orientation = "upper_left"
+            spriteType = "GFX_wchess_small_pieces"
         }
     }
 

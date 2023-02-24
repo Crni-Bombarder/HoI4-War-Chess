@@ -76,6 +76,18 @@ scripted_gui = {
                 change_scope = no
                 entry_container = wchess_halocheck_cell
             }
+
+            wchess_grid_captured_piece_black = {
+                array = wchess_captured_piece_black_array
+                change_scope = no
+                entry_container = wchess_captured_piece_black_cell
+            }
+
+            wchess_grid_captured_piece_white = {
+                array = wchess_captured_piece_white_array
+                change_scope = no
+                entry_container = wchess_captured_piece_white_cell
+            }
         }
 
         effects = {
@@ -881,6 +893,14 @@ scripted_gui = {
                 frame = v
             }
 
+            wchess_captured_piece_black_tile = {
+                frame = v
+            }
+
+            wchess_captured_piece_white_tile = {
+                frame = v
+            }
+
             wchess_black_player_flag = {
                 image = [?wchess_black_player.GetFlag]
             }
@@ -1097,33 +1117,14 @@ scripted_gui = {
 
             wchess_debug_random_tile_array_click = {
                 log = "Random value to array wchess_pieces_array"
-                resize_array = {
-                    array = wchess_pieces_array
-                    size = 64
-                    value = 2
-                }
-                for_each_loop = {
-                    array = wchess_pieces_array
-                    index = i
-                    set_temp_variable = {temp_random = random}
-                    multiply_temp_variable = {
-                        var = temp_random
-                        value = 13.5
-                    }
-                    round_temp_variable = temp_random
-                    clamp_temp_variable = {
-                        var = temp_random
-                        min = 0
-                        max = 13
-                    }
-
-                    set_variable = {wchess_pieces_array^i = temp_random}
-                }
+                add_to_array = {wchess_captured_piece_black_array = 4}
+                add_to_array = {wchess_captured_piece_white_array = 5}
             }
 
             wchess_debug_clean_tile_array_click = {
                 log = "Clearing wchess_pieces_array"
-                clear_array = wchess_pieces_array
+                clear_array = wchess_captured_piece_black_array
+                clear_array = wchess_captured_piece_white_array
             }
 
             wchess_debug_add_highlight_array_click = {
