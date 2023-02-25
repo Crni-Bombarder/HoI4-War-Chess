@@ -62,6 +62,12 @@
 @CAPTURED_PIECE_GRID_SIZE_X = 128
 @CAPTURED_PIECE_GRID_SIZE_Y = 32
 
+@WHITE_PLAYER_ADVANTAGE_TEXT_POS_X = 540
+@WHITE_PLAYER_ADVANTAGE_TEXT_POS_Y = 380
+
+@BLACK_PLAYER_ADVANTAGE_TEXT_POS_X = 540
+@BLACK_PLAYER_ADVANTAGE_TEXT_POS_Y = 180
+
 guiTypes = {
     containerWindowType  = {
         name = "wchess_gui_board"
@@ -197,6 +203,30 @@ guiTypes = {
             format = "UPPER_LEFT"
             max_slots_horizontal = @CAPTURED_PIECE_GRID_NUMBER_X
             max_slots_vertical   = @CAPTURED_PIECE_GRID_NUMBER_Y
+        }
+
+        instantTextBoxType = {
+            name = "wchess_text_white_player_advantage"
+            position = {
+                x = @WHITE_PLAYER_ADVANTAGE_TEXT_POS_X
+                y = @WHITE_PLAYER_ADVANTAGE_TEXT_POS_Y
+            }
+            text = "[?ROOT.wchess_white_advantage|=+.0]"
+            font = "vic_36"
+            format = centre
+            alwaystransparent = yes
+        }
+
+        instantTextBoxType = {
+            name = "wchess_text_black_player_advantage"
+            position = {
+                x = @BLACK_PLAYER_ADVANTAGE_TEXT_POS_X
+                y = @BLACK_PLAYER_ADVANTAGE_TEXT_POS_Y
+            }
+            text = "[?ROOT.wchess_black_advantage|=+.0]"
+            font = "vic_36"
+            format = centre
+            alwaystransparent = yes
         }
 
         containerWindowType = {

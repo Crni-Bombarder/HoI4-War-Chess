@@ -43,6 +43,11 @@
 
 @DRAW_NB_MOVE = 49 # Number of moves before a draw minus 1
 
+@PAWN_VALUE = 1
+@ROOK_VALUE = 5
+@KNIGHT_BISHOP_VALUE = 3
+@QUEEN_VALUE = 9
+
 # Function : wchess_init_variables
 # Context : Player
 # Initialize in the player context the variables for castling and the end game flags.
@@ -55,6 +60,9 @@ wchess_init_variables = {
     set_variable = {wchess_right_rook_moved_opponent = 0}
     set_variable = {wchess_check_piece_id = -1}
     set_variable = {wchess_double_check   = @DEACTIVATE}
+
+    set_variable = {wchess_white_advantage = 0}
+    set_variable = {wchess_black_advantage = 0}
 
     set_variable = {wchess_draw_stalemate = @DEACTIVATE}
     set_variable = {wchess_draw_50_moves  = @DEACTIVATE}
@@ -2049,4 +2057,125 @@ wchess_draw_material_check = {
 
         set_temp_variable = {temp_wchess_draw_material = @DEACTIVATE}
     }
+}
+
+# Function : wchess_update_captured_piece_array
+# Context : Player
+# This function update the captured piece array
+# Inputs : temp_wchess_piece_value - The captured piece
+# Outputs: None
+wchess_update_captured_piece_array = {
+    if = {
+        limit = {
+            check_variable = {wchess_color = @WHITE}
+        }
+        
+        add_to_array = {
+            wchess_captured_piece_white_array = temp_wchess_piece_value
+        }
+        if = {
+            limit = {
+                check_variable = {
+                    var = wchess_opponent
+                    value = ROOT
+                    compare = not_equals
+                }
+            }
+
+            var:wchess_opponent = {
+                add_to_array = {
+                    wchess_captured_piece_white_array = temp_wchess_piece_value
+                }
+            }
+        }
+    } else = {
+        add_to_array = {
+            wchess_captured_piece_black_array = temp_wchess_piece_value
+        }
+        if = {
+            limit = {
+                check_variable = {
+                    var = wchess_opponent
+                    value = ROOT
+                    compare = not_equals
+                }
+            }
+
+            var:wchess_opponent = {
+                add_to_array = {
+                    wchess_captured_piece_black_array = temp_wchess_piece_value
+                }
+            }
+        }
+    }
+}
+
+# Function : wchess_update_advantages
+# Context : Player
+# This function update the wchess_black/white_advantage variables
+# Inputs : temp_wchess_piece_value - The captured piece
+#          temp_wchess_promotion_value - If positive, the raw value to add to the advantage
+# Outputs: None
+wchess_update_advantages = {
+    if = {
+        limit = {
+            check_variable = {temp_wchess_promotion_value > -1}
+        }
+
+    } else = {
+        # Knight / Bishop value by default
+        set_temp_variable = {temp_wchess_advantage_increment = @KNIGHT_BISHOP_VALUE}
+        if = {
+            limit = {
+                OR = {
+                    check_variable = {temp_wchess_piece_value = @B_ROOK}
+                    check_variable = {temp_wchess_piece_value = @W_ROOK}
+                }
+            }
+
+            set_temp_variable = {temp_wchess_advantage_increment = @ROOK_VALUE}
+        } else_if = {
+            limit = {
+                OR = {
+                    check_variable = {temp_wchess_piece_value = @B_PAWN}
+                    check_variable = {temp_wchess_piece_value = @W_PAWN}
+                }
+            }
+
+            set_temp_variable = {temp_wchess_advantage_increment = @PAWN_VALUE}
+        } else_if = {
+            limit = {
+                OR = {
+                    check_variable = {temp_wchess_piece_value = @B_QUEEN}
+                    check_variable = {temp_wchess_piece_value = @W_QUEEN}
+                }
+            }
+
+            set_temp_variable = {temp_wchess_advantage_increment = @QUEEN_VALUE}
+        }
+
+        set_temp_variable = {temp_wchess_white_advantage = wchess_white_advantage}
+        set_temp_variable = {temp_wchess_black_advantage = wchess_black_advantage}
+        if = {
+            limit = {
+                check_variable = {wchess_color = @WHITE}
+            }
+
+            add_to_temp_variable        = {temp_wchess_white_advantage = temp_wchess_advantage_increment}
+            subtract_from_temp_variable = {temp_wchess_black_advantage = temp_wchess_advantage_increment}
+        } else = {
+            add_to_temp_variable        = {temp_wchess_black_advantage = temp_wchess_advantage_increment}
+            subtract_from_temp_variable = {temp_wchess_white_advantage = temp_wchess_advantage_increment}
+        }
+    }
+
+    set_variable = {wchess_white_advantage = temp_wchess_white_advantage}
+    set_variable = {wchess_black_advantage = temp_wchess_black_advantage}
+    var:wchess_opponent = {
+        set_variable = {wchess_white_advantage = temp_wchess_white_advantage}
+        set_variable = {wchess_black_advantage = temp_wchess_black_advantage}
+    }
+
+    log = "White : [?wchess_white_advantage]"
+    log = "Black : [?wchess_black_advantage]"
 }

@@ -438,45 +438,17 @@ scripted_gui = {
                                     }
 
                                     add_to_temp_variable = {temp_wchess_en_passant_id = -8}
-                                    add_to_array = {
-                                            wchess_captured_piece_black_array = @W_PAWN
-                                    }
-                                    if = {
-                                        limit = {
-                                            check_variable = {
-                                                var = wchess_opponent
-                                                value = ROOT
-                                                compare = not_equals
-                                            }
-                                        }
-
-                                        var:wchess_opponent = {
-                                            add_to_array = {
-                                                wchess_captured_piece_black_array = @W_PAWN
-                                            }
-                                        }
-                                    }
+                                    set_temp_variable = {temp_wchess_piece_value = @W_PAWN}
                                 } else = {
                                     add_to_temp_variable = {temp_wchess_en_passant_id =  8}
-                                    add_to_array = {
-                                            wchess_captured_piece_white_array = @B_PAWN
-                                    }
-                                    if = {
-                                        limit = {
-                                            check_variable = {
-                                                var = wchess_opponent
-                                                value = ROOT
-                                                compare = not_equals
-                                            }
-                                        }
-
-                                        var:wchess_opponent = {
-                                            add_to_array = {
-                                                wchess_captured_piece_white_array = @B_PAWN
-                                            }
-                                        }
-                                    }
+                                    set_temp_variable = {temp_wchess_piece_value = @B_PAWN}
                                 }
+                                
+                                # Update captured piece array and advantage values
+                                set_temp_variable = {temp_wchess_promotion_value = -1}
+                                wchess_update_captured_piece_array = yes
+                                wchess_update_advantages = yes
+                                # Delete passed pawn
                                 set_variable = {wchess_pieces_array^temp_wchess_en_passant_id = @EMPTY}
                             }
 
@@ -646,49 +618,10 @@ scripted_gui = {
                                         }
                                     }
 
-                                    if = {
-                                        limit = {
-                                            check_variable = {wchess_color = @WHITE}
-                                        }
-                                        
-                                        add_to_array = {
-                                            wchess_captured_piece_white_array = wchess_pieces_array^i
-                                        }
-                                        if = {
-                                            limit = {
-                                                check_variable = {
-                                                    var = wchess_opponent
-                                                    value = ROOT
-                                                    compare = not_equals
-                                                }
-                                            }
-
-                                            var:wchess_opponent = {
-                                                add_to_array = {
-                                                    wchess_captured_piece_white_array = wchess_pieces_array^i
-                                                }
-                                            }
-                                        }
-                                    } else = {
-                                        add_to_array = {
-                                            wchess_captured_piece_black_array = wchess_pieces_array^i
-                                        }
-                                        if = {
-                                            limit = {
-                                                check_variable = {
-                                                    var = wchess_opponent
-                                                    value = ROOT
-                                                    compare = not_equals
-                                                }
-                                            }
-
-                                            var:wchess_opponent = {
-                                                add_to_array = {
-                                                    wchess_captured_piece_black_array = wchess_pieces_array^i
-                                                }
-                                            }
-                                        }
-                                    }
+                                    set_temp_variable = {temp_wchess_piece_value = wchess_pieces_array^i}
+                                    set_temp_variable = {temp_wchess_promotion_value = -1}
+                                    wchess_update_captured_piece_array = yes
+                                    wchess_update_advantages = yes
                                 }
                                 # Normal move
                                 set_variable = {
