@@ -90,6 +90,9 @@ wchess_create_board = {
             value = @EMPTY
         }
 
+        clear_array = wchess_captured_piece_black_array
+        clear_array = wchess_captured_piece_white_array
+
         clear_array = wchess_highlights_array
         resize_array = {
             array = wchess_highlights_array
